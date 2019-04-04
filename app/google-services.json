@@ -21,6 +21,14 @@
             "package_name": "com.example.groop",
             "certificate_hash": "31305532b2114bd12583d0ee3f2e4c986d071d02"
           }
+        },
+        {
+          "client_id": "648876161799-lmnto5u3s8thnefq1p3mel3eohdi87mc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.groop",
+            "certificate_hash": "92e4c890e64441a46861e7cbc1030f1da48b8a11"
+          }
         }
       ],
       "api_key": [
