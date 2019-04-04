@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "648876161799",
+    "firebase_url": "https://groop-66d2d.firebaseio.com",
+    "project_id": "groop-66d2d",
+    "storage_bucket": "groop-66d2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648876161799:android:156de2c0a6bc77a2",
+        "android_client_info": {
+          "package_name": "com.example.groop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648876161799-sh4i9afomfb5cj4s0kmkprsjcr8kggq3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.groop",
+            "certificate_hash": "31305532b2114bd12583d0ee3f2e4c986d071d02"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApCO7AKN3Qydf6aNCRjYvJNeljRU7Xp2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648876161799-d83661ba3vmb45ob9g0th60mmraeqdhc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
