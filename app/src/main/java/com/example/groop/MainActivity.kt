@@ -48,14 +48,14 @@ class MainActivity : AppCompatActivity() {
 
     fun login(){
         val email = user_email.text.toString()
-        if (isEmail(email)) {
+        if (!isEmail(email)) {
             toast(this, "Please enter valid email")
         }
         val password = user_password.text.toString()
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
             if (it.isSuccessful){
-                val intent = Intent(this, ProfileActivity::class.java)
+                val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
             }
             else {

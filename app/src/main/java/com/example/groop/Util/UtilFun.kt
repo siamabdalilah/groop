@@ -8,5 +8,6 @@ fun toast(context: Context, text: String){
 }
 
 fun isEmail(text: String) : Boolean {
-    return true
+    val regex = Regex("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}\$")
+    return regex.containsMatchIn(text)
 }
