@@ -1,5 +1,6 @@
 package com.example.groop
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.TransitionManager
@@ -53,6 +54,13 @@ class MainActivity : AppCompatActivity() {
         val password = user_password.text.toString()
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
+            if (it.isSuccessful){
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+            }
+            else {
+                toast(this, "sign in failed")
+            }
         }
     }
 
