@@ -16,8 +16,8 @@ class DBManager() {
      * of activity objects including every activity that the user
      * is interested in
      */
-    fun getUserActivityList(email: String): ArrayList<Activity> {
-        val activityList = ArrayList<Activity>()
+    fun getUserActivityList(email: String): ArrayList<Activity_groop> {
+        val activityList = ArrayList<Activity_groop>()
 
         db.collection(users).document(email).collection(activities).get()
             .addOnSuccessListener { query ->
@@ -27,7 +27,7 @@ class DBManager() {
                 for (doc in docList) {
                     //construct a new activity from the given fields
                     activityList.add(
-                        Activity(
+                        Activity_groop(
                             doc.id,
                             doc.get("description") as String?,
                             doc.get("skill") as Int?
