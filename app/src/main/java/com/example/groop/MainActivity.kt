@@ -140,6 +140,7 @@ class MainActivity : AppCompatActivity() {
             }else{
                 location = it
                 isLocated = true
+                TransitionManager.beginDelayedTransition(login_screen_button_container)
                 locate_button.visibility = View.GONE
                 finish_button.setOnClickListener{signup()}
             }
