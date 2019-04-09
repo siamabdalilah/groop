@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.R
-import com.example.groop.groop
+import com.example.groop.DataModels.groop
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.home_groop_view.*
 import kotlinx.android.synthetic.main.home_recycler_frag.*
@@ -23,6 +23,7 @@ class home_groop_view : AppCompatActivity(){
     @SuppressLint("ValidFragment")
     class home(contexter: Context, username: String) : Fragment() {
 
+        private val myLoc = getLocation()
         private val username = username
         private val auth = FirebaseAuth.getInstance()
         private var adapter = HomeAdapter()

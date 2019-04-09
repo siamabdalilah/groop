@@ -1,5 +1,6 @@
-package com.example.groop
+package com.example.groop.DataModels
 
+import com.google.firebase.firestore.GeoPoint
 import java.io.FileDescriptor
 import java.io.Serializable
 import java.util.*
@@ -11,7 +12,7 @@ class groop: Serializable {
     private var capacity: Int = 0
     private var createdBy: String = ""
     private var description: String = ""
-    private var location: String = ""
+    private var location: GeoPoint = GeoPoint(0.0,0.0)
     private var numMembers: Int = 0
     private var startTime: Date = Date()
 
@@ -22,7 +23,7 @@ class groop: Serializable {
         capacity: Int,
         createdBy: String,
         description: String,
-        location: String,
+        location: GeoPoint,
         numMembers: Int,
         startTime: Date
     )  {
@@ -56,7 +57,7 @@ class groop: Serializable {
     fun getDescription():String{
         return this.description
     }
-    fun getLocation():String{
+    fun getLocation():GeoPoint{
         return this.location
     }
     fun getNumMembers():Int{
