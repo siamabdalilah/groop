@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
             if (it.isSuccessful){
-                val intent = Intent(this, HomeActivity::class.java)
+                //val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
             }
             else {
