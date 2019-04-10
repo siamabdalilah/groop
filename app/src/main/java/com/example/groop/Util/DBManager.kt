@@ -16,8 +16,8 @@ class DBManager() {
      * of activity objects including every activity that the user
      * is interested in
      */
-    fun getUserActivityList(email: String): ArrayList<Activity_groop> {
-        val activityList = ArrayList<Activity_groop>()
+    fun getUserActivityList(email: String): ArrayList<Activity> {
+        val activityList = ArrayList<Activity>()
 
         db.collection(users).document(email).collection(activities).get()
             .addOnSuccessListener { query ->
@@ -27,7 +27,7 @@ class DBManager() {
                 for (doc in docList) {
                     //construct a new activity from the given fields
                     activityList.add(
-                        Activity_groop(
+                        Activity(
                             doc.id,
                             doc.get("description") as String?,
                             doc.get("skill") as Int?
@@ -62,8 +62,38 @@ class DBManager() {
     /**
      * Returns an arraylist of Groop objects associated with
      * a given activity
+     * Be sure to check for subactivities
      */
     fun getGroopsFromActivity(activity: String) : ArrayList<Groop> {
+        val groops = ArrayList<Groop>()
+
+        return groops
+    }
+
+    /**
+     * Updates the info for an activity that one user has expressed
+     * interest in.
+     * Void method, writes to the user's list of activities
+     */
+    fun updateActivityInfo(email: String, activity: String, bio: String) {
+
+    }
+
+    /**
+     * Returns an ArrayList of groops that have been created by
+     * the user specified by the email
+     */
+    fun getGroopsBy(email: String) : ArrayList<Groop> {
+        val groops = ArrayList<Groop>()
+
+        return groops
+    }
+
+    /**
+     * Returns an ArrayList of groops that have been joined by
+     * the user specified by the email
+     */
+    fun getGroopsJoinedBy(email: String) : ArrayList<Groop> {
         val groops = ArrayList<Groop>()
 
         return groops

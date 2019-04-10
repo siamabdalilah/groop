@@ -6,14 +6,14 @@ import com.google.firebase.firestore.model.value.TimestampValue
 class Groop(capacity: Int, creator: User, description: String,
             location: GeoPoint, members: ArrayList<User>, name: String,
             numMembers: Int, startTime: TimestampValue, type: Activity_groop) {
-    private val capacity: Int = capacity
-    private val creator: User = creator
-    private val description: String = description
-    private val location: GeoPoint = location
-    private val members: ArrayList<User> = members
-    private val name: String = name
-    private val numMembers: Int = numMembers
-    private val startTime: TimestampValue = startTime
-    private val type: Activity_groop = type
+    val capacity: Int = capacity
+    val creator: User = creator
+    val description: String = description
+    val location: GeoPoint = location
+    val members: ArrayList<User> = members
+    val name: String = name
+    val numMembers: Int = numMembers
+    val startTime: TimestampValue = startTime
+    val type: Activity_groop = type
 
 }
