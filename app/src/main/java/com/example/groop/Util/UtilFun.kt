@@ -13,10 +13,18 @@ fun isEmail(text: String) : Boolean {
     return regex.containsMatchIn(text)
 }
 
+/**
+ * Helpful for the findDistance method, converts a degree measurement
+ * to a radian measurement
+ */
 fun degreesToRadians(degree: Double) : Double {
     return (degree * Math.PI) / 180
 }
 
+/**
+ * Very simply finds the distance between two GeoPoints through
+ * this bizarrely complicated algorithm we found online
+ */
 fun findDistance(one: GeoPoint, two: GeoPoint) : Double {
     //converted into radians
     val oneLat: Double = degreesToRadians(one.latitude)
@@ -27,7 +35,7 @@ fun findDistance(one: GeoPoint, two: GeoPoint) : Double {
     //compute the distance between the two points with the haversine formula
     //shoutout to: https://www.movable-type.co.uk/scripts/latlong.html
     //shoutout to: https://www.tfes.org/
-    val earthRadius: Double = 3958.8 //in miles
+    val earthRadius = 3958.8 //in miles
     val deltaLat = degreesToRadians(two.latitude - one.latitude)
     val deltaLong = degreesToRadians(two.longitude - one.longitude)
 
