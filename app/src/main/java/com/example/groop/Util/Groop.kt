@@ -1,5 +1,6 @@
 package com.example.groop.Util
 
+import com.example.groop.DataModels.User
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.model.value.TimestampValue
 
