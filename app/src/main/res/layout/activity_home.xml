@@ -11,9 +11,9 @@
     <include
             layout="@layout/bottom_bar"
             android:id="@+id/bottom_bar"
-            tools:layout_editor_absoluteY="208dp"
-            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteX="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="260dp"
             />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

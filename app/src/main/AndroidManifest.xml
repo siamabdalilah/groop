@@ -10,7 +10,15 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".HomePackage.home">
+        </activity>
         <activity android:name=".HomeActivity">
+        </activity>
+        <activity android:name=".display_groops">
+        </activity>
+        <activity android:name=".display_users">
+        </activity>
+        <activity android:name=".HomePackage.edit_activity_info">
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

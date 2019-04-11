@@ -1,13 +1,11 @@
 package com.example.groop
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.transition.TransitionManager
 import android.view.View
 import androidx.core.app.ActivityCompat
@@ -22,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
@@ -37,16 +34,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // <<<<<< CODE to be removed
 
         val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
 
-        // >>>>>>
+        startActivity(intent)
 
         switch_button.setOnClickListener{switch()}
         finish_button.setOnClickListener{login()}
-        locate_button.setOnClickListener({locate()})
+        locate_button.setOnClickListener{locate()}
     }
 
     fun switch(){
@@ -88,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
             if (it.isSuccessful){
-                //val intent = Intent(this, home::class.java)
+                val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
             }
             else {

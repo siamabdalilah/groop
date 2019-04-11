@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.home_display.*
 
 import com.example.groop.R
 import com.example.groop.Util.DBManager
+import com.google.firebase.firestore.GeoPoint
 
 class home : AppCompatActivity() {
 
@@ -35,6 +36,7 @@ class home : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val fragmentAdapter = MyPagerAdapter(supportFragmentManager, this)
+        //var pager=findViewById<view_pager>(R.id.viewpager_home)
         viewpager_home.adapter = fragmentAdapter
         tabs_home.setupWithViewPager(viewpager_home)
     }
@@ -71,7 +73,8 @@ class home : AppCompatActivity() {
     class MyPagerAdapter(fm: FragmentManager, context: Context) : FragmentPagerAdapter(fm) {
         var context=context
         val intent = Intent()
-        var user = intent.getSerializableExtra("user") as User
+//        var user = intent.getSerializableExtra("user") as User
+        val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
         //var locationTemp = LocationServices.getLocation(context)
         //user.location = GeoPoint(locationTemp.latitude,locationTemp.longitude)
 
