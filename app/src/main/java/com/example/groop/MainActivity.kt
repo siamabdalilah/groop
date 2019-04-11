@@ -13,9 +13,11 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.groop.DataModels.User
+import com.example.groop.HomePackage.home
 import com.example.groop.Util.isEmail
 import com.example.groop.Util.toast
 import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
@@ -33,8 +35,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         // <<<<<< CODE to be removed
 
         val intent = Intent(this, HomeActivity::class.java)
@@ -86,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
             if (it.isSuccessful){
-                val intent = Intent(this, HomeActivity::class.java)
+                //val intent = Intent(this, home::class.java)
                 startActivity(intent)
             }
             else {
@@ -115,7 +117,8 @@ class MainActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
             if (it.isSuccessful){
                 db.collection("users").document(user.email).set(user)
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent(this, home::class.java)
+                intent.putExtra("user",user)
                 startActivity(intent)
             }else{
                 toast(this, "Failed. Try again")

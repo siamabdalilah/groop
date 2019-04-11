@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/home_recycler" tools:itemCount="5"
+
+            tools:listitem="@layout/recycler_view_item"
+    />
+    <EditText
+            android:text="activity_search_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteY="172dp"
+            tools:layout_editor_absoluteX="84dp" android:id="@+id/activity_search_home"/>
+</android.support.constraint.ConstraintLayout>
+
+
