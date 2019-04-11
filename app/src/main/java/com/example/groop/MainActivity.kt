@@ -35,6 +35,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        // <<<<<< CODE to be removed
+
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+
+        // >>>>>>
 
         switch_button.setOnClickListener{switch()}
         finish_button.setOnClickListener{login()}
