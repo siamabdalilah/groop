@@ -14,7 +14,7 @@ import java.io.Serializable
     var profilePicture:String = ""
     var createdGroops: ArrayList<DocumentReference>? = null
     var joinedGroops: ArrayList<DocumentReference>? = null
-    var activities: ArrayList<Activity_groop>? = null
+    var activities: ArrayList<Activity_groop> = ArrayList()
 
 
 

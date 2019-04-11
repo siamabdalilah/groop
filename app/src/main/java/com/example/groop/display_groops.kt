@@ -1,8 +1,6 @@
 package com.example.groop
 
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,18 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
-import com.example.groop.DataModels.groop
-import com.example.groop.LocationServices
-import com.example.groop.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.home_groop_view.*
-import kotlinx.android.synthetic.main.home_recycler_frag.*
-import android.content.Intent.getIntent
 import com.example.groop.Util.*
 
 
@@ -80,15 +72,7 @@ class display_groops : AppCompatActivity(){
         }
         }
 
-        fun groopsContainsActivity(g:ArrayList<groop>, category:String):ArrayList<groop>{
-            var result: ArrayList<groop> = ArrayList()
-            for(p in g){
-                if(p.getCategory()==category){
-                    result.add(p)
-                }
-            }
-            return result
-        }
+
 
 
         //recycler view adapter

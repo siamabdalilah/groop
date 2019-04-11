@@ -23,12 +23,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.home_groop_view.*
 import kotlinx.android.synthetic.main.home_recycler_frag.*
-import android.content.Intent.getIntent
-
-
-
-
-
 
 
 class home_groop_view : AppCompatActivity(){

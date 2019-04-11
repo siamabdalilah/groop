@@ -5,4 +5,7 @@ class Activity_groop (name: String, description: String?, skill: Int?) {
     private val description = description
     private val skill = skill
 
+    public fun getName():String{
+        return this.name
+    }
 }

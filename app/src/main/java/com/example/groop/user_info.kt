@@ -1,5 +1,5 @@
 package com.example.groop
 
-class groop_info {
+class user_info {
     //TODO
 }
