@@ -12,25 +12,39 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.groop.R
+import com.example.groop.DataModels.User
 import com.example.groop.DataModels.groop
+import com.example.groop.LocationServices
+import com.example.groop.R
+import com.example.groop.Util.DBManager
+import com.example.groop.Util.Groop
+import com.example.groop.Util.findDistance
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.home_groop_view.*
 import kotlinx.android.synthetic.main.home_recycler_frag.*
+import android.content.Intent.getIntent
+
+
+
+
+
+
 
 class home_groop_view : AppCompatActivity(){
 
     @SuppressLint("ValidFragment")
-    class home(contexter: Context, username: String) : Fragment() {
+    class home(contexter: Context, user: User) : Fragment() {
 
-        private val myLoc = getLocation()
-        private val username = username
+        private val myLoc = LocationServices().getLocation(this.context as Context)
+        private val user= user
+        private val username = user.email
         private val auth = FirebaseAuth.getInstance()
         private var adapter = HomeAdapter()
-        private var joined_groops: ArrayList<groop> = ArrayList()
-        private var created_groops: ArrayList<groop> = ArrayList()
-        private var my_groops: ArrayList<groop> = ArrayList()
-        private var activity_list_temp: ArrayList<groop> = ArrayList()
+        private var joined_groops: ArrayList<Groop> = ArrayList()
+        private var created_groops: ArrayList<Groop> = ArrayList()
+        private var my_groops: ArrayList<Groop> = ArrayList()
+        private var activity_list_temp: ArrayList<Groop> = ArrayList()
 
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -41,8 +55,8 @@ class home_groop_view : AppCompatActivity(){
             super.onStart()
             home_groops_recycler.layoutManager = LinearLayoutManager(context)
             home_groops_recycler.adapter = adapter
-            created_groops=DBManager.getGroopsBy(username);
-            joined_groops=DBManager.getGroopsJoinedBy(username);
+            created_groops= DBManager.getGroopsBy(user.email)
+            joined_groops=DBManager.getGroopsJoinedBy(user.email)
             my_groops.addAll(created_groops)
             my_groops.addAll(joined_groops)
             adapter.notifyDataSetChanged()
@@ -52,7 +66,12 @@ class home_groop_view : AppCompatActivity(){
                 if(!hasFocus){
                     activity_list_temp=my_groops
                     if(searchBy!=""){
-                        my_groops=groopsContainsActivity(activity_list_temp,searchBy)
+                        my_groops.clear()
+                        for(grp in activity_list_temp){
+                            if(grp.type==searchBy){
+                                my_groops.add(grp)
+                            }
+                        }
                     }
                     adapter.notifyDataSetChanged()
                 }
@@ -83,11 +102,13 @@ class home_groop_view : AppCompatActivity(){
                 //gets joke aka song from the songlist and fills the fields of the itemView
                 //with the song data from the array
                 val activity = my_groops[p1]
-                p0.name.text = "Name: "+activity.getName()
-                p0.curParticiants.text="Currently: "+activity.getMembers().size.toString()
-                p0.participants.text = "Participants: "+activity.getCapacity().toString()
-                p0.distance.text="Distance: "+findDistance(activity.getLocation(),myLoc)
-                p0.time.text="Time: "+activity.getStartTime().toString()
+                p0.name.text = "Name: "+activity.name
+                p0.curParticiants.text="Currently: "+activity.members!!.size.toString()
+                p0.participants.text = "Participants: "+activity.capacity.toString()
+                var lng = myLoc.longitude*10000000
+                var lat = myLoc.latitude*1000000
+                p0.distance.text="Distance: "+findDistance(activity.location, GeoPoint(lat,lng))
+                p0.time.text="Time: "+activity.startTime.toString()
                 p0.row.setOnClickListener {
                     val intent = Intent(p0.itemView.context, com.example.groop.groop_info::class.java)
                     intent.putExtra("activity", activity)

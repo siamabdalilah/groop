@@ -3,8 +3,52 @@ package com.example.groop.DataModels
 import com.example.groop.Util.Activity_groop
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.GeoPoint
+import java.io.Serializable
 
-data class User(val email: String, val name: String, val location: GeoPoint, var bio: String,
-                var profilePicture: String? = null, val createdGroops: ArrayList<DocumentReference> = ArrayList(),
-                val joinedGroops: ArrayList<DocumentReference> = ArrayList(),
-                val activities: ArrayList<Activity_groop>)
+   class User:Serializable{
+
+    var email:String = ""
+    var name:String = ""
+    var location: GeoPoint = GeoPoint(0.0,0.0)
+    var bio: String = ""
+    var profilePicture:String = ""
+    var createdGroops: ArrayList<DocumentReference>? = null
+    var joinedGroops: ArrayList<DocumentReference>? = null
+    var activities: ArrayList<Activity_groop>? = null
+
+
+
+    constructor( email: String,
+                 name: String,
+                 location: GeoPoint,
+                 bio: String,
+                 profilePicture: String?,
+                 createdGroops: ArrayList<DocumentReference>,
+                 joinedGroops: ArrayList<DocumentReference>,
+                 activities: ArrayList<Activity_groop>
+    )   {
+        this.email=email
+        this.name=name
+        this.location=location
+        this.bio=bio
+        this.profilePicture=""
+        this.createdGroops= createdGroops
+        this.joinedGroops = joinedGroops
+        this.activities = activities
+    }
+       constructor( email: String,
+                    name: String,
+                    location: GeoPoint,
+                    bio: String
+       )   {
+           this.email=email
+           this.name=name
+           this.location=location
+           this.bio=bio
+           this.profilePicture=""
+           this.createdGroops= ArrayList()
+           this.joinedGroops = ArrayList()
+           this.activities = ArrayList()
+       }
+
+}

@@ -17,10 +17,12 @@ class LocationServices {
     private lateinit var location : Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var context: Context
-    fun getLocation(context: Context)
+    fun getLocation(context: Context):Location
     {
         this.context=context
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locate()
+        return location
     }
     private fun locate(){
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -43,6 +45,7 @@ class LocationServices {
 
             }else{
                 location = it
+
             }
         }
 

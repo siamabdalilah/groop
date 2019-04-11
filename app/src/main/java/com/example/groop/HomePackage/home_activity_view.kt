@@ -12,16 +12,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.groop.DataModels.User
 import com.example.groop.R
+import com.example.groop.Util.DBManager
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.home_recycler_frag.*
 
 class home_activity_view: AppCompatActivity() {
 
     @SuppressLint("ValidFragment")
-    class home(contexter: Context, username: String) : Fragment() {
+    class home(contexter: Context, user: User) : Fragment() {
 
-        private val username = username
+        private val user = user
+        private val username = user.email
 
         private val auth = FirebaseAuth.getInstance()
         private var adapter = HomeAdapter()
@@ -38,7 +41,7 @@ class home_activity_view: AppCompatActivity() {
 
             home_recycler.layoutManager = LinearLayoutManager(context)
             home_recycler.adapter = adapter
-            activity_list=DBManager.getAllActivities();
+            activity_list= DBManager.getAllActivities();
             adapter.notifyDataSetChanged()
             var searchBy: String = activity_search_home.text as String
             activity_search_home.setOnFocusChangeListener { v, hasFocus ->
@@ -74,7 +77,7 @@ class home_activity_view: AppCompatActivity() {
                 p0.row.setOnClickListener {
                     val intent = Intent(p0.itemView.context, com.example.groop.HomePackage.edit_activity_info::class.java)
                     intent.putExtra("activity", activity)
-                    intent.putExtra("user", username)
+                    intent.putExtra("user", user)
                     startActivity(intent)
                 }
 

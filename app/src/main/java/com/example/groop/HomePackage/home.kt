@@ -2,6 +2,7 @@ package com.example.groop.HomePackage
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 
 import androidx.appcompat.app.AppCompatActivity
@@ -15,11 +16,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.example.groop.DataModels.User
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.home_display.*
 
 
 import com.example.groop.R
+import com.example.groop.Util.DBManager
 
 class home : AppCompatActivity() {
 
@@ -66,14 +69,15 @@ class home : AppCompatActivity() {
     }
     class MyPagerAdapter(fm: FragmentManager, context: Context) : FragmentPagerAdapter(fm) {
         var context=context
-        var username = DBManager.getUsername()
+        val intent = Intent()
+        var user = intent.getSerializableExtra("user") as User
         //gets which tab you are on and calls that method to inflate the fragment
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> {
-                    home_activity_view.home(context, username)
+                    home_activity_view.home(context, user)
                 }
-                else -> home_groop_view.home(context, username)
+                else -> home_groop_view.home(context, user)
             }
         }
 

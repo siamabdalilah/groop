@@ -3,14 +3,17 @@ package com.example.groop.HomePackage
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.groop.DataModels.User
 import com.example.groop.R
+import com.example.groop.Util.DBManager
 import kotlinx.android.synthetic.main.activity_interest_edit.*
 
 class edit_activity_info: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var username = intent.extras!!.getSerializable("user") as String
+        var user = intent.extras!!.getSerializable("user") as User
+        var username = user.email
         var activity: String = intent.extras!!.getSerializable("activity") as String
         home_activity_edit_name.text=activity
 
