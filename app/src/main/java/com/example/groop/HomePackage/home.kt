@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.example.groop.DataModels.User
+import com.example.groop.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.home_display.*
 
@@ -71,6 +72,9 @@ class home : AppCompatActivity() {
         var context=context
         val intent = Intent()
         var user = intent.getSerializableExtra("user") as User
+        //var locationTemp = LocationServices.getLocation(context)
+        //user.location = GeoPoint(locationTemp.latitude,locationTemp.longitude)
+
         //gets which tab you are on and calls that method to inflate the fragment
         override fun getItem(position: Int): Fragment {
             return when (position) {

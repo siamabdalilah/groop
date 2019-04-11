@@ -1,4 +1,5 @@
-package com.example.groop.HomePackage
+package com.example.groop
+
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,56 +17,41 @@ import com.example.groop.DataModels.User
 import com.example.groop.DataModels.groop
 import com.example.groop.LocationServices
 import com.example.groop.R
-import com.example.groop.Util.DBManager
-import com.example.groop.Util.Groop
-import com.example.groop.Util.findDistance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.home_groop_view.*
 import kotlinx.android.synthetic.main.home_recycler_frag.*
 import android.content.Intent.getIntent
+import com.example.groop.Util.*
 
 
+class display_groops : AppCompatActivity(){
 
+    private val myLoc = LocationServices.getLocation(this)
+    private val user= intent.getSerializableExtra("user") as User
+    private val username = user.email
+    private val auth = FirebaseAuth.getInstance()
+    private var adapter = HomeAdapter()
+    private var joined_groops: ArrayList<Groop> = ArrayList()
+    private var created_groops: ArrayList<Groop> = ArrayList()
+    private var my_groops: ArrayList<Groop> = ArrayList()
+    private var activity_list_temp: ArrayList<Groop> = ArrayList()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.home_groop_view)
 
-
-
-class home_groop_view : AppCompatActivity(){
-
-    @SuppressLint("ValidFragment")
-    class home(contexter: Context, user: User) : Fragment() {
-
-        private val myLoc = LocationServices.getLocation(this.context as Context)
-        private val user= user
-        private val username = user.email
-        private val auth = FirebaseAuth.getInstance()
-        private var adapter = HomeAdapter()
-        private var joined_groops: ArrayList<Groop> = ArrayList()
-        private var created_groops: ArrayList<Groop> = ArrayList()
-        private var my_groops: ArrayList<Groop> = ArrayList()
-        private var activity_list_temp: ArrayList<Groop> = ArrayList()
-
-
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-            return inflater.inflate(R.layout.home_groop_view, container, false)
-        }
-
-        override fun onStart() {
-            super.onStart()
-            search_by_distance.visibility= View.GONE
-            home_groops_recycler.layoutManager = LinearLayoutManager(context)
+            home_groops_recycler.layoutManager = LinearLayoutManager(this)
             home_groops_recycler.adapter = adapter
-            created_groops= DBManager.getGroopsBy(user.email)
-            joined_groops=DBManager.getGroopsJoinedBy(user.email)
-            my_groops.addAll(created_groops)
-            my_groops.addAll(joined_groops)
+            var locationTemp = LocationServices.getLocation(this)
+            user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
+            my_groops=DBManager.getSortedGroopList(user.location)
+            activity_list_temp=my_groops
             adapter.notifyDataSetChanged()
-            var searchBy: String = activity_search_home.text as String
-            activity_search_home.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = activity_search_home.text as String
+            var searchBy: String = search_by_category.text as String
+            search_by_category.setOnFocusChangeListener { v, hasFocus ->
+                var searchBy = search_by_category.text as String
                 if(!hasFocus){
-                    activity_list_temp=my_groops
                     if(searchBy!=""){
                         my_groops.clear()
                         for(grp in activity_list_temp){
@@ -77,6 +63,21 @@ class home_groop_view : AppCompatActivity(){
                     adapter.notifyDataSetChanged()
                 }
             }
+        search_by_distance.setOnFocusChangeListener { v, hasFocus ->
+            var searchBy = (search_by_distance.text as String).toIntOrNull()
+
+            if(!hasFocus){
+                if(searchBy!=null){
+                    my_groops.clear()
+                    for(grp in activity_list_temp){
+                        if(findDistance(grp.location,user.location)<=searchBy){
+                            my_groops.add(grp)
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+        }
         }
 
         fun groopsContainsActivity(g:ArrayList<groop>, category:String):ArrayList<groop>{
@@ -111,7 +112,6 @@ class home_groop_view : AppCompatActivity(){
                 p0.distance.text="Distance: "+findDistance(activity.location, GeoPoint(lat,lng))
                 p0.time.text="Time: "+activity.startTime.toString()
                 p0.row.setOnClickListener {
-                    search_by_distance.visibility= View.VISIBLE
                     val intent = Intent(p0.itemView.context, com.example.groop.groop_info::class.java)
                     intent.putExtra("activity", activity)
                     intent.putExtra("user", user)
@@ -137,5 +137,6 @@ class home_groop_view : AppCompatActivity(){
             }
         }
 
-    }
+
+
 }

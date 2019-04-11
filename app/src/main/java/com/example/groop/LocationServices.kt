@@ -14,44 +14,51 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 class LocationServices {
-    private lateinit var location : Location
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var context: Context
-    fun getLocation(context: Context):Location
-    {
-        this.context=context
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        locate()
-        return location
-    }
-    private fun locate(){
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(context as Activity,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
-            return
+    companion object {
 
+
+        private lateinit var location: Location
+        private lateinit var fusedLocationClient: FusedLocationProviderClient
+        private lateinit var context: Context
+        fun getLocation(context: Context): Location {
+            this.context = context
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+            locate()
+            return location
         }
-        fusedLocationClient.lastLocation.addOnSuccessListener {
-            if (it == null){
-//                toast(this, "Failed. Please try again")
-                fusedLocationClient.requestLocationUpdates(LocationRequest.create(), object : LocationCallback(){
-                    override fun onLocationResult(p0: LocationResult?) {
-                        super.onLocationResult(p0)
-                        toast(context, "got here")
-                        locate()
-                    }
-                }, null)
 
-            }else{
-                location = it
+        private fun locate() {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    context as Activity,
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
+                )
+                return
 
             }
+            fusedLocationClient.lastLocation.addOnSuccessListener {
+                if (it == null) {
+//                toast(this, "Failed. Please try again")
+                    fusedLocationClient.requestLocationUpdates(LocationRequest.create(), object : LocationCallback() {
+                        override fun onLocationResult(p0: LocationResult?) {
+                            super.onLocationResult(p0)
+                            toast(context, "got here")
+                            locate()
+                        }
+                    }, null)
+
+                } else {
+                    location = it
+
+                }
+            }
+
         }
 
-    }
-
-    private fun locatePrompt(){
-        toast(this.context, "Please locate first")
+        private fun locatePrompt() {
+            toast(this.context, "Please locate first")
+        }
     }
 }
