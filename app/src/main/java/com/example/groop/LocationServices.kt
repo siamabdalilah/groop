@@ -12,7 +12,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-
+import com.google.android.gms.location.LocationServices
 class LocationServices {
     private lateinit var location : Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -20,7 +20,7 @@ class LocationServices {
     fun getLocation(context: Context):Location
     {
         this.context=context
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         locate()
         return location
     }

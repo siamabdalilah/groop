@@ -17,6 +17,7 @@ import com.example.groop.HomePackage.home
 import com.example.groop.Util.isEmail
 import com.example.groop.Util.toast
 import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
@@ -34,9 +35,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
         switch_button.setOnClickListener{switch()}
         finish_button.setOnClickListener{login()}
         locate_button.setOnClickListener({locate()})
