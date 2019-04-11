@@ -46,10 +46,10 @@ import java.lang.IllegalArgumentException
 
             return Groop(
                 doc.get("capacity") as Int, doc.get("createdBy") as DocumentReference,
-                doc.get("description") as String, doc.get("location") as GeoPoint,
-                members, doc.get("name") as String,
+                doc.get("description").toString(), doc.get("location") as GeoPoint,
+                members, doc.get("name").toString(),
                 doc.get("numMembers") as Int, doc.get("startTime") as TimestampValue,
-                doc.get("type") as String
+                doc.get("type").toString()
             )
         }
 
@@ -77,8 +77,8 @@ import java.lang.IllegalArgumentException
                 }
 
             return User(
-                doc.id, doc.get("name") as String, doc.get("location") as GeoPoint,
-                doc.get("bio") as String, doc.get("profilePicture") as String,
+                doc.id, doc.get("name").toString(), doc.get("location") as GeoPoint,
+                doc.get("bio").toString(), doc.get("profilePicture").toString(),
                 createdGroops, joinedGroops, activityList
             )
         }
@@ -254,7 +254,7 @@ import java.lang.IllegalArgumentException
             return getUserGroops(email, "joinedGroops")
         }
 
-        /////////////////////////ALL BETS ARE OFF
+        /////////////////////////MISC. GETS
         /**
          * Given a user, represented as an email, returns an arraylist
          * of activity objects including every activity that the user
@@ -279,13 +279,18 @@ import java.lang.IllegalArgumentException
             return activityList
         }
 
+        ////////////////////////SET DOCUMENT INFO
         /**
          * Updates the info for an activity that one user has expressed
          * interest in.
          * Void method, writes to the user's list of activities
          */
         fun updateActivityInfo(email: String, activity: String, bio: String) {
-            //TODO
+            //access the user's information
+            val map: HashMap<String, String> = HashMap<String, String>()
+            map.put("description", bio)
+            //either create the document anew if it hasn't been created already, or simply update the description
+            db.collection(users).document(email).collection(activities).document(activity).set(map)
         }
     }
 }
