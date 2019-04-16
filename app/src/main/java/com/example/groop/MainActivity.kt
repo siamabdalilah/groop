@@ -1,47 +1,29 @@
 package com.example.groop
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.View
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.groop.DataModels.User
-import com.example.groop.HomePackage.home
+import android.view.ViewGroup
+import android.widget.Toast
 import com.example.groop.Util.isEmail
 import com.example.groop.Util.toast
-import com.google.android.gms.location.*
-import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private val db = FirebaseFirestore.getInstance()
     private var state = true // Login
     private val auth = FirebaseAuth.getInstance()
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var isLocated = false
-    private lateinit var location : Location
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-
-        val intent = Intent(this, HomeActivity::class.java)
-
-        startActivity(intent)
 
         switch_button.setOnClickListener{switch()}
         finish_button.setOnClickListener{login()}
-        locate_button.setOnClickListener{locate()}
     }
 
     fun switch(){
@@ -52,9 +34,9 @@ class MainActivity : AppCompatActivity() {
                 log_status.text = "Sign Up"
                 switch_button.text = "Login"
                 finish_button.text = "Sign Up"
-                finish_button.setOnClickListener{locatePrompt()}
-                signup_info.visibility = View.VISIBLE
-                locate_button.visibility = View.VISIBLE
+                finish_button.setOnClickListener{signup()}
+                finish_button.setOnClickListener{signup()}
+                confirm_password_container.visibility = View.VISIBLE
             }
             else -> {
                 state = true
@@ -62,25 +44,18 @@ class MainActivity : AppCompatActivity() {
                 switch_button.text = "Sign Up"
                 finish_button.text = "Login"
                 finish_button.setOnClickListener{login()}
-                signup_info.visibility = View.GONE
-                locate_button.visibility = View.GONE
-
-                user_confirm_password.setText("")
-                user_name.setText("")
-                bio_info.setText("")
-                isLocated = false
+                confirm_password_container.visibility = View.GONE
             }
         }
     }
 
-    private fun login(){
+    fun login(){
         val email = user_email.text.toString()
         if (!isEmail(email)) {
             toast(this, "Please enter valid email")
-            return
         }
         val password = user_password.text.toString()
-
+/*
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
             if (it.isSuccessful){
                 val intent = Intent(this, HomeActivity::class.java)
@@ -90,70 +65,70 @@ class MainActivity : AppCompatActivity() {
                 toast(this, "sign in failed")
             }
         }
+        */
     }
 
-    private fun signup(){
-        if (user_confirm_password.text.toString() != user_password.text.toString()) {
-            toast(this, "Password does not match")
-            return
-        }
-        if (user_name.text.toString() == "") {
-            toast(this, "Name cannot be empty")
-            return
-        }
+    fun signup(){
+        var TAG: String = "emailPassword"
+        var email = user_email.text as String
+        var password = user_password.text as String
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "createUserWithEmail:success")
 
-        val email = user_email.text.toString()
-        val password = user_password.text.toString()
-        val name = user_name.text.toString()
-        val bio = bio_info.text.toString()
-        val loc = GeoPoint(location.latitude, location.longitude)
-        val user = User(email, name,loc, bio)
+                    //add the new user to the database
+                    addUser(email)
 
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
-            if (it.isSuccessful){
-                db.collection("users").document(user.email).set(user)
-                val intent = Intent(this, home::class.java)
-                intent.putExtra("user",user)
-                startActivity(intent)
-            }else{
-                toast(this, "Failed. Try again")
+                    val user = auth.currentUser
+                   // updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                   // updateUI(null)
+                }
+
+                // [START_EXCLUDE]
+                // hideProgressDialog() //maybe put back in
+                // [END_EXCLUDE]
             }
-        }
+
     }
-
-
-    private fun locate(){
-        if (ContextCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
-            return
-
+/*
+    private fun updateUI(user: FirebaseUser?) {
+        if (user != null) {
+            val intent = Intent(this, Dashboard::class.java)
+            intent.putExtra("username", user?.email)
+            startActivity(intent)
         }
-        fusedLocationClient.lastLocation.addOnSuccessListener {
-            if (it == null){
-//                toast(this, "Failed. Please try again")
-                fusedLocationClient.requestLocationUpdates(LocationRequest.create(), object : LocationCallback(){
-                    override fun onLocationResult(p0: LocationResult?) {
-                        super.onLocationResult(p0)
-                        toast(this@MainActivity, "got here")
-                        locate()
-                    }
-                }, null)
+        */
+    }
+    private fun addUser(email: String) {
+        var TAG:String="addUser"
+        // add user to database, indexed by email, including win and loss count (both 0)
+        val newUserInfo = HashMap<String, Any>()
+        newUserInfo["winCount"] = 0
+        newUserInfo["lossCount"] = 0
+        newUserInfo["moneyCount"]=100
 
-            }else{
-                location = it
-                isLocated = true
-                TransitionManager.beginDelayedTransition(login_screen_button_container)
-                locate_button.visibility = View.GONE
-                finish_button.setOnClickListener{signup()}
+        //users are indexed by their email
+        //so we create a new document with the email as the ID
+        //NOTE: overrides any previous account data that the
+        // user might have
+        /*
+        db.collection(Dashboard.usersPath).document(email)
+            .set(newUserInfo)
+            .addOnSuccessListener {
+                Log.d(TAG, "New user added successfully")
             }
-        }
-
+            .addOnFailureListener {
+                Log.d(TAG, "New user could not be added")
+            }*/
     }
 
-    private fun locatePrompt(){
-        toast(this, "Please locate first")
-    }
-
-}
+//}
