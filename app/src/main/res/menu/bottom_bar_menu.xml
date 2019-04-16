@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/nav_home"
+            android:title="Home"
+            app:showAsAction="always|withText"
+            android:icon="@drawable/ic_home_black_24dp"
+        />
+    <item
+            android:id="@+id/nav_people"
+            android:title="People"
+            app:showAsAction="always|withText"
+            android:icon="@drawable/ic_people_black_24dp"
+            />
+    <item
+            android:id="@+id/nav_groops"
+            android:title="Groops"
+            app:showAsAction="always|withText"
+            android:checked="true"
+            android:icon="@drawable/ic_group_work_black_24dp"
+            />
+</menu>
