@@ -31,8 +31,7 @@ import java.lang.IllegalArgumentException
         private fun parseActivity(doc: DocumentSnapshot): Activity_groop {
             return Activity_groop(
                 doc.id,
-                doc.get("description") as String?,
-                doc.get("skill") as Int?
+                doc.get("description").toString()
             )
         }
 
@@ -216,7 +215,7 @@ import java.lang.IllegalArgumentException
         private fun getUserGroops(email: String, createdOrJoined: String): ArrayList<Groop> {
             if (createdOrJoined != "joinedGroops" && createdOrJoined != "createdGroops") {
                 //not using the method properly
-                throw IllegalArgumentException()
+                throw IllegalArgumentException("Does not work")
             }
 
             val groops = ArrayList<Groop>()
@@ -242,7 +241,7 @@ import java.lang.IllegalArgumentException
          * Returns an ArrayList of groops that have been created by
          * the user specified by the email
          */
-        fun getGroopsBy(email: String): ArrayList<Groop> {
+        fun getGroopsBy(email: String, gotten: (ArrayList<Groop>) -> Any?): ArrayList<Groop> {
             return getUserGroops(email, "createdGroops")
         }
 
@@ -250,7 +249,7 @@ import java.lang.IllegalArgumentException
          * Returns an ArrayList of Groop objects that have been
          * joined by the user specified in this email
          */
-        fun getGroopsJoinedBy(email: String): ArrayList<Groop> {
+        fun getGroopsJoinedBy(email: String, gotten: (ArrayList<Groop>) -> Any?): ArrayList<Groop> {
             return getUserGroops(email, "joinedGroops")
         }
 
@@ -260,11 +259,12 @@ import java.lang.IllegalArgumentException
          * of activity objects including every activity that the user
          * is interested in
          */
-        fun getUserActivityList(email: String): ArrayList<Activity_groop> {
+        //getUserActivityList("billiam@gmail.com", (activityList) -> {this.list = activityList})
+        fun getUserActivityList(email: String, gotten: (ArrayList<Activity_groop>) -> Any?) {
             val activityList = ArrayList<Activity_groop>()
 
-            db.collection(users).document(email).collection(activities).get()
-                .addOnSuccessListener { query ->
+            val task = db.collection(users).document(email).collection(activities).get()
+                task.addOnSuccessListener { query ->
                     //go through each activity in the collection
                     val docList = query.documents
 
@@ -273,10 +273,8 @@ import java.lang.IllegalArgumentException
                         activityList.add(parseActivity(doc))
                     }
 
+                    gotten(activityList)
                 }
-
-            //list should now be full of activity objects
-            return activityList
         }
 
         ////////////////////////SET DOCUMENT INFO
