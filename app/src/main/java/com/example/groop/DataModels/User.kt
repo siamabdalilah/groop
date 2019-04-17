@@ -57,5 +57,8 @@ import java.io.Serializable
 //           this.joinedGroops = ArrayList()
 //           this.activities = ArrayList()
 //       }
-//
-//}
+//       constructor(email:String){
+//           this.email=email
+//       }
+
+}
