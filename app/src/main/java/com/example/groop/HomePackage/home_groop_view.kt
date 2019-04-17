@@ -45,13 +45,14 @@ class home_groop_view : AppCompatActivity(){
             return inflater.inflate(R.layout.home_groop_view, container, false)
         }
 
+
         override fun onStart() {
             super.onStart()
             search_by_distance.visibility= View.GONE
             home_groops_recycler.layoutManager = LinearLayoutManager(context)
             home_groops_recycler.adapter = adapter
-            created_groops= DBManager.getGroopsBy(user.email)
-            joined_groops=DBManager.getGroopsJoinedBy(user.email)
+            DBManager.getGroopsBy(user.email,{this::GetCreatedGroops})
+            DBManager.getGroopsJoinedBy(user.email,{this::GetJoinedArray})
             my_groops.addAll(created_groops)
             my_groops.addAll(joined_groops)
             adapter.notifyDataSetChanged()
@@ -71,6 +72,14 @@ class home_groop_view : AppCompatActivity(){
                     adapter.notifyDataSetChanged()
                 }
             }
+        }
+
+        fun GetJoinedArray(arr:ArrayList<Groop>){
+            joined_groops=arr
+        }
+
+        fun GetCreatedGroops(arr:ArrayList<Groop>){
+            created_groops=arr
         }
 
         fun groopsContainsActivity(g:ArrayList<groop>, category:String):ArrayList<groop>{

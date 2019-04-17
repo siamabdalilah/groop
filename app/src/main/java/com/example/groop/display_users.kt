@@ -14,6 +14,7 @@ import com.example.groop.DataModels.User
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.findDistance
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.display_users.*
 import com.squareup.picasso.Picasso
@@ -26,6 +27,7 @@ class display_users: AppCompatActivity() {
     private var adapter = HomeAdapter()
     private var my_groops: ArrayList<User> = ArrayList()
     private var activity_list_temp: ArrayList<User> = ArrayList()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,10 @@ class display_users: AppCompatActivity() {
         user_display_recycler.adapter = adapter
         var locationTemp = LocationServices.getLocation(this)
         user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
-        my_groops= DBManager.getAllUsers()
+        db.collection("users").get().addOnSuccessListener { snapshot ->
+            my_groops= DBManager.getAllUsers(snapshot)
+        }
+       // my_groops= DBManager.getAllUsers()
         my_groops.remove(user)
         activity_list_temp=my_groops
         adapter.notifyDataSetChanged()
@@ -49,7 +54,7 @@ class display_users: AppCompatActivity() {
                     for(usr in activity_list_temp){
                         //for each activity in the given user check if he is interested in the specified activity
                         for(activityT in usr.activities){
-                            if(activityT.getName()==searchBy){
+                            if(activityT.name==searchBy){
                                 my_groops.add(usr)
                             }
                         }
