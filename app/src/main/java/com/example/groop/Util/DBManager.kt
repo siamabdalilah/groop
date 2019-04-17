@@ -271,7 +271,7 @@ class DBManager {
 
                     //mostly, we're just going to invoke the parseGroop method
                     groop.get().addOnSuccessListener { doc ->
-                        val g = doc.toObject(Groop::class.java)
+                        val g = doc.toObject(Groop::class.java) //TODO throws deserialization error
                         if (g != null) {
                             groops.add(g)
                         }

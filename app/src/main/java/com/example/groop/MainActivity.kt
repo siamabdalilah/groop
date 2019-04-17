@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.groop.DataModels.User
+import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.isEmail
 import com.example.groop.Util.toast
@@ -24,7 +25,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //TODO - check to make sure Google Play account can use messaging
-
+        intent.putExtra("username", "Raccardi Firbase")
+        val intent = Intent(this, home::class.java)
+        startActivity(intent)
         switch_button.setOnClickListener{switch()}
         finish_button.setOnClickListener{login()}
     }
