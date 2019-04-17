@@ -1,11 +1,14 @@
 package com.example.groop.Util
 
 import android.app.Activity
+import android.util.Log
 import com.example.groop.DataModels.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.model.value.TimestampValue
 import java.lang.IllegalArgumentException
+import java.util.Date
+import java.sql.Timestamp
 
 class DBManager {
 
@@ -39,12 +42,13 @@ class DBManager {
         private fun parseGroop(doc: DocumentSnapshot): Groop {
             //TODO: not quite sure how firebase handles arrays, actually
             val members = doc.get("members") as ArrayList<DocumentReference>
-
+           var d: Date? = doc.getDate("startTime")
+            Log.d("ANDROID",d.toString())
             return Groop(
                 (doc.get("capacity") as Long).toInt(), doc.get("createdBy") as DocumentReference,
                 doc.get("description").toString(), doc.get("location") as GeoPoint,
                 members, doc.get("name").toString(),
-                (doc.get("numMembers") as Long).toInt(), doc.get("startTime") as TimestampValue,
+                (doc.get("numMembers") as Long).toInt(), doc.getDate("startTime") as Date,
                 doc.get("type").toString()
             )
         }
@@ -288,6 +292,7 @@ class DBManager {
                             //so now we've finished all of the get requests
                             //safe to call the callback function
                             gotten(groops)
+                            Log.d("ANDROID","got here")
                         }
                     }
                 }

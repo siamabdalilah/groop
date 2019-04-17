@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         //TODO - check to make sure Google Play account can use messaging
 
-        val intent = Intent(this, display_groops::class.java)
+        val intent = Intent(this, home::class.java)
         //val extras = Bundle()
         //extras.putString("username", "Raccardi Firbase")
        // val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")

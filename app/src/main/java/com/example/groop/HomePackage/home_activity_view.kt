@@ -44,12 +44,13 @@ class home_activity_view: AppCompatActivity() {
             home_recycler.adapter = adapter
             db.collection("activities").get().addOnSuccessListener { snapshot ->
                 activity_list= DBManager.getAllActivities(snapshot)
+                adapter.notifyDataSetChanged()
             }
             //activity_list= DBManager.getAllActivities();
             adapter.notifyDataSetChanged()
             var searchBy: String = activity_search_home.text as String
             activity_search_home.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = activity_search_home.text as String
+                var searchBy = ""+activity_search_home.text
                 if(!hasFocus){
                     activity_list_temp=activity_list
                     if(searchBy!=""){
@@ -79,9 +80,9 @@ class home_activity_view: AppCompatActivity() {
                 val activity = activity_list[p1]
                 p0.category_text.text = activity
                 p0.row.setOnClickListener {
-                    val intent = Intent(p0.itemView.context, com.example.groop.HomePackage.edit_activity_info::class.java)
+                    val intent = Intent(p0.itemView.context, edit_activity_info::class.java)
                     intent.putExtra("activity", activity)
-                    intent.putExtra("user", user)
+                    intent.putExtra("user", user) //TODO cannot be serialized
                     startActivity(intent)
                 }
 

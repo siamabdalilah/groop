@@ -42,13 +42,14 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
             user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
             db.collection("groops").get().addOnSuccessListener { snapshot ->
                 my_groops=getAllGroops(snapshot)
+                adapter.notifyDataSetChanged()
             }
             //my_groops=DBManager.getSortedGroopList(my_groops,user.location)
             activity_list_temp=my_groops
             adapter.notifyDataSetChanged()
             var searchBy: String = search_by_category.text as String
             search_by_category.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = search_by_category.text as String
+                var searchBy = ""+search_by_category.text
                 if(!hasFocus){
                     if(searchBy!=""){
                         my_groops.clear()
@@ -62,7 +63,7 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                 }
             }
         search_by_distance.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = (search_by_distance.text as String).toIntOrNull()
+            var searchBy = (""+search_by_distance.text).toIntOrNull()
 
             if(!hasFocus){
                 if(searchBy!=null){
@@ -70,6 +71,7 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                     for(grp in activity_list_temp){
                         if(findDistance(grp.location,user.location)<=searchBy){
                             my_groops.add(grp)
+                            adapter.notifyDataSetChanged()
                         }
                     }
                 }

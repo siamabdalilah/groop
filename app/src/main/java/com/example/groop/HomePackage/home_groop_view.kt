@@ -52,10 +52,8 @@ class home_groop_view : AppCompatActivity(){
             textView2.visibility=View.GONE
             home_groops_recycler.layoutManager = LinearLayoutManager(context)
             home_groops_recycler.adapter = adapter
-            DBManager.getGroopsBy(user.email,{this::GetCreatedGroops})
-            DBManager.getGroopsJoinedBy(user.email,{this::GetJoinedArray})
-            my_groops.addAll(created_groops)
-            my_groops.addAll(joined_groops)
+            DBManager.getGroopsBy(user.email,this::GetCreatedGroops) //TODO this is not working
+            DBManager.getGroopsJoinedBy(user.email,this::GetJoinedArray)
             adapter.notifyDataSetChanged()
             var searchBy: String = search_by_category.text as String
             search_by_category.setOnFocusChangeListener { v, hasFocus ->
@@ -76,11 +74,13 @@ class home_groop_view : AppCompatActivity(){
         }
 
         fun GetJoinedArray(arr:ArrayList<Groop>){
-            joined_groops=arr
+           my_groops.addAll(arr)
+            adapter.notifyDataSetChanged()
         }
 
         fun GetCreatedGroops(arr:ArrayList<Groop>){
-            created_groops=arr
+            my_groops.addAll(arr)
+            adapter.notifyDataSetChanged()
         }
 
         fun groopsContainsActivity(g:ArrayList<groop>, category:String):ArrayList<groop>{
