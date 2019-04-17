@@ -5,7 +5,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.GeoPoint
 import java.io.Serializable
 
-    data class User(var email: String, var name: String, var location: GeoPoint, var bio: String = "",
+    data class User(var email: String, var name: String="", var location: GeoPoint=GeoPoint(0.0,0.0), var bio: String = "",
                     var profilePicture: String? = null, var createdGroops: ArrayList<DocumentReference> = ArrayList(),
                     var joinedGroops: ArrayList<DocumentReference> = ArrayList(),
                     var activities: ArrayList<Activity_groop> = ArrayList()): Serializable
