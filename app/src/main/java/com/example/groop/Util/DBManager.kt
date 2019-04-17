@@ -41,10 +41,10 @@ class DBManager {
             val members = doc.get("members") as ArrayList<DocumentReference>
 
             return Groop(
-                doc.get("capacity") as Int, doc.get("createdBy") as DocumentReference,
+                (doc.get("capacity") as Long).toInt(), doc.get("createdBy") as DocumentReference,
                 doc.get("description").toString(), doc.get("location") as GeoPoint,
                 members, doc.get("name").toString(),
-                doc.get("numMembers") as Int, doc.get("startTime") as TimestampValue,
+                (doc.get("numMembers") as Long).toInt(), doc.get("startTime") as TimestampValue,
                 doc.get("type").toString()
             )
         }
@@ -109,7 +109,7 @@ class DBManager {
             //add each group to the list through this ridiculous process
             for (doc in docList) {
                 //add a new Groop to the list
-                val g = doc.toObject(Groop::class.java) //TODO this does not convert
+                val g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO this does not convert
                 if (g != null) {
                     groopList.add(g)
                 }
@@ -271,7 +271,7 @@ class DBManager {
 
                     //mostly, we're just going to invoke the parseGroop method
                     groop.get().addOnSuccessListener { doc ->
-                        val g = doc.toObject(Groop::class.java) //TODO throws deserialization error
+                        val g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO throws deserialization error
                         if (g != null) {
                             groops.add(g)
                         }
