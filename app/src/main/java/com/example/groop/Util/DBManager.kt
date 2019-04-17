@@ -109,7 +109,7 @@ class DBManager {
             //add each group to the list through this ridiculous process
             for (doc in docList) {
                 //add a new Groop to the list
-                val g = doc.toObject(Groop::class.java)
+                val g = doc.toObject(Groop::class.java) //TODO this does not convert
                 if (g != null) {
                     groopList.add(g)
                 }

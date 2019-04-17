@@ -9,13 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.groop.DataModels.User
+import com.example.groop.HomePackage.edit_activity_info
 import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.isEmail
 import com.example.groop.Util.toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
     private var state = true // Login
@@ -25,8 +28,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //TODO - check to make sure Google Play account can use messaging
-        intent.putExtra("username", "Raccardi Firbase")
-        val intent = Intent(this, home::class.java)
+
+        val intent = Intent(this, display_groops::class.java)
+        //val extras = Bundle()
+        //extras.putString("username", "Raccardi Firbase")
+       // val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
+        //intent.putExtra("user",user as Serializable)
+        //extras.putString("activity","Water Polo")
+        //intent.putExtras(extras)
         startActivity(intent)
         switch_button.setOnClickListener{switch()}
         finish_button.setOnClickListener{login()}

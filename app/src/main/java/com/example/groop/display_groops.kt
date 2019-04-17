@@ -21,8 +21,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class display_groops : AppCompatActivity(){
 
-    private val myLoc = LocationServices.getLocation(this)
-    private val user= intent.getSerializableExtra("user") as User
+    private val myLoc = GeoPoint(0.0,0.0)//TODO LocationServices.getLocation(this)
+//    private val user= intent.getSerializableExtra("user") as User //TODO
+val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
     private val username = user.email
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var adapter = HomeAdapter()
@@ -37,7 +38,7 @@ class display_groops : AppCompatActivity(){
 
             home_groops_recycler.layoutManager = LinearLayoutManager(this)
             home_groops_recycler.adapter = adapter
-            var locationTemp = LocationServices.getLocation(this)
+            var locationTemp =GeoPoint(0.0,0.0)//TODO LocationServices.getLocation(this)
             user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
             db.collection("groops").get().addOnSuccessListener { snapshot ->
                 my_groops=getAllGroops(snapshot)
