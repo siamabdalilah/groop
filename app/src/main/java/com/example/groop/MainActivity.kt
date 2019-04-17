@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.groop.DataModels.User
+import com.example.groop.Util.DBManager
 import com.example.groop.Util.isEmail
 import com.example.groop.Util.toast
 import com.google.firebase.auth.FirebaseAuth
@@ -21,9 +23,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //TODO - check to make sure Google Play account can use messaging
 
         switch_button.setOnClickListener{switch()}
         finish_button.setOnClickListener{login()}
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //TODO - check to make sure Google Play account can use messaging
     }
 
     fun switch(){
@@ -109,12 +117,11 @@ class MainActivity : AppCompatActivity() {
         */
     }
     private fun addUser(email: String) {
-        var TAG:String="addUser"
-        // add user to database, indexed by email, including win and loss count (both 0)
-        val newUserInfo = HashMap<String, Any>()
-        newUserInfo["winCount"] = 0
-        newUserInfo["lossCount"] = 0
-        newUserInfo["moneyCount"]=100
+
+        //TODO - prompt the user to input all of their information
+        //for now, just create the default user with only an email
+        //will probably rewrite this document wholesale later
+        DBManager.addUser(User(email))
 
         //users are indexed by their email
         //so we create a new document with the email as the ID

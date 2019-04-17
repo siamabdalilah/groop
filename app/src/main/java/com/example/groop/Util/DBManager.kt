@@ -359,6 +359,7 @@ class DBManager {
             db.collection(Paths.activities).document(activityName).set(activity)
         }
 
+        /////////////////////////////////MESSAGING
         /**
          * Used for messaging
          * TODO
@@ -367,6 +368,13 @@ class DBManager {
             val map: HashMap<String, String> = HashMap()
             map.put("token", token)
             db.collection(users).document(email).set(map)
+        }
+
+        /**
+         * Well, we'll see
+         */
+        fun getToken(doc: DocumentSnapshot): String? {
+            return doc.get("token") as String?
         }
     }
 }
