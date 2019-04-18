@@ -46,7 +46,7 @@ class home_groop_view : AppCompatActivity(){
 
         override fun onStart() {
             super.onStart()
-            username=auth.currentUser!!.email as String
+            username=auth.currentUser!!.email!!
 
             search_by_distance.visibility= View.GONE
             textView2.visibility=View.GONE
@@ -56,9 +56,9 @@ class home_groop_view : AppCompatActivity(){
             DBManager.getGroopsBy(username,this::GetCreatedGroops) //TODO this is not working
             DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
             adapter.notifyDataSetChanged()
-            var searchBy: String = search_by_category.text as String
+            var searchBy: String = ""+search_by_category.text
             search_by_category.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = search_by_category.text as String
+                var searchBy = ""+search_by_category.text
                 if(!hasFocus){
                     activity_list_temp=my_groops
                     if(searchBy!=""){
