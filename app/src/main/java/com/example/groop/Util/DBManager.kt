@@ -51,7 +51,7 @@ class DBManager {
                 doc.get("description").toString(), doc.get("location") as GeoPoint,
                 members, doc.get("name").toString(),
                 (doc.get("numMembers") as Long).toInt(), doc.getDate("startTime") as Date,
-                doc.get("type").toString()
+                doc.get("type").toString(), doc.id
             )
         }
 
@@ -212,7 +212,7 @@ class DBManager {
             for (groop in listOfGroopDocuments) {
                 //mostly, we're just going to invoke the parseGroop method
                 groop.get().addOnSuccessListener { snapshot ->
-                    val g = snapshot.toObject(Groop::class.java)
+                    val g = parseGroop(snapshot)
                     if (g != null) {
                         groops.add(g)
                     }
@@ -375,8 +375,6 @@ class DBManager {
 
         /////////////////////////////////MESSAGING
 
-
-
         /**
          * Takes in data about the message as well as a callback method
          * to update the UI
@@ -407,20 +405,21 @@ class DBManager {
         /**
          * Takes in data about the message as well as a callback method
          * to update the UI.
-         * Unlike the above method, requires the Groop to be a document
-         * reference rather than a string
+         * Like the above method, requires the Groop ID to be passed
+         * in as a string, except this time the ID is some random assortment
+         * of nonsense.
          *
          * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
          * FUNCTION INSTEAD OF RETURNING UPON COMPLETION
          */
-        fun sendMessageToGroop(from: String, groop: DocumentReference,
+        fun sendMessageToGroop(from: String, groopID: String,
                                content: String, sent: () -> Any? = {}) {
             val currentDate = Date()
 
             //don't need a "to" field on this li'l guy at all
             val message = Message(from, currentDate, content)
             //add the message to the groop's collection
-            groop.set(message)
+            db.collection(Paths.groops).document(groopID).set(message)
                     //update the UI if applicable
                 .addOnSuccessListener {
                     sent()

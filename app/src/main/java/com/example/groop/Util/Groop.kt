@@ -20,6 +20,7 @@ class Groop: Serializable {
     var numMembers: Int = 0
     var startTime: Date? = null
     var type: String = ""
+    var id: String? = null
 
     constructor(
         capacity: Int, creator: DocumentReference, description: String,
@@ -37,7 +38,25 @@ class Groop: Serializable {
         this.type = type
 
     }
-    constructor() {
 
+    /**
+     * A second constructor used specifically for the Messaging function,
+     * when a Groop object might need an ID as well
+     */
+    constructor(
+        capacity: Int, creator: DocumentReference, description: String,
+        location: GeoPoint, members: ArrayList<DocumentReference>, name: String,
+        numMembers: Int, startTime: Date, type: String, id: String
+    ) {
+        this.capacity = capacity
+        this.creator = creator
+        this.description = description
+        this.location = location
+        this.members = members
+        this.name = name
+        this.numMembers = numMembers
+        this.startTime = startTime
+        this.type = type
+        this.id = id
     }
 }
