@@ -2,6 +2,7 @@ package com.example.groop.Util
 
 import android.app.Activity
 import android.util.Log
+import com.example.groop.DataModels.Message
 import com.example.groop.DataModels.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
@@ -18,6 +19,7 @@ class DBManager {
         val activities: String = "activities"
         val groops: String = "groops"
         val users: String = "users"
+        val messages: String = "messages"
 
 
         //okay boys, here we go
@@ -81,6 +83,13 @@ class DBManager {
                 doc.id, doc.get("name").toString(), doc.get("location") as GeoPoint,
                 doc.get("bio").toString(), doc.get("profilePicture").toString(),
                 createdGroops, joinedGroops, activityList
+            )
+        }
+
+        fun parseMessage(doc: DocumentSnapshot) : Message {
+            return Message(
+                doc.get("from").toString(), doc.get("to").toString(),
+                doc.get("timeStamp") as Date, doc.get("content").toString()
             )
         }
 
@@ -365,21 +374,83 @@ class DBManager {
         }
 
         /////////////////////////////////MESSAGING
+
+
+
         /**
+         * Takes in data about the message as well as a callback method
+         * to update the UI
+         *
+         * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
+         * FUNCTION INSTEAD OF RETURNING UPON COMPLETION
+         */
+        fun sendMessageToUser(from: String, to: String, content: String,
+                              sent: () -> Any? = {}) {
+            val currentDate = Date()
+
+            //sender and receiver messages are identical
+            val message = Message(from, to, currentDate, content)
+            //add the message first to the receiver's collection
+            db.collection(Paths.users).document(to).collection(Paths.messages)
+                .document().set(message)
+            //and then to the sender's
+            db.collection(Paths.users).document(from).collection(Paths.messages)
+                .document().set(message)
+                    //after the sender's collection is changed, we want
+                    // to update the UI with the callback
+                    //might also do nothing
+                .addOnSuccessListener {
+                    sent()
+                }
+        }
+
+        /**
+         * Returns an arraylist of message objects from the collection
+         * specified by the passed in query snapshot.  If "otherUser" is
+         * passed in as a parameter, will only return messages where that
+         * user is either the sender or the recipient
+         *
+         * Works for either a Groop's message history or an individual's message
+         * history.
+         */
+        fun getMessageMessageHistory(query: QuerySnapshot, otherUser: String? = null)
+            : ArrayList<Message> {
+            var messages = ArrayList<Message>()
+
+            //first, look at every document in the specified query snapshot
+            val docList = query.documents
+            for (doc in docList) {
+                //construct a new activity from the given fields
+                messages.add(parseMessage(doc))
+            }
+
+            //if another user was passed in as a parameter, then
+            // filters the array based on that
+            if (otherUser != null) {
+                messages = messages.filter {message ->
+                    message.from == otherUser || message.to == otherUser
+                } as ArrayList<Message>
+            }
+
+            return messages
+        }
+
+        /*
          * Used for messaging
          * TODO
-         */
+
         fun sendRegistrationToServer(token: String, email: String) {
             val map: HashMap<String, String> = HashMap()
             map.put("token", token)
             db.collection(users).document(email).set(map)
         }
 
-        /**
+
          * Well, we'll see
-         */
+
         fun getToken(doc: DocumentSnapshot): String? {
             return doc.get("token") as String?
         }
+        */
     }
 }
