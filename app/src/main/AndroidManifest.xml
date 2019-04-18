@@ -21,8 +21,6 @@
 
         <activity android:name=".HomePackage.home">
         </activity>
-        <activity android:name=".HomeActivity">
-        </activity>
         <activity android:name=".display_groops">
         </activity>
         <activity android:name=".display_users">
