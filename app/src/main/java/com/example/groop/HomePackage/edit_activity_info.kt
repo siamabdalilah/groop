@@ -6,26 +6,32 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.groop.DataModels.User
 import com.example.groop.R
 import com.example.groop.Util.DBManager
+import com.example.groop.Util.DBManager.Paths.updateActivityInfo
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.activity_interest_edit.*
 
 class edit_activity_info: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        var user = intent.extras!!.getSerializable("user") as User
+        setContentView(R.layout.activity_interest_edit)
+        //val intent = Intent()
+        //val extras = intent.extras
+
+        var activity: String = "Water Polo"
+       // var user = intent.extras.get("user") as User
+        val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
         var username = user.email
-        var activity: String = intent.extras!!.getSerializable("activity") as String
         home_activity_edit_name.text=activity
 
         home_activity_edit_button.setOnClickListener {
-            var bio = home_activity_edit_description.text as String
+            var bio = ""+home_activity_edit_description.text
             DBManager.updateActivityInfo(username, activity, bio)
-            val intent = Intent(this@edit_activity_info, home_activity_view::class.java)
+            val intent = Intent(this@edit_activity_info, home::class.java)
             intent.putExtra("user", username)
             startActivity(intent)
         }
         home_activity_edit_back_button.setOnClickListener {
-            val intent = Intent(this@edit_activity_info, home_activity_view::class.java)
+            val intent = Intent(this@edit_activity_info, home::class.java)
             intent.putExtra("user", username)
             startActivity(intent)
         }

@@ -1,10 +1,8 @@
 package com.example.groop.Util
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -12,7 +10,6 @@ import com.example.groop.*
 import com.example.groop.HomePackage.home
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 
 fun toast(context: Context, text: String){
@@ -28,28 +25,29 @@ fun isEmail(text: String) : Boolean {
  * Insert this function below bottom nav activities and pass the bottom_bar_{activityname}.bottom_bar_layout
  * to set up the bottom navigation bar
  */
-fun setupBottomNav(context: AppCompatActivity, view: BottomNavigationView, view2: Toolbar){
+fun setupNav(activity: AppCompatActivity, toolbar: Toolbar, bottomBar: BottomNavigationView
+){
     // not quite sure if this is necessary yet
-    val act = when(context){
+    val act = when(activity){
         is home     -> {
-            view.selectedItemId = R.id.nav_home
-            context
+            bottomBar.selectedItemId = R.id.nav_home
+            activity
         }
         is display_users    -> {
-            view.selectedItemId = R.id.nav_people
-            context
+            bottomBar.selectedItemId = R.id.nav_people
+            activity
         }
         is display_groops   -> {
-            view.selectedItemId = R.id.nav_groops
-            context
+            bottomBar.selectedItemId = R.id.nav_groops
+            activity
         }
         else                -> {
             Log.wtf("wtf", "How the f did this happen")
-            context as home
+            activity as HomeActivity
         }
     }
 
-    view.setOnNavigationItemSelectedListener {
+    bottomBar.setOnNavigationItemSelectedListener {
         val intent = when(it.title){
             "Home"      -> {
                 Log.d("title", "Home")
@@ -71,14 +69,14 @@ fun setupBottomNav(context: AppCompatActivity, view: BottomNavigationView, view2
         false
     }
 
-    context.setSupportActionBar(view2)
-    view2.setOnMenuItemClickListener{
+    activity.setSupportActionBar(toolbar)
+    toolbar.setOnMenuItemClickListener{
         when(it.title){
             "Sign Out" -> {
                 FirebaseAuth.getInstance().signOut()
-                val intent = Intent(context, MainActivity::class.java)
+                val intent = Intent(activity, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
+                activity.startActivity(intent)
             }
             else -> {
                 Log.wtf("menu", it.title.toString())

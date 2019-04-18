@@ -13,19 +13,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.findDistance
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.display_users.*
 import com.squareup.picasso.Picasso
 
 class display_users: AppCompatActivity() {
-    private val myLoc = LocationServices.getLocation(this)
+    private val myLoc = GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
     private val user= intent.getSerializableExtra("user") as User
     private val username = user.email
     private val auth = FirebaseAuth.getInstance()
-    private var adapter = HomeAdapter()
+    private var adapter = display_groops().HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
     private var my_groops: ArrayList<User> = ArrayList()
     private var activity_list_temp: ArrayList<User> = ArrayList()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +36,18 @@ class display_users: AppCompatActivity() {
 
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
-        var locationTemp = LocationServices.getLocation(this)
+        var locationTemp = GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
         user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
-        my_groops= DBManager.getAllUsers()
+        db.collection("users").get().addOnSuccessListener { snapshot ->
+            my_groops= DBManager.getAllUsers(snapshot)
+        }
+       // my_groops= DBManager.getAllUsers()
         my_groops.remove(user)
         activity_list_temp=my_groops
         adapter.notifyDataSetChanged()
-        var searchBy: String = user_search_by_category.text as String
+//        var searchBy: String = user_search_by_category.text as String
         user_search_by_category.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = user_search_by_category.text as String
+            var searchBy = "" + user_search_by_category.text
             if(!hasFocus){
                 if(searchBy!=""){
                     my_groops.clear()
@@ -49,7 +55,7 @@ class display_users: AppCompatActivity() {
                     for(usr in activity_list_temp){
                         //for each activity in the given user check if he is interested in the specified activity
                         for(activityT in usr.activities){
-                            if(activityT.name==searchBy){ // changed getName() to name -- siam
+                            if(activityT.name==searchBy){
                                 my_groops.add(usr)
                             }
                         }
@@ -59,7 +65,7 @@ class display_users: AppCompatActivity() {
             }
         }
         user_search_by_distance.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = (user_search_by_distance.text as String).toIntOrNull()
+            var searchBy = user_search_by_category.text.toString().toIntOrNull()// ?? //(user_search_by_distance.text as String).toIntOrNull()
 
             if(!hasFocus){
                 if(searchBy!=null){

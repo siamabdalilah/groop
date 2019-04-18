@@ -1,12 +1,10 @@
 package com.example.groop
 
 //import android.content.Intent
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
-import com.example.groop.Util.setupBottomNav
+import com.example.groop.Util.setupNav
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.bottom_bar.view.*
 import kotlinx.android.synthetic.main.top_bar.view.*
@@ -16,7 +14,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        setupBottomNav(this, bottom_bar_home.bottom_bar_layout, top_bar_home.top_bar)
+        setupNav(this, top_bar_home.top_bar, bottom_bar_home.bottom_bar_layout)
 
 //        val a= bottom_bar.bottom_bar_layout
 //        bottom_bar.bottom_bar_layout.setOnNavigationItemSelectedListener {

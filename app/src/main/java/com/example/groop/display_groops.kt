@@ -15,14 +15,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.home_groop_view.*
 import com.example.groop.Util.*
+import com.example.groop.Util.DBManager.Paths.getAllGroops
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class display_groops : AppCompatActivity(){
 
-    private val myLoc = LocationServices.getLocation(this)
-    private val user= intent.getSerializableExtra("user") as User
+    private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
+//    private val user= intent.getSerializableExtra("user") as User //TODO
+val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
     private val username = user.email
-    private val auth = FirebaseAuth.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var adapter = HomeAdapter()
     private var joined_groops: ArrayList<Groop> = ArrayList()
     private var created_groops: ArrayList<Groop> = ArrayList()
@@ -35,14 +38,18 @@ class display_groops : AppCompatActivity(){
 
             home_groops_recycler.layoutManager = LinearLayoutManager(this)
             home_groops_recycler.adapter = adapter
-            var locationTemp = LocationServices.getLocation(this)
+            var locationTemp =GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
             user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
-            my_groops=DBManager.getSortedGroopList(user.location)
+            db.collection("groops").get().addOnSuccessListener { snapshot ->
+                my_groops=getAllGroops(snapshot)
+                adapter.notifyDataSetChanged()
+            }
+            //my_groops=DBManager.getSortedGroopList(my_groops,user.location)
             activity_list_temp=my_groops
             adapter.notifyDataSetChanged()
             var searchBy: String = search_by_category.text as String
             search_by_category.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = search_by_category.text as String
+                var searchBy = ""+search_by_category.text
                 if(!hasFocus){
                     if(searchBy!=""){
                         my_groops.clear()
@@ -56,7 +63,7 @@ class display_groops : AppCompatActivity(){
                 }
             }
         search_by_distance.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = (search_by_distance.text as String).toIntOrNull()
+            var searchBy = (""+search_by_distance.text).toIntOrNull()
 
             if(!hasFocus){
                 if(searchBy!=null){
@@ -64,6 +71,7 @@ class display_groops : AppCompatActivity(){
                     for(grp in activity_list_temp){
                         if(findDistance(grp.location,user.location)<=searchBy){
                             my_groops.add(grp)
+                            adapter.notifyDataSetChanged()
                         }
                     }
                 }

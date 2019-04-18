@@ -10,35 +10,46 @@ import 	androidx.recyclerview.widget.RecyclerView
 
 
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.example.groop.DataModels.User
-import com.example.groop.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.home_display.*
 
 
 import com.example.groop.R
-import com.example.groop.Util.DBManager
+import com.example.groop.Util.setupNav
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
+import kotlinx.android.synthetic.main.bottom_bar.view.*
+import kotlinx.android.synthetic.main.top_bar.view.*
 
 class home : AppCompatActivity() {
-
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private var adapter = HomeAdapter()
     private var activity_list: ArrayList<String> =ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.home_display)
+        setupNav(this, home_top_bar.top_bar, home_bottom_bar.bottom_bar_layout)
 
         val fragmentAdapter = MyPagerAdapter(supportFragmentManager, this)
         //var pager=findViewById<view_pager>(R.id.viewpager_home)
-        viewpager_home.adapter = fragmentAdapter
+        findViewById<ViewPager>(R.id.viewpager_home).adapter=fragmentAdapter
+       // viewpager_home.adapter = fragmentAdapter
         tabs_home.setupWithViewPager(viewpager_home)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_menu, menu)
+        return true
     }
 
 
@@ -73,9 +84,9 @@ class home : AppCompatActivity() {
     class MyPagerAdapter(fm: FragmentManager, context: Context) : FragmentPagerAdapter(fm) {
         var context=context
         val intent = Intent()
-//        var user = intent.getSerializableExtra("user") as User
+       // var user = intent.getSerializableExtra("user") as User
         val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
-        //var locationTemp = LocationServices.getLocation(context)
+        //var locationTemp = GroopLocation.getLocation(context)
         //user.location = GeoPoint(locationTemp.latitude,locationTemp.longitude)
 
         //gets which tab you are on and calls that method to inflate the fragment

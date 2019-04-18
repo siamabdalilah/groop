@@ -1,18 +1,16 @@
 package com.example.groop.Util
 
 import android.app.Activity
+import android.util.Log
 import com.example.groop.DataModels.User
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.model.value.TimestampValue
 import java.lang.IllegalArgumentException
+import java.util.Date
+import java.sql.Timestamp
 
- class DBManager {
-
-
-
+class DBManager {
 
 
     companion object Paths {
@@ -27,6 +25,7 @@ import java.lang.IllegalArgumentException
         /**
          * Parse an Activity_groop object from a document snapshot
          * containing a representation of an activity
+         * DEPRECATED
          */
         private fun parseActivity(doc: DocumentSnapshot): Activity_groop {
             return Activity_groop(
@@ -38,16 +37,18 @@ import java.lang.IllegalArgumentException
         /**
          * Parse a Groop object from a document snapshot
          * containing a representation of an activity
+         * DEPRECATED
          */
         private fun parseGroop(doc: DocumentSnapshot): Groop {
             //TODO: not quite sure how firebase handles arrays, actually
             val members = doc.get("members") as ArrayList<DocumentReference>
-
+           var d: Date? = doc.getDate("startTime")
+            Log.d("ANDROID",d.toString())
             return Groop(
-                doc.get("capacity") as Int, doc.get("createdBy") as DocumentReference,
+                (doc.get("capacity") as Long).toInt(), doc.get("createdBy") as DocumentReference,
                 doc.get("description").toString(), doc.get("location") as GeoPoint,
                 members, doc.get("name").toString(),
-                doc.get("numMembers") as Int, doc.get("startTime") as TimestampValue,
+                (doc.get("numMembers") as Long).toInt(), doc.getDate("startTime") as Date,
                 doc.get("type").toString()
             )
         }
@@ -55,6 +56,7 @@ import java.lang.IllegalArgumentException
         /**
          * Parse a User object from a document snapshot
          * containing a representation of a user
+         * DEPRECATED
          */
         private fun parseUser(doc: DocumentSnapshot): User {
             //TODO: Again, not really sure how arrays work
@@ -88,15 +90,13 @@ import java.lang.IllegalArgumentException
          * Returns a list of Strings representing the names of
          * all the activities in the database
          */
-        fun getAllActivities(): ArrayList<String> {
+        fun getAllActivities(query: QuerySnapshot): ArrayList<String> {
             val activityList = ArrayList<String>()
 
-            db.collection(activities).get().addOnSuccessListener { query ->
-                val docList = query.documents
-                //activities are indexed by their name, so we just add that name to the list
-                for (doc in docList) {
-                    activityList.add(doc.id)
-                }
+            val docList = query.documents
+            //activities are indexed by their name, so we just add that name to the list
+            for (doc in docList) {
+                activityList.add(doc.id)
             }
 
             return activityList
@@ -106,34 +106,43 @@ import java.lang.IllegalArgumentException
          * Returns an arraylist of every Groop that has been
          * created and remains active
          */
-        fun getAllGroops(): ArrayList<Groop> {
+        fun getAllGroops(query: QuerySnapshot, reference: GeoPoint? = null): ArrayList<Groop> {
             val groopList = ArrayList<Groop>()
 
-            db.collection(Paths.groops).get().addOnSuccessListener { query ->
-                val docList = query.documents
-                //add each group to the list through this ridiculous process
-                for (doc in docList) {
-                    //add a new Groop to the list
-                    groopList.add(parseGroop(doc))
+            val docList = query.documents
+            //add each group to the list through this ridiculous process
+            for (doc in docList) {
+                //add a new Groop to the list
+                val g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO this does not convert
+                if (g != null) {
+                    groopList.add(g)
                 }
             }
 
-            return groopList
+            //if the caller has specified that they want the list of groops to be
+            // sorted based on a particular point
+            if (reference != null) {
+                return sortGroops(groopList, reference)
+            } else {
+                return groopList
+            }
+
         }
 
         /**
          * Returns an arraylist of every User registered
          * in  the database
          */
-        fun getAllUsers(): ArrayList<User> {
+        fun getAllUsers(query: QuerySnapshot): ArrayList<User> {
             val userList = ArrayList<User>()
 
-            db.collection(Paths.users).get().addOnSuccessListener { query ->
-                val docList = query.documents
-                //add each user to the list
-                for (doc in docList) {
-                    //add a new Groop to the list
-                    userList.add(parseUser(doc))
+            val docList = query.documents
+            //add each user to the list
+            for (doc in docList) {
+                //add a new user to the list by automatically parsing it
+                val u = doc.toObject(User::class.java)
+                if (u != null) {
+                    userList.add(u)
                 }
             }
 
@@ -141,15 +150,6 @@ import java.lang.IllegalArgumentException
         }
 
         ////////////////////////SORTING
-        /**
-         * Gets every Groop that has been set up and returns it as
-         * a sorted list
-         * Sorts by distance to the given GeoPoint
-         */
-        fun getSortedGroopList(point: GeoPoint): ArrayList<Groop> {
-            val groops: ArrayList<Groop> = getAllGroops()
-            return sortGroops(groops, point);
-        }
 
         /**
          * Sorts a list of Groops relative to the GeoPoint
@@ -182,37 +182,76 @@ import java.lang.IllegalArgumentException
 
         /////////////////////////GETS LIST OF GROOPS
         /**
-         * Returns an arraylist of Groop objects associated with
+         * Compiles an arraylist of Groop objects associated with
          * a given activity, looking in the activities collection of the database
          * Be sure to check for subactivities
-         */
-        fun getGroopsFromActivity(activity: String): ArrayList<Groop> {
+         *
+         * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
+         * FUNCTION INSTEAD OF RETURNING UPON COMPLETION         */
+        fun getGroopsFromActivity(doc: DocumentSnapshot, gotten: (ArrayList<Groop>) -> Any?) {
             val groops = ArrayList<Groop>()
+            //bear with me
+            var nulls = 0
 
             //again, I'm not all that certain how this all is going
             // to work, but here we go
-            db.collection(activities).document(activity).get().addOnSuccessListener { snapshot ->
-                //TODO: still don't know what's up with how arrays return in firebase
-                val listOfGroopDocuments = snapshot.get("listOfGroops") as ArrayList<DocumentReference>
-                //parse each groop and add it to the list
-                for (groop in listOfGroopDocuments) {
-                    //mostly, we're just going to invoke the parseGroop method
-                    groop.get().addOnSuccessListener { snapshot ->
-                        groops.add(parseGroop(snapshot))
+
+            //still don't know what's up with how arrays return in firebase
+            val listOfGroopDocuments = doc.get("listOfGroops")
+                    as ArrayList<DocumentReference>
+            //parse each groop and add it to the list
+            for (groop in listOfGroopDocuments) {
+                //mostly, we're just going to invoke the parseGroop method
+                groop.get().addOnSuccessListener { snapshot ->
+                    val g = snapshot.toObject(Groop::class.java)
+                    if (g != null) {
+                        groops.add(g)
+                    }
+                    else {
+                        ++nulls
+                    }
+
+                    //okay, bear with me
+                    //we need to discover if this is the last ever iteration
+                    // in order to do so, check to see whether the array has
+                    // been completely filled up with groops, and/or if null
+                    // has been encountered enough times to merit moving on
+                    if (groops.size + nulls >= listOfGroopDocuments.size) {
+                        //so now we've finished all of the get requests
+                        //safe to call the callback function
+                        gotten(groops)
                     }
                 }
             }
-
-            return groops
         }
 
         /**
-         * Used by both of the methods below; returns an ArrayList of Groop
+         * Returns an ArrayList of groops that have been created by
+         * the user specified by the email
+         */
+        fun getGroopsBy(email: String, gotten: (ArrayList<Groop>) -> Any?) {
+            getUserGroops(email, "createdGroops", gotten)
+        }
+
+        /**
+         * Returns an ArrayList of Groop objects that have been
+         * joined by the user specified in this email
+         */
+        fun getGroopsJoinedBy(email: String, gotten: (ArrayList<Groop>) -> Any?) {
+            return getUserGroops(email, "joinedGroops", gotten)
+        }
+
+        /**
+         * Used by both of the methods above; compiles an ArrayList of Groop
          * objects that have been either created or joined by the user specified
          * in the given email
+         * Then calls the callback function with the created ArrayList
          * The createdOrJoined parameter should always be either "joinedGroops" or "createdGroops"
+         *
+         * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
+         * FUNCTION INSTEAD OF RETURNING UPON COMPLETION
          */
-        private fun getUserGroops(email: String, createdOrJoined: String): ArrayList<Groop> {
+        private fun getUserGroops(email: String, createdOrJoined: String, gotten: (ArrayList<Groop>) -> Any?) {
             if (createdOrJoined != "joinedGroops" && createdOrJoined != "createdGroops") {
                 //not using the method properly
                 throw IllegalArgumentException("Does not work")
@@ -220,37 +259,44 @@ import java.lang.IllegalArgumentException
 
             val groops = ArrayList<Groop>()
 
+            //bear with me
+            var nulls = 0
+
             //again, I'm not all that certain how this all is going
             // to work, but here we go
             db.collection(users).document(email).get().addOnSuccessListener { snapshot ->
-                //TODO: still don't know what's up with how arrays return in firebase
-                val listOfGroopDocuments = snapshot.get(createdOrJoined) as ArrayList<DocumentReference>
+                //still don't know what's up with how arrays return in firebase
+                val listOfGroopDocuments = snapshot.get(createdOrJoined)
+                        as ArrayList<DocumentReference>
                 //parse each groop and add it to the list
+                //must use this style of iteration because we need to access the
+                // index to know when to employ the callback
                 for (groop in listOfGroopDocuments) {
+
                     //mostly, we're just going to invoke the parseGroop method
-                    groop.get().addOnSuccessListener { snapshot ->
-                        groops.add(parseGroop(snapshot))
+                    groop.get().addOnSuccessListener { doc ->
+                        val g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO throws deserialization error
+                        if (g != null) {
+                            groops.add(g)
+                        }
+                        else {
+                            ++nulls
+                        }
+
+                        //okay, bear with me
+                        //we need to discover if this is the last ever iteration
+                        // in order to do so, check to see whether the array has
+                        // been completely filled up with groops, and/or if null
+                        // has been encountered enough times to merit moving on
+                        if (groops.size + nulls >= listOfGroopDocuments.size) {
+                            //so now we've finished all of the get requests
+                            //safe to call the callback function
+                            gotten(groops)
+                            Log.d("ANDROID","got here")
+                        }
                     }
                 }
             }
-
-            return groops
-        }
-
-        /**
-         * Returns an ArrayList of groops that have been created by
-         * the user specified by the email
-         */
-        fun getGroopsBy(email: String, gotten: (ArrayList<Groop>) -> Any?): ArrayList<Groop> {
-            return getUserGroops(email, "createdGroops")
-        }
-
-        /**
-         * Returns an ArrayList of Groop objects that have been
-         * joined by the user specified in this email
-         */
-        fun getGroopsJoinedBy(email: String, gotten: (ArrayList<Groop>) -> Any?): ArrayList<Groop> {
-            return getUserGroops(email, "joinedGroops")
         }
 
         /////////////////////////MISC. GETS
@@ -259,22 +305,17 @@ import java.lang.IllegalArgumentException
          * of activity objects including every activity that the user
          * is interested in
          */
-        //getUserActivityList("billiam@gmail.com", (activityList) -> {this.list = activityList})
-        fun getUserActivityList(email: String, gotten: (ArrayList<Activity_groop>) -> Any?) {
+        fun getUserActivityList(email: String, query: QuerySnapshot) {
             val activityList = ArrayList<Activity_groop>()
 
-            val task = db.collection(users).document(email).collection(activities).get()
-                task.addOnSuccessListener { query ->
-                    //go through each activity in the collection
-                    val docList = query.documents
+            //go through each activity in the collection
+            val docList = query.documents
 
-                    for (doc in docList) {
-                        //construct a new activity from the given fields
-                        activityList.add(parseActivity(doc))
-                    }
+            for (doc in docList) {
+                //construct a new activity from the given fields
+                activityList.add(parseActivity(doc))
+            }
 
-                    gotten(activityList)
-                }
         }
 
         ////////////////////////SET DOCUMENT INFO
@@ -289,6 +330,56 @@ import java.lang.IllegalArgumentException
             map.put("description", bio)
             //either create the document anew if it hasn't been created already, or simply update the description
             db.collection(users).document(email).collection(activities).document(activity).set(map)
+        }
+
+        /**
+         * Now we get to the money function--actually creates a new user
+         * object in the database
+         * Not all that impressive; just takes in a user object and goes for it
+         */
+        fun addUser(user: User) {
+            //single line--Firestore should convert everything for us
+            db.collection(users).document(user.email).set(user)
+        }
+
+        /**
+         * Creates a Groop with the specified information
+         */
+        fun createGroop(groop: Groop) {
+            //again, Firestore does everything for us
+            //document will just have an auto-generated ID
+            db.collection(Paths.groops).document().set(groop)
+        }
+
+        /**
+         * Adds an activity to the list thereof stored in the database
+         */
+        fun addNewActivity(activityName: String) {
+            //this time, we have to do a little bit more work,
+            // as not much is known about the activity at time of
+            // addition
+            val activity = HashMap<String, Any>()
+            activity["listOfGroops"] = ArrayList<DocumentReference>()
+            activity["listOfUsers"] = ArrayList<DocumentReference>()
+            db.collection(Paths.activities).document(activityName).set(activity)
+        }
+
+        /////////////////////////////////MESSAGING
+        /**
+         * Used for messaging
+         * TODO
+         */
+        fun sendRegistrationToServer(token: String, email: String) {
+            val map: HashMap<String, String> = HashMap()
+            map.put("token", token)
+            db.collection(users).document(email).set(map)
+        }
+
+        /**
+         * Well, we'll see
+         */
+        fun getToken(doc: DocumentSnapshot): String? {
+            return doc.get("token") as String?
         }
     }
 }

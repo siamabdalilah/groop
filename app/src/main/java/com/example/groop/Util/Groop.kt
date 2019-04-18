@@ -5,6 +5,8 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.model.value.TimestampValue
 import java.io.Serializable
+import java.util.Date
+import java.sql.Time
 import java.sql.Timestamp
 
 class Groop: Serializable {
@@ -16,13 +18,13 @@ class Groop: Serializable {
     var members: ArrayList<DocumentReference>? = null
     var name: String = ""
     var numMembers: Int = 0
-    var startTime: TimestampValue? = null
+    var startTime: Date? = null
     var type: String = ""
 
     constructor(
         capacity: Int, creator: DocumentReference, description: String,
         location: GeoPoint, members: ArrayList<DocumentReference>, name: String,
-        numMembers: Int, startTime: TimestampValue, type: String
+        numMembers: Int, startTime: Date, type: String
     ) {
          this.capacity = capacity
         this.creator = creator
@@ -33,6 +35,9 @@ class Groop: Serializable {
         this.numMembers = numMembers
         this.startTime = startTime
         this.type = type
+
+    }
+    constructor() {
 
     }
 }

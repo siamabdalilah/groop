@@ -16,6 +16,7 @@ import com.example.groop.DataModels.User
 import com.example.groop.R
 import com.example.groop.Util.DBManager
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.home_recycler_frag.*
 
 class home_activity_view: AppCompatActivity() {
@@ -25,7 +26,7 @@ class home_activity_view: AppCompatActivity() {
 
         private val user = user
         private val username = user.email
-
+        private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
         private val auth = FirebaseAuth.getInstance()
         private var adapter = HomeAdapter()
         private var activity_list: ArrayList<String> = ArrayList()
@@ -41,11 +42,15 @@ class home_activity_view: AppCompatActivity() {
 
             home_recycler.layoutManager = LinearLayoutManager(context)
             home_recycler.adapter = adapter
-            activity_list= DBManager.getAllActivities();
+            db.collection("activities").get().addOnSuccessListener { snapshot ->
+                activity_list= DBManager.getAllActivities(snapshot)
+                adapter.notifyDataSetChanged()
+            }
+            //activity_list= DBManager.getAllActivities();
             adapter.notifyDataSetChanged()
             var searchBy: String = activity_search_home.text as String
             activity_search_home.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = activity_search_home.text as String
+                var searchBy = ""+activity_search_home.text
                 if(!hasFocus){
                     activity_list_temp=activity_list
                     if(searchBy!=""){
@@ -75,9 +80,9 @@ class home_activity_view: AppCompatActivity() {
                 val activity = activity_list[p1]
                 p0.category_text.text = activity
                 p0.row.setOnClickListener {
-                    val intent = Intent(p0.itemView.context, com.example.groop.HomePackage.edit_activity_info::class.java)
+                    val intent = Intent(p0.itemView.context, edit_activity_info::class.java)
                     intent.putExtra("activity", activity)
-                    intent.putExtra("user", user)
+                    intent.putExtra("user", user) //TODO cannot be serialized
                     startActivity(intent)
                 }
 

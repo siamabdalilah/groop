@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
 import com.example.groop.DataModels.groop
-import com.example.groop.LocationServices
 import com.example.groop.R
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
@@ -22,7 +21,6 @@ import com.example.groop.Util.findDistance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.home_groop_view.*
-import kotlinx.android.synthetic.main.home_recycler_frag.*
 
 
 class home_groop_view : AppCompatActivity(){
@@ -30,7 +28,7 @@ class home_groop_view : AppCompatActivity(){
     @SuppressLint("ValidFragment")
     class home(contexter: Context, user: User) : Fragment() {
 
-        private val myLoc = LocationServices.getLocation(this.context as Context)
+        private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this.context as Context)
         private val user= user
         private val username = user.email
         private val auth = FirebaseAuth.getInstance()
@@ -45,19 +43,20 @@ class home_groop_view : AppCompatActivity(){
             return inflater.inflate(R.layout.home_groop_view, container, false)
         }
 
+
         override fun onStart() {
             super.onStart()
             search_by_distance.visibility= View.GONE
+            textView2.visibility=View.GONE
             home_groops_recycler.layoutManager = LinearLayoutManager(context)
             home_groops_recycler.adapter = adapter
-            created_groops= DBManager.getGroopsBy(user.email, {}) // added {} to resolve compilation
-            joined_groops=DBManager.getGroopsJoinedBy(user.email, {})
-            my_groops.addAll(created_groops)
-            my_groops.addAll(joined_groops)
+
+            DBManager.getGroopsBy(user.email,this::GetCreatedGroops) //TODO this is not working
+            DBManager.getGroopsJoinedBy(user.email,this::GetJoinedArray)
             adapter.notifyDataSetChanged()
-            var searchBy: String = activity_search_home.text as String
-            activity_search_home.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = activity_search_home.text as String
+            var searchBy: String = search_by_category.text as String
+            search_by_category.setOnFocusChangeListener { v, hasFocus ->
+                var searchBy = search_by_category.text as String
                 if(!hasFocus){
                     activity_list_temp=my_groops
                     if(searchBy!=""){
@@ -71,6 +70,16 @@ class home_groop_view : AppCompatActivity(){
                     adapter.notifyDataSetChanged()
                 }
             }
+        }
+
+        fun GetJoinedArray(arr:ArrayList<Groop>){
+           my_groops.addAll(arr)
+            adapter.notifyDataSetChanged()
+        }
+
+        fun GetCreatedGroops(arr:ArrayList<Groop>){
+            my_groops.addAll(arr)
+            adapter.notifyDataSetChanged()
         }
 
         fun groopsContainsActivity(g:ArrayList<groop>, category:String):ArrayList<groop>{
