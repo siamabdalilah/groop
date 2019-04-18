@@ -26,12 +26,12 @@ import kotlinx.android.synthetic.main.home_groop_view.*
 class home_groop_view : AppCompatActivity(){
 
     @SuppressLint("ValidFragment")
-    class home(contexter: Context, user: User) : Fragment() {
+    class home(contexter: Context) : Fragment() {
 
         private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this.context as Context)
         //private val user= user
         private val auth = FirebaseAuth.getInstance()
-        private val username = auth.currentUser!!.email as String
+        private var username = ""
         private var adapter = HomeAdapter()
         private var joined_groops: ArrayList<Groop> = ArrayList()
         private var created_groops: ArrayList<Groop> = ArrayList()
@@ -46,6 +46,8 @@ class home_groop_view : AppCompatActivity(){
 
         override fun onStart() {
             super.onStart()
+            username=auth.currentUser!!.email as String
+
             search_by_distance.visibility= View.GONE
             textView2.visibility=View.GONE
             home_groops_recycler.layoutManager = LinearLayoutManager(context)

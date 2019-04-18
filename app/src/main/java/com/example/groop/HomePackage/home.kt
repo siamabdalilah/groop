@@ -85,7 +85,7 @@ class home : AppCompatActivity() {
         var context=context
         val intent = Intent()
        // var user = intent.getSerializableExtra("user") as User
-        val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
+        //val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
         //var locationTemp = GroopLocation.getLocation(context)
         //user.location = GeoPoint(locationTemp.latitude,locationTemp.longitude)
 
@@ -93,9 +93,9 @@ class home : AppCompatActivity() {
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> {
-                    home_activity_view.home(context, user)
+                    home_activity_view.home(context)
                 }
-                else -> home_groop_view.home(context, user)
+                else -> home_groop_view.home(context)
             }
         }
 
