@@ -50,8 +50,8 @@ class home_groop_view : AppCompatActivity(){
             search_by_distance.visibility= View.GONE
             home_groops_recycler.layoutManager = LinearLayoutManager(context)
             home_groops_recycler.adapter = adapter
-            created_groops= DBManager.getGroopsBy(user.email)
-            joined_groops=DBManager.getGroopsJoinedBy(user.email)
+            created_groops= DBManager.getGroopsBy(user.email, {}) // added {} to resolve compilation
+            joined_groops=DBManager.getGroopsJoinedBy(user.email, {})
             my_groops.addAll(created_groops)
             my_groops.addAll(joined_groops)
             adapter.notifyDataSetChanged()

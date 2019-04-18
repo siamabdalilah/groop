@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.groop.DataModels.User
@@ -34,14 +35,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
-        val intent = Intent(this, HomeActivity::class.java)
-
+        val intent = Intent(this, home::class.java)
         startActivity(intent)
+        if (auth.currentUser != null){
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+        }
 
         switch_button.setOnClickListener{switch()}
         finish_button.setOnClickListener{login()}
         locate_button.setOnClickListener{locate()}
+
     }
 
     fun switch(){

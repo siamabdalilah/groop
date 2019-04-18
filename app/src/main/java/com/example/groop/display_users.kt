@@ -49,7 +49,7 @@ class display_users: AppCompatActivity() {
                     for(usr in activity_list_temp){
                         //for each activity in the given user check if he is interested in the specified activity
                         for(activityT in usr.activities){
-                            if(activityT.getName()==searchBy){
+                            if(activityT.name==searchBy){ // changed getName() to name -- siam
                                 my_groops.add(usr)
                             }
                         }
