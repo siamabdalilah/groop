@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var location: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val db = FirebaseFirestore.getInstance()
+    private var isLocated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,15 +43,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        //TODO - check to make sure Google Play account can use messaging
-
-
-        //val extras = Bundle()
-        //extras.putString("username", "Raccardi Firbase")
-        // val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
-        //intent.putExtra("user",user as Serializable)
-        //extras.putString("activity","Water Polo")
-        //intent.putExtras(extras)
         switch_button.setOnClickListener { switch() }
         finish_button.setOnClickListener { login() }
         locate_button.setOnClickListener { locate() }
@@ -69,8 +61,9 @@ class MainActivity : AppCompatActivity() {
                 log_status.text = "Sign Up"
                 switch_button.text = "Login"
                 finish_button.text = "Sign Up"
-                finish_button.setOnClickListener { signup() }
+                finish_button.setOnClickListener { locatePrompt() }
                 signup_info.visibility = View.VISIBLE
+                locate_button.visibility = View.VISIBLE
             }
             else -> {
                 state = true
@@ -79,6 +72,12 @@ class MainActivity : AppCompatActivity() {
                 finish_button.text = "Login"
                 finish_button.setOnClickListener { login() }
                 signup_info.visibility = View.GONE
+                locate_button.visibility = View.GONE
+
+                user_confirm_password.setText("")
+                user_name.setText("")
+                bio_info.setText("")
+                isLocated = false
             }
         }
     }
@@ -122,8 +121,7 @@ class MainActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 db.collection("users").document(user.email).set(user)
-                val intent = Intent(this, home::class.java)
-                intent.putExtra("user", user)
+                val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
             } else {
                 toast(this, "Failed. Try again")
@@ -133,14 +131,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun locate() {
         if (ContextCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
+            != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
             )
             return
-
         }
 
         fusedLocationClient.lastLocation.addOnSuccessListener {
@@ -148,52 +144,23 @@ class MainActivity : AppCompatActivity() {
                 fusedLocationClient.requestLocationUpdates(LocationRequest.create(), object : LocationCallback() {
                     override fun onLocationResult(p0: LocationResult?) {
                         super.onLocationResult(p0)
+                        toast(this@MainActivity, "got here")
                         locate()
                     }
                 }, null)
 
             } else {
                 location = it
-
+                isLocated = true
+                TransitionManager.beginDelayedTransition(login_screen_button_container)
+                locate_button.visibility = View.GONE
+                finish_button.setOnClickListener { signup() }
             }
         }
-
     }
 
     private fun locatePrompt() {
         toast(this, "Please locate first")
     }
 
-
-/*
-    private fun updateUI(user: FirebaseUser?) {
-        if (user != null) {
-            val intent = Intent(this, Dashboard::class.java)
-            intent.putExtra("username", user?.email)
-            startActivity(intent)
-        }
-        */
 }
-//    private fun addUser(email: String) {
-//
-//        //TODO - prompt the user to input all of their information
-//        //for now, just create the default user with only an email
-//        //will probably rewrite this document wholesale later
-//        DBManager.addUser(User(email))
-//
-//        //users are indexed by their email
-//        //so we create a new document with the email as the ID
-//        //NOTE: overrides any previous account data that the
-//        // user might have
-//        /*
-//        db.collection(Dashboard.usersPath).document(email)
-//            .set(newUserInfo)
-//            .addOnSuccessListener {
-//                Log.d(TAG, "New user added successfully")
-//            }
-//            .addOnFailureListener {
-//                Log.d(TAG, "New user could not be added")
-//            }*/
-//    }
-
-//}

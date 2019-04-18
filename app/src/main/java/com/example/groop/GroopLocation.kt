@@ -14,8 +14,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 
 object GroopLocation {
-//    companion object {
-
 
     private lateinit var location: Location
 
@@ -52,9 +50,5 @@ object GroopLocation {
             }
         }
 
-    }
-
-    private fun locatePrompt(context: Context) {
-        toast(context, "Please locate first")
     }
 }
