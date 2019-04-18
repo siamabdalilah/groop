@@ -88,8 +88,8 @@ class DBManager {
 
         fun parseMessage(doc: DocumentSnapshot) : Message {
             return Message(
-                doc.get("from").toString(), doc.get("to").toString(),
-                doc.get("timeStamp") as Date, doc.get("content").toString()
+                doc.get("from").toString(), doc.get("timeStamp") as Date,
+                doc.get("content").toString(), doc.get("to").toString()
             )
         }
 
@@ -389,7 +389,7 @@ class DBManager {
             val currentDate = Date()
 
             //sender and receiver messages are identical
-            val message = Message(from, to, currentDate, content)
+            val message = Message(from, currentDate, content, to)
             //add the message first to the receiver's collection
             db.collection(Paths.users).document(to).collection(Paths.messages)
                 .document().set(message)
@@ -405,6 +405,29 @@ class DBManager {
         }
 
         /**
+         * Takes in data about the message as well as a callback method
+         * to update the UI.
+         * Unlike the above method, requires the Groop to be a document
+         * reference rather than a string
+         *
+         * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
+         * FUNCTION INSTEAD OF RETURNING UPON COMPLETION
+         */
+        fun sendMessageToGroop(from: String, groop: DocumentReference,
+                               content: String, sent: () -> Any? = {}) {
+            val currentDate = Date()
+
+            //don't need a "to" field on this li'l guy at all
+            val message = Message(from, currentDate, content)
+            //add the message to the groop's collection
+            groop.set(message)
+                    //update the UI if applicable
+                .addOnSuccessListener {
+                    sent()
+                }
+        }
+
+        /**
          * Returns an arraylist of message objects from the collection
          * specified by the passed in query snapshot.  If "otherUser" is
          * passed in as a parameter, will only return messages where that
@@ -413,7 +436,7 @@ class DBManager {
          * Works for either a Groop's message history or an individual's message
          * history.
          */
-        fun getMessageMessageHistory(query: QuerySnapshot, otherUser: String? = null)
+        fun getMessageHistory(query: QuerySnapshot, otherUser: String? = null)
             : ArrayList<Message> {
             var messages = ArrayList<Message>()
 
@@ -435,22 +458,5 @@ class DBManager {
             return messages
         }
 
-        /*
-         * Used for messaging
-         * TODO
-
-        fun sendRegistrationToServer(token: String, email: String) {
-            val map: HashMap<String, String> = HashMap()
-            map.put("token", token)
-            db.collection(users).document(email).set(map)
-        }
-
-
-         * Well, we'll see
-
-        fun getToken(doc: DocumentSnapshot): String? {
-            return doc.get("token") as String?
-        }
-        */
     }
 }

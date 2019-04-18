@@ -18,6 +18,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
         //TODO - I haven't got the faintest clue what's going on
-        DBManager.sendRegistrationToServer(token!!, "telemonian@gmail.com")
+        //DBManager.sendRegistrationToServer(token!!, "telemonian@gmail.com")
     }
 }

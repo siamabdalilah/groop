@@ -13,5 +13,5 @@ import java.util.*
  * timeStamp is the time it was sent
  * content is the actual text of the message
  */
-data class Message (var from: String = "", var to: String? = null,
-                    var timeStamp: Date = Date(), var content: String = "") : Serializable
+data class Message (var from: String = "", var timeStamp: Date = Date(),
+                    var content: String = "", var to: String? = null) : Serializable
