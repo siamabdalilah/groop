@@ -59,6 +59,7 @@ class home_activity_view: AppCompatActivity() {
                         activity_list.clear()
                         if(activity_list_temp.contains(searchBy)){
                             activity_list.add(searchBy)
+                            adapter.notifyDataSetChanged()
                         }
                     }
                     adapter.notifyDataSetChanged()

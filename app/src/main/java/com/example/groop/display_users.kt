@@ -57,6 +57,7 @@ class display_users: AppCompatActivity() {
                         for(activityT in usr.activities){
                             if(activityT.name==searchBy){
                                 my_groops.add(usr)
+                                adapter.notifyDataSetChanged()
                             }
                         }
                     }
@@ -73,6 +74,7 @@ class display_users: AppCompatActivity() {
                     for(usr in activity_list_temp){
                         if(findDistance(usr.location,user.location) <=searchBy){
                             my_groops.add(usr)
+                            adapter.notifyDataSetChanged()
                         }
                     }
                 }
