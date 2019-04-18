@@ -29,9 +29,9 @@ class home_groop_view : AppCompatActivity(){
     class home(contexter: Context, user: User) : Fragment() {
 
         private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this.context as Context)
-        private val user= user
-        private val username = user.email
+        //private val user= user
         private val auth = FirebaseAuth.getInstance()
+        private val username = auth.currentUser!!.email as String
         private var adapter = HomeAdapter()
         private var joined_groops: ArrayList<Groop> = ArrayList()
         private var created_groops: ArrayList<Groop> = ArrayList()
@@ -51,8 +51,8 @@ class home_groop_view : AppCompatActivity(){
             home_groops_recycler.layoutManager = LinearLayoutManager(context)
             home_groops_recycler.adapter = adapter
 
-            DBManager.getGroopsBy(user.email,this::GetCreatedGroops) //TODO this is not working
-            DBManager.getGroopsJoinedBy(user.email,this::GetJoinedArray)
+            DBManager.getGroopsBy(username,this::GetCreatedGroops) //TODO this is not working
+            DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
             adapter.notifyDataSetChanged()
             var searchBy: String = search_by_category.text as String
             search_by_category.setOnFocusChangeListener { v, hasFocus ->
@@ -117,7 +117,6 @@ class home_groop_view : AppCompatActivity(){
                     search_by_distance.visibility= View.VISIBLE
                     val intent = Intent(p0.itemView.context, com.example.groop.groop_info::class.java)
                     intent.putExtra("activity", activity)
-                    intent.putExtra("user", user)
                     startActivity(intent)
                 }
 

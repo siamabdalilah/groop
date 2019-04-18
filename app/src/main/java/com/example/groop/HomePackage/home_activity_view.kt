@@ -13,8 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
+import com.example.groop.GroopLocation
 import com.example.groop.R
 import com.example.groop.Util.DBManager
+import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.home_recycler_frag.*
@@ -23,11 +25,10 @@ class home_activity_view: AppCompatActivity() {
 
     @SuppressLint("ValidFragment")
     class home(contexter: Context, user: User) : Fragment() {
-
-        private val user = user
-        private val username = user.email
-        private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
         private val auth = FirebaseAuth.getInstance()
+        //private val user = user
+        private val username = auth.currentUser!!.email
+        private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
         private var adapter = HomeAdapter()
         private var activity_list: ArrayList<String> = ArrayList()
         private var activity_list_temp: ArrayList<String> = ArrayList()
@@ -39,7 +40,6 @@ class home_activity_view: AppCompatActivity() {
 
         override fun onStart() {
             super.onStart()
-
             home_recycler.layoutManager = LinearLayoutManager(context)
             home_recycler.adapter = adapter
             db.collection("activities").get().addOnSuccessListener { snapshot ->
@@ -82,7 +82,7 @@ class home_activity_view: AppCompatActivity() {
                 p0.row.setOnClickListener {
                     val intent = Intent(p0.itemView.context, edit_activity_info::class.java)
                     intent.putExtra("activity", activity)
-                    intent.putExtra("user", user) //TODO cannot be serialized
+                    //intent.putExtra("user", user) //TODO cannot be serialized
                     startActivity(intent)
                 }
 

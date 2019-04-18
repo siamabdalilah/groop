@@ -7,6 +7,7 @@ import com.example.groop.DataModels.User
 import com.example.groop.R
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.DBManager.Paths.updateActivityInfo
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.activity_interest_edit.*
 
@@ -16,11 +17,11 @@ class edit_activity_info: AppCompatActivity() {
         setContentView(R.layout.activity_interest_edit)
         //val intent = Intent()
         //val extras = intent.extras
-
+        val auth = FirebaseAuth.getInstance()
         var activity: String = "Water Polo"
        // var user = intent.extras.get("user") as User
         val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
-        var username = user.email
+        var username = auth.currentUser!!.email as String
         home_activity_edit_name.text=activity
 
         home_activity_edit_button.setOnClickListener {
