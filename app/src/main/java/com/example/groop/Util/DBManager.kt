@@ -48,6 +48,7 @@ class DBManager {
             Log.d("ANDROID",d.toString())
             return Groop(
                 (doc.get("capacity") as Long).toInt(), doc.get("createdBy").toString(),
+                doc.get("creatorName").toString(),
                 doc.get("description").toString(), doc.get("location") as GeoPoint,
                 members, doc.get("name").toString(),
                 (doc.get("numMembers") as Long).toInt(), doc.getDate("startTime") as Date,
