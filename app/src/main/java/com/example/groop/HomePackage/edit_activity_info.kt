@@ -21,7 +21,7 @@ class edit_activity_info: AppCompatActivity() {
         var activity: String = intent.getStringExtra("activity")
        // var user = intent.extras.get("user") as User
        // val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
-        var username = auth.currentUser!!.email as String
+        var username = auth.currentUser!!.email!!
         home_activity_edit_name.text=activity
 
         home_activity_edit_button.setOnClickListener {

@@ -41,7 +41,7 @@ class DBManager {
          * containing a representation of an activity
          * DEPRECATED
          */
-        private fun parseGroop(doc: DocumentSnapshot): Groop {
+        fun parseGroop(doc: DocumentSnapshot): Groop {
             //TODO: not quite sure how firebase handles arrays, actually
             val members = doc.get("members") as ArrayList<DocumentReference>
            var d: Date? = doc.getDate("startTime")

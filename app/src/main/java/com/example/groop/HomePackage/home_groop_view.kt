@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.groop.DataModels.User
 import com.example.groop.DataModels.groop
 import com.example.groop.R
 import com.example.groop.Util.DBManager
@@ -117,7 +116,7 @@ class home_groop_view : AppCompatActivity(){
                 p0.time.text="Time: "+activity.startTime.toString()
                 p0.row.setOnClickListener {
                     search_by_distance.visibility= View.VISIBLE
-                    val intent = Intent(p0.itemView.context, com.example.groop.groop_info::class.java)
+                    val intent = Intent(p0.itemView.context, com.example.groop.groop_join::class.java)
                     intent.putExtra("activity", activity)
                     startActivity(intent)
                 }

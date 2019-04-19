@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.home_groop_view.*
 import com.example.groop.Util.*
@@ -104,8 +103,8 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                 p0.distance.text="Distance: "+findDistance(activity.location, GeoPoint(lat,lng))
                 p0.time.text="Time: "+activity.startTime.toString()
                 p0.row.setOnClickListener {
-                    val intent = Intent(p0.itemView.context, com.example.groop.groop_info::class.java)
-                    intent.putExtra("activity", activity)
+                    val intent = Intent(p0.itemView.context, com.example.groop.groop_join::class.java)
+                    intent.putExtra("this_groop", activity.id)
                     intent.putExtra("user", user)
                     startActivity(intent)
                 }
