@@ -12,7 +12,8 @@ import java.sql.Timestamp
 class Groop: Serializable {
 
     var capacity: Int = 0
-    var creator: DocumentReference? = null
+    var createdBy: String? = null
+    var creatorName: String? = null
     var description: String = ""
     var location: GeoPoint = GeoPoint(0.0,0.0)
     var members: ArrayList<DocumentReference>? = null
@@ -20,14 +21,16 @@ class Groop: Serializable {
     var numMembers: Int = 0
     var startTime: Date? = null
     var type: String = ""
+    var id: String? = null
 
     constructor(
-        capacity: Int, creator: DocumentReference, description: String,
+        capacity: Int, createdBy: String?, creatorName: String?, description: String,
         location: GeoPoint, members: ArrayList<DocumentReference>, name: String,
         numMembers: Int, startTime: Date, type: String
     ) {
          this.capacity = capacity
-        this.creator = creator
+        this.createdBy = createdBy
+        this.creatorName = creatorName
         this.description = description
         this.location = location
         this.members = members
@@ -37,7 +40,26 @@ class Groop: Serializable {
         this.type = type
 
     }
-    constructor() {
 
+    /**
+     * A second constructor used specifically for the Messaging function,
+     * when a Groop object might need an ID as well
+     */
+    constructor(
+        capacity: Int, createdBy: String?, creatorName: String?, description: String,
+        location: GeoPoint, members: ArrayList<DocumentReference>, name: String,
+        numMembers: Int, startTime: Date, type: String, id: String
+    ) {
+        this.capacity = capacity
+        this.createdBy = createdBy
+        this.creatorName = creatorName
+        this.description = description
+        this.location = location
+        this.members = members
+        this.name = name
+        this.numMembers = numMembers
+        this.startTime = startTime
+        this.type = type
+        this.id = id
     }
 }

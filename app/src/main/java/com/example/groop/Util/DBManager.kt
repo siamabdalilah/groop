@@ -2,6 +2,7 @@ package com.example.groop.Util
 
 import android.app.Activity
 import android.util.Log
+import com.example.groop.DataModels.Message
 import com.example.groop.DataModels.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
@@ -18,6 +19,7 @@ class DBManager {
         val activities: String = "activities"
         val groops: String = "groops"
         val users: String = "users"
+        val messages: String = "messages"
 
 
         //okay boys, here we go
@@ -39,17 +41,18 @@ class DBManager {
          * containing a representation of an activity
          * DEPRECATED
          */
-        private fun parseGroop(doc: DocumentSnapshot): Groop {
+        fun parseGroop(doc: DocumentSnapshot): Groop {
             //TODO: not quite sure how firebase handles arrays, actually
             val members = doc.get("members") as ArrayList<DocumentReference>
            var d: Date? = doc.getDate("startTime")
             Log.d("ANDROID",d.toString())
             return Groop(
-                (doc.get("capacity") as Long).toInt(), doc.get("createdBy") as DocumentReference,
+                (doc.get("capacity") as Long).toInt(), doc.get("createdBy").toString(),
+                doc.get("creatorName").toString(),
                 doc.get("description").toString(), doc.get("location") as GeoPoint,
                 members, doc.get("name").toString(),
                 (doc.get("numMembers") as Long).toInt(), doc.getDate("startTime") as Date,
-                doc.get("type").toString()
+                doc.get("type").toString(), doc.id
             )
         }
 
@@ -81,6 +84,13 @@ class DBManager {
                 doc.id, doc.get("name").toString(), doc.get("location") as GeoPoint,
                 doc.get("bio").toString(), doc.get("profilePicture").toString(),
                 createdGroops, joinedGroops, activityList
+            )
+        }
+
+        fun parseMessage(doc: DocumentSnapshot) : Message {
+            return Message(
+                doc.get("from").toString(), doc.get("timeStamp") as Date,
+                doc.get("content").toString(), doc.get("to").toString()
             )
         }
 
@@ -140,7 +150,7 @@ class DBManager {
             //add each user to the list
             for (doc in docList) {
                 //add a new user to the list by automatically parsing it
-                val u = doc.toObject(User::class.java)
+                val u = parseUser(doc)//doc.toObject(User::class.java)
                 if (u != null) {
                     userList.add(u)
                 }
@@ -203,7 +213,7 @@ class DBManager {
             for (groop in listOfGroopDocuments) {
                 //mostly, we're just going to invoke the parseGroop method
                 groop.get().addOnSuccessListener { snapshot ->
-                    val g = snapshot.toObject(Groop::class.java)
+                    val g = parseGroop(snapshot)
                     if (g != null) {
                         groops.add(g)
                     }
@@ -365,21 +375,88 @@ class DBManager {
         }
 
         /////////////////////////////////MESSAGING
+
         /**
-         * Used for messaging
-         * TODO
+         * Takes in data about the message as well as a callback method
+         * to update the UI
+         *
+         * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
+         * FUNCTION INSTEAD OF RETURNING UPON COMPLETION
          */
-        fun sendRegistrationToServer(token: String, email: String) {
-            val map: HashMap<String, String> = HashMap()
-            map.put("token", token)
-            db.collection(users).document(email).set(map)
+        fun sendMessageToUser(from: String, to: String, content: String,
+                              sent: () -> Any? = {}) {
+            val currentDate = Date()
+
+            //sender and receiver messages are identical
+            val message = Message(from, currentDate, content, to)
+            //add the message first to the receiver's collection
+            db.collection(Paths.users).document(to).collection(Paths.messages)
+                .document().set(message)
+            //and then to the sender's
+            db.collection(Paths.users).document(from).collection(Paths.messages)
+                .document().set(message)
+                    //after the sender's collection is changed, we want
+                    // to update the UI with the callback
+                    //might also do nothing
+                .addOnSuccessListener {
+                    sent()
+                }
         }
 
         /**
-         * Well, we'll see
+         * Takes in data about the message as well as a callback method
+         * to update the UI.
+         * Like the above method, requires the Groop ID to be passed
+         * in as a string, except this time the ID is some random assortment
+         * of nonsense.
+         *
+         * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
+         * FUNCTION INSTEAD OF RETURNING UPON COMPLETION
          */
-        fun getToken(doc: DocumentSnapshot): String? {
-            return doc.get("token") as String?
+        fun sendMessageToGroop(from: String, groopID: String,
+                               content: String, sent: () -> Any? = {}) {
+            val currentDate = Date()
+
+            //don't need a "to" field on this li'l guy at all
+            val message = Message(from, currentDate, content)
+            //add the message to the groop's collection
+            db.collection(Paths.groops).document(groopID).set(message)
+                    //update the UI if applicable
+                .addOnSuccessListener {
+                    sent()
+                }
         }
+
+        /**
+         * Returns an arraylist of message objects from the collection
+         * specified by the passed in query snapshot.  If "otherUser" is
+         * passed in as a parameter, will only return messages where that
+         * user is either the sender or the recipient
+         *
+         * Works for either a Groop's message history or an individual's message
+         * history.
+         */
+        fun getMessageHistory(query: QuerySnapshot, otherUser: String? = null)
+            : ArrayList<Message> {
+            var messages = ArrayList<Message>()
+
+            //first, look at every document in the specified query snapshot
+            val docList = query.documents
+            for (doc in docList) {
+                //construct a new activity from the given fields
+                messages.add(parseMessage(doc))
+            }
+
+            //if another user was passed in as a parameter, then
+            // filters the array based on that
+            if (otherUser != null) {
+                messages = messages.filter {message ->
+                    message.from == otherUser || message.to == otherUser
+                } as ArrayList<Message>
+            }
+
+            return messages
+        }
+
     }
 }

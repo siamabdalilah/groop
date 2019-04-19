@@ -24,10 +24,10 @@ import kotlinx.android.synthetic.main.home_recycler_frag.*
 class home_activity_view: AppCompatActivity() {
 
     @SuppressLint("ValidFragment")
-    class home(contexter: Context, user: User) : Fragment() {
+    class home(contexter: Context) : Fragment() {
         private val auth = FirebaseAuth.getInstance()
         //private val user = user
-        private val username = auth.currentUser!!.email
+        private var username = ""
         private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
         private var adapter = HomeAdapter()
         private var activity_list: ArrayList<String> = ArrayList()
@@ -40,6 +40,8 @@ class home_activity_view: AppCompatActivity() {
 
         override fun onStart() {
             super.onStart()
+            username =auth.currentUser!!.email as String
+
             home_recycler.layoutManager = LinearLayoutManager(context)
             home_recycler.adapter = adapter
             db.collection("activities").get().addOnSuccessListener { snapshot ->
@@ -57,6 +59,7 @@ class home_activity_view: AppCompatActivity() {
                         activity_list.clear()
                         if(activity_list_temp.contains(searchBy)){
                             activity_list.add(searchBy)
+                            adapter.notifyDataSetChanged()
                         }
                     }
                     adapter.notifyDataSetChanged()

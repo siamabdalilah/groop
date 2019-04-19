@@ -26,12 +26,14 @@ import kotlinx.android.synthetic.main.home_groop_view.*
 class home_groop_view : AppCompatActivity(){
 
     @SuppressLint("ValidFragment")
-    class home(contexter: Context, user: User) : Fragment() {
+    class home(contexter: Context) : Fragment() {
 
         private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this.context as Context)
         //private val user= user
         private val auth = FirebaseAuth.getInstance()
-        private val username = auth.currentUser!!.email as String
+//        private val username = auth.currentUser!!.email as String // commented because of merge conflict -- siam
+        private var username = ""
+
         private var joined_groops: ArrayList<Groop> = ArrayList()
         private var created_groops: ArrayList<Groop> = ArrayList()
         private var my_groops: ArrayList<Groop> = ArrayList()
@@ -46,6 +48,8 @@ class home_groop_view : AppCompatActivity(){
 
         override fun onStart() {
             super.onStart()
+            username=auth.currentUser!!.email!!
+
             search_by_distance.visibility= View.GONE
             textView2.visibility=View.GONE
             home_groops_recycler.layoutManager = LinearLayoutManager(context)
@@ -54,9 +58,9 @@ class home_groop_view : AppCompatActivity(){
             DBManager.getGroopsBy(username,this::GetCreatedGroops) //TODO this is not working
             DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
             adapter.notifyDataSetChanged()
-            var searchBy: String = search_by_category.text as String
+            var searchBy: String = ""+search_by_category.text
             search_by_category.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = search_by_category.text as String
+                var searchBy = ""+search_by_category.text
                 if(!hasFocus){
                     activity_list_temp=my_groops
                     if(searchBy!=""){
@@ -116,7 +120,7 @@ class home_groop_view : AppCompatActivity(){
                 p0.time.text="Time: "+activity.startTime.toString()
                 p0.row.setOnClickListener {
                     search_by_distance.visibility= View.VISIBLE
-                    val intent = Intent(p0.itemView.context, com.example.groop.groop_info::class.java)
+                    val intent = Intent(p0.itemView.context, com.example.groop.groop_join::class.java)
                     intent.putExtra("activity", activity)
                     startActivity(intent)
                 }
