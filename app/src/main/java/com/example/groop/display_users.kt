@@ -57,50 +57,51 @@ class display_users: AppCompatActivity() {
         }
 //        var searchBy: String = user_search_by_category.text as String
         user_search_by_category.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = "" + user_search_by_category.text
             if(!hasFocus){
-                if(searchBy!=""){
-                    my_groops.clear()
-                    //checking if each user is interested in the activity
-                    for(usr in activity_list_temp){
-                        //for each activity in the given user check if he is interested in the specified activity
-                        for(activityT in usr.activities){
-                            if(activityT.name==searchBy){
-                                my_groops.add(usr)
-                                adapter.notifyDataSetChanged()
-                            }
-                        }
-                    }
-                }
-                else{
-                    my_groops=activity_list_temp
-                }
-                adapter.notifyDataSetChanged()
+               searchBy()
             }
         }
         user_search_by_distance.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = user_search_by_distance.text.toString().toIntOrNull()// ?? //(user_search_by_distance.text as String).toIntOrNull()
-
             if(!hasFocus){
-                if(searchBy!=null){
-                    my_groops.clear()
-                    for(usr in activity_list_temp){
-                        if(findDistance(usr.location,user.location) <=searchBy){
-                            my_groops.add(usr)
-                            adapter.notifyDataSetChanged()
-                        }
-                    }
-                }
-                else{
-                    my_groops=activity_list_temp
-                }
-                adapter.notifyDataSetChanged()
+                searchBy()
             }
         }
     }
 
 
+    fun searchBy(){
+        my_groops.clear()
+        my_groops.addAll(activity_list_temp)
+        var searchByDist = user_search_by_distance.text.toString().toIntOrNull()
+        if(searchByDist!=null){
+            my_groops.clear()
+            for(usr in my_groops){
+                if(findDistance(usr.location,user.location) <=searchByDist){
+                    my_groops.remove(usr)
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        }
+        adapter.notifyDataSetChanged()
 
+        var searchByCat = "" + user_search_by_category.text
+        if(searchByCat!=""){
+            //checking if each user is interested in the activity
+            for(usr in my_groops){
+                var hasActivity=false
+                //for each activity in the given user check if he is interested in the specified activity
+                for(activityT in usr.activities){
+                    if(activityT.name==searchByCat){
+                        hasActivity=true
+                    }
+                }
+                if(!hasActivity){
+                    my_groops.remove(usr)
+                }
+            }
+        }
+        adapter.notifyDataSetChanged()
+    }
 
     //recycler view adapter
     inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {

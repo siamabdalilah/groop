@@ -15,12 +15,12 @@ class edit_activity_info: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_interest_edit)
-        //val intent = Intent()
+        val intent = Intent()
         //val extras = intent.extras
         val auth = FirebaseAuth.getInstance()
-        var activity: String = "Water Polo"
+        var activity: String = intent.getStringExtra("activity")
        // var user = intent.extras.get("user") as User
-        val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
+       // val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
         var username = auth.currentUser!!.email as String
         home_activity_edit_name.text=activity
 
