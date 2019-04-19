@@ -19,32 +19,42 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.display_users.*
 import com.squareup.picasso.Picasso
+import java.util.*
 
 class display_users: AppCompatActivity() {
-    private val myLoc = GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
-    private val user= intent.getSerializableExtra("user") as User
-    private val username = user.email
+    private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
+    //private val user= intent.getSerializableExtra("user") as User
+
     private val auth = FirebaseAuth.getInstance()
-    private var adapter = display_groops().HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
+    private val username = auth.currentUser!!.email!!
+    private lateinit var user:User
+    private var adapter = HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
     private var my_groops: ArrayList<User> = ArrayList()
     private var activity_list_temp: ArrayList<User> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_groop_view)
+        setContentView(R.layout.display_users)
 
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
-        var locationTemp = GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
-        user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
-        db.collection("users").get().addOnSuccessListener { snapshot ->
-            my_groops= DBManager.getAllUsers(snapshot)
+        var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
+        db.collection("users").document(username).get().addOnSuccessListener { it ->
+            var bio = it.get("bio").toString()
+            var name = it.get("name").toString()
+            var location = it.getGeoPoint("location") as GeoPoint
+            user = User(username, name, location, bio)
+            user.location = GeoPoint(locationTemp.latitude, locationTemp.longitude)
+
+
+            db.collection("users").get().addOnSuccessListener { snapshot ->
+                my_groops = DBManager.getAllUsers(snapshot)
+                my_groops.remove(user)
+                activity_list_temp.addAll(my_groops)
+                adapter.notifyDataSetChanged()
+            }
         }
-       // my_groops= DBManager.getAllUsers()
-        my_groops.remove(user)
-        activity_list_temp=my_groops
-        adapter.notifyDataSetChanged()
 //        var searchBy: String = user_search_by_category.text as String
         user_search_by_category.setOnFocusChangeListener { v, hasFocus ->
             var searchBy = "" + user_search_by_category.text
@@ -62,11 +72,14 @@ class display_users: AppCompatActivity() {
                         }
                     }
                 }
+                else{
+                    my_groops=activity_list_temp
+                }
                 adapter.notifyDataSetChanged()
             }
         }
         user_search_by_distance.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = user_search_by_category.text.toString().toIntOrNull()// ?? //(user_search_by_distance.text as String).toIntOrNull()
+            var searchBy = user_search_by_distance.text.toString().toIntOrNull()// ?? //(user_search_by_distance.text as String).toIntOrNull()
 
             if(!hasFocus){
                 if(searchBy!=null){
@@ -77,6 +90,9 @@ class display_users: AppCompatActivity() {
                             adapter.notifyDataSetChanged()
                         }
                     }
+                }
+                else{
+                    my_groops=activity_list_temp
                 }
                 adapter.notifyDataSetChanged()
             }
@@ -103,10 +119,11 @@ class display_users: AppCompatActivity() {
             p0.bio.text="Currently: "+user_viewed.bio
             Picasso.with(this@display_users).load(user_viewed.profilePicture).into(p0.img)
             p0.row.setOnClickListener {
-                val intent = Intent(p0.itemView.context, user_info::class.java)
-                intent.putExtra("user_viewed", user_viewed)
-                intent.putExtra("user", user)
-                startActivity(intent)
+                //TODO add this in when user_info added
+                //val intent = Intent(p0.itemView.context, user_info::class.java)
+                //intent.putExtra("user_viewed", user_viewed)
+                //intent.putExtra("user", user)
+                //startActivity(intent)
             }
 
         }

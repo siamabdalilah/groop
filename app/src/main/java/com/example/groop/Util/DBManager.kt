@@ -149,7 +149,7 @@ class DBManager {
             //add each user to the list
             for (doc in docList) {
                 //add a new user to the list by automatically parsing it
-                val u = doc.toObject(User::class.java)
+                val u = parseUser(doc)//doc.toObject(User::class.java)
                 if (u != null) {
                     userList.add(u)
                 }
