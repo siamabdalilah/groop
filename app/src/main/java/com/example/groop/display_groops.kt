@@ -38,7 +38,7 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
 
             home_groops_recycler.layoutManager = LinearLayoutManager(this)
             home_groops_recycler.adapter = adapter
-            var locationTemp =GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
+            var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
             user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
             db.collection("groops").get().addOnSuccessListener { snapshot ->
                 my_groops=getAllGroops(snapshot)

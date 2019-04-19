@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.groop.DataModels.GroopListAdapter
 import com.example.groop.DataModels.User
-import com.example.groop.DataModels.groop
 import com.example.groop.R
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
@@ -32,11 +32,11 @@ class home_groop_view : AppCompatActivity(){
         //private val user= user
         private val auth = FirebaseAuth.getInstance()
         private val username = auth.currentUser!!.email as String
-        private var adapter = HomeAdapter()
         private var joined_groops: ArrayList<Groop> = ArrayList()
         private var created_groops: ArrayList<Groop> = ArrayList()
         private var my_groops: ArrayList<Groop> = ArrayList()
         private var activity_list_temp: ArrayList<Groop> = ArrayList()
+        private var adapter = GroopListAdapter(my_groops, contexter)
 
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -82,15 +82,16 @@ class home_groop_view : AppCompatActivity(){
             adapter.notifyDataSetChanged()
         }
 
-        fun groopsContainsActivity(g:ArrayList<groop>, category:String):ArrayList<groop>{
-            var result: ArrayList<groop> = ArrayList()
-            for(p in g){
-                if(p.getCategory()==category){
-                    result.add(p)
-                }
-            }
-            return result
-        }
+        // USES groop CLASS NOW DELETED
+//        fun groopsContainsActivity(g:ArrayList<groop>, category:String):ArrayList<groop>{
+//            var result: ArrayList<groop> = ArrayList()
+//            for(p in g){
+//                if(p.getCategory()==category){
+//                    result.add(p)
+//                }
+//            }
+//            return result
+//        }
 
 
         //recycler view adapter
