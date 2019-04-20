@@ -64,7 +64,7 @@ class DBManager {
          * containing a representation of a user
          * DEPRECATED
          */
-        private fun parseUser(doc: DocumentSnapshot): User {
+        fun parseUser(doc: DocumentSnapshot): User {
             //TODO: Again, not really sure how arrays work
             val createdGroops = doc.get("createdGroops") as ArrayList<DocumentReference>
             val joinedGroops = doc.get("joinedGroops") as ArrayList<DocumentReference>

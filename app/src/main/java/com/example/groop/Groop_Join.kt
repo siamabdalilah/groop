@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.home_display.*
 import kotlinx.android.synthetic.main.home_recycler_frag.*
@@ -46,7 +47,7 @@ class Groop_Join: AppCompatActivity() {
             if(this_groop.members!=null){
                 for(usr in this_groop.members!!){
                     usr.get().addOnSuccessListener { snap->
-                        jusers?.add(snap.get("name") as String)
+                        jusers.add(snap.get("name").toString())
                         hasher?.plus(Pair(snap.get("name")as String,snap.id))
                         adapter.notifyDataSetChanged()
                     }
@@ -55,15 +56,8 @@ class Groop_Join: AppCompatActivity() {
         }
         // var user = intent.extras.get("user") as User
         //val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
-        db.collection("user").document(username).get().addOnSuccessListener {snapshot->
+        DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
 
-            user_groops = snapshot.get("joinedGroops") as ArrayList<Groop>
-            if(!user_groops.contains(this_groop)){
-                if(this_groop.capacity!=this_groop.numMembers){
-                    join_groop_btn.visibility= View.VISIBLE
-                }
-            }
-        }
 
 
 
@@ -85,6 +79,14 @@ class Groop_Join: AppCompatActivity() {
             intent.putExtra("groop_hash_keys",keys)
             intent.putExtra("groop_hash_emails",vals)
             startActivity(intent)
+        }
+    }
+    fun GetJoinedArray(arr:ArrayList<Groop>){
+        user_groops.addAll(arr)
+        if(!user_groops.contains(this_groop)){
+            if(this_groop.capacity!=this_groop.numMembers){
+                join_groop_btn.visibility= View.VISIBLE
+            }
         }
     }
     //recycler view adapter
