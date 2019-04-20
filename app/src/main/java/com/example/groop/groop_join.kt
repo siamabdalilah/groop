@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_interest_edit.*
@@ -29,6 +30,9 @@ class groop_join: AppCompatActivity() {
             this_groop=DBManager.parseGroop(snap)
             groop_name.text=this_groop.name
             jgroop_creator.text=this_groop.creator
+            jgroop_bio.text=this_groop.description
+            jgroop_location.text=this_groop.location.toString()
+            jgroop_time.text=this_groop.startTime.toString()
         }
         // var user = intent.extras.get("user") as User
         //val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")

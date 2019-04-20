@@ -28,7 +28,7 @@ class Groop: Serializable {
         location: GeoPoint, members: ArrayList<DocumentReference>, name: String,
         numMembers: Int, startTime: Date, type: String
     ) {
-         this.capacity = capacity
+        this.capacity = capacity
         this.createdBy = createdBy
         this.creatorName = creatorName
         this.description = description
