@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.groop.DataModels.GroopListAdapter
 import com.example.groop.DataModels.User
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.home_groop_view.*
@@ -26,11 +27,11 @@ class display_groops : AppCompatActivity(){
     val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
     private val username = user.email
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var adapter = HomeAdapter()
     private var joined_groops: ArrayList<Groop> = ArrayList()
     private var created_groops: ArrayList<Groop> = ArrayList()
     private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<Groop> = ArrayList()
+    private var adapter = GroopListAdapter(my_groops, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

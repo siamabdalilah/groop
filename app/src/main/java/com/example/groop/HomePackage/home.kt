@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.example.groop.DataModels.User
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.home_display.*
 
@@ -26,7 +25,6 @@ import kotlinx.android.synthetic.main.home_display.*
 import com.example.groop.R
 import com.example.groop.Util.setupNav
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.bottom_bar.view.*
 import kotlinx.android.synthetic.main.top_bar.view.*
 
@@ -95,9 +93,9 @@ class home : AppCompatActivity() {
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> {
-                    home_activity_view.home(context)
+                    ActivityViewFragment()
                 }
-                else -> home_groop_view.home(context)
+                else -> GroopViewFragment()
             }
         }
 
