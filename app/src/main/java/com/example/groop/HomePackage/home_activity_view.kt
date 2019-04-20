@@ -17,7 +17,6 @@ import com.example.groop.GroopLocation
 import com.example.groop.R
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
-import com.example.groop.activity_create
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.home_recycler_frag.*
