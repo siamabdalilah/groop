@@ -393,11 +393,17 @@ class DBManager {
                     val members: ArrayList<DocumentReference> = snapshot.get("members")
                             as ArrayList<DocumentReference>
 
-                    members.add(db.collection(users).document(user.email))
+                    val memberDocRef = db.collection(users).document(user.email)
+
+                    members.add(memberDocRef)
 
                     //and now remake the array
                     db.collection(groops).document(groop.id.toString())
                         .update("members", members)
+
+                    //also change the Groop object that was passed in,
+                    // just for fun
+                    groop.members?.add(memberDocRef)
                 }
 
             //and now add the groop to the user's list of joined groops
@@ -407,11 +413,17 @@ class DBManager {
                     val joinedGroops: ArrayList<DocumentReference> = snapshot.get("joinedGroops")
                         as ArrayList<DocumentReference>
 
-                    joinedGroops.add(db.collection(groops).document(groop.id.toString()))
+                    val groopDocRef = db.collection(groops).document(groop.id.toString())
+
+                    joinedGroops.add(groopDocRef)
 
                     //and remake the array
                     db.collection(users).document(user.email)
                         .update("joinedGroops", joinedGroops)
+
+                    //also change the User object that was passed in,
+                    // just for fun
+                    user.joinedGroops.add(groopDocRef)
                 }
             //badaboom
         }
