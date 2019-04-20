@@ -1,5 +1,5 @@
 package com.example.groop
 
-class user_info {
+class Groop_Create {
     //TODO needs to be made
 }
