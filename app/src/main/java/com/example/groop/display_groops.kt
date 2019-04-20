@@ -103,7 +103,7 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                 p0.distance.text="Distance: "+findDistance(activity.location, GeoPoint(lat,lng))
                 p0.time.text="Time: "+activity.startTime.toString()
                 p0.row.setOnClickListener {
-                    val intent = Intent(p0.itemView.context, com.example.groop.groop_join::class.java)
+                    val intent = Intent(p0.itemView.context, com.example.groop.Groop_Join::class.java)
                     intent.putExtra("this_groop", activity.id)
                     intent.putExtra("user", user)
                     startActivity(intent)
