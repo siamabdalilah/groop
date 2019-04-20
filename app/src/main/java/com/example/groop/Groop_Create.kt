@@ -5,29 +5,67 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
+import com.example.groop.Util.Groop
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.create_groop.*
+import kotlinx.android.synthetic.main.join_groop.*
+import java.util.*
 
 class Groop_Create: AppCompatActivity() {
     private var activity_list: ArrayList<String> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
+    private val auth = FirebaseAuth.getInstance()
+    private var gl=GroopLocation(this@Groop_Create)
+    private var username=auth.currentUser!!.email!!
+    private var name = ""
+    private lateinit var docRef: DocumentReference
     override fun onCreate(savedInstanceState: Bundle?) {
-        //TODO needs to be made
+        //TODO needs to be finished
         super.onCreate(savedInstanceState)
         setContentView(R.layout.create_groop)
         addItemsOnSpinner2()
+        db.collection("user").document(username).get().addOnSuccessListener { snap->
+            name=snap.get("name").toString()
+            docRef=snap.reference
+        }
 
-
-        spinner2.getSelectedItem().toString()
-
+        create_id.setOnClickListener(){
+            gl.pickLocation()
+        }
 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
+        var address=gl.getAddress(requestCode,resultCode,data)
+        var location= gl.getGeoPoint(requestCode,resultCode,data)
+        if(address!=null && location!=null) {
+            if (spinner2.getSelectedItem() != null) {
+                var activityU = spinner2.getSelectedItem().toString()
+                var capacity = 0
+                if (max_participants_id.text.toString() != "") {
+                    capacity = max_participants_id.text.toString() as Int
+                } else {
+                    capacity = 10
+                }
+                var createdBy =username
+                var creatorName = name
+                var members: ArrayList<DocumentReference> = ArrayList()
+                members.add(docRef)
+                var description = jgroop_bio.text.toString()
+                var startTime = starttime_id.text as Date
+                val groop = Groop(capacity, createdBy,creatorName,description,location,members,
+                    name,1,startTime,activityU)
+                DBManager.createGroop(groop)
+                val intent = Intent(this@Groop_Create, home::class.java)
+                startActivity(intent)
+            }
+        }
     }
+    //credit to https://www.mkyong.com/android/android-spinner-drop-down-list-example/
     private fun addItemsOnSpinner2() {
 
         var spinner2 = findViewById(R.id.spinner2) as Spinner;
