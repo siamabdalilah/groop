@@ -48,7 +48,7 @@ class Groop_Join: AppCompatActivity() {
                 for(usr in this_groop.members!!){
                     usr.get().addOnSuccessListener { snap->
                         jusers.add(snap.get("name").toString())
-                        hasher?.plus(Pair(snap.get("name")as String,snap.id))
+                        hasher.plus(Pair(snap.get("name")as String,snap.id))
                         adapter.notifyDataSetChanged()
                     }
                 }
