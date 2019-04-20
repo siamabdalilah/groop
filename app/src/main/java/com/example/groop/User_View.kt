@@ -56,7 +56,7 @@ class User_View : AppCompatActivity() {
     inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
 
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder {
-            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.recycler_view_item_1_1, p0, false)
+            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.groop_card, p0, false) //TODO change layout back
             return JokeViewHolder(itemView)
         }
 

@@ -41,10 +41,11 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
             user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
             db.collection("groops").get().addOnSuccessListener { snapshot ->
                 my_groops=getAllGroops(snapshot)
+                activity_list_temp.addAll(my_groops)
                 adapter.notifyDataSetChanged()
             }
             //my_groops=DBManager.getSortedGroopList(my_groops,user.location)
-            activity_list_temp=my_groops
+
             adapter.notifyDataSetChanged()
             search_by_category.setOnFocusChangeListener { v, hasFocus ->
                 var searchBy = ""+search_by_category.text
@@ -58,7 +59,7 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                         }
                     }
                     else{
-                        my_groops=activity_list_temp
+                        my_groops.addAll(activity_list_temp)
                     }
                     adapter.notifyDataSetChanged()
                 }
@@ -79,7 +80,7 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                     }
                 }
                 else{
-                    my_groops=activity_list_temp
+                    my_groops.addAll(activity_list_temp)
                 }
                 adapter.notifyDataSetChanged()
             }
