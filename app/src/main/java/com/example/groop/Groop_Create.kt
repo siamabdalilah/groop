@@ -19,7 +19,7 @@ class Groop_Create: AppCompatActivity() {
         setContentView(R.layout.create_groop)
         addItemsOnSpinner2()
 
-        
+
         spinner2.getSelectedItem().toString()
 
 
