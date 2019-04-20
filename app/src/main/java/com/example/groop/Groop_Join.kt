@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.home_recycler_frag.*
 import kotlinx.android.synthetic.main.join_groop.*
 
 class Groop_Join: AppCompatActivity() {
-    //TODO
+
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private val username:String= auth.currentUser!!.email!!
@@ -71,8 +71,16 @@ class Groop_Join: AppCompatActivity() {
             startActivity(intent)
         }
         messege_groop_btn.setOnClickListener {
-            val intent = Intent(this@Groop_Join, home::class.java)
-            intent.putExtra("user", username)
+            val intent = Intent(this@Groop_Join, MyFirebaseMessagingService::class.java)
+            intent.putExtra("groop_id",this_groop.id)
+            var keys:ArrayList<String> = ArrayList()
+            var vals:ArrayList<String> = ArrayList()
+            for(pair in hasher!!){
+                keys.add(pair.key)
+                vals.add(pair.value)
+            }
+            intent.putExtra("groop_hash_keys",keys)
+            intent.putExtra("groop_hash_emails",vals)
             startActivity(intent)
         }
     }
@@ -94,7 +102,6 @@ class Groop_Join: AppCompatActivity() {
                 val intent = Intent(p0.itemView.context, User_View::class.java)
                 intent.putExtra("user_name", activity)
                 intent.putExtra("user_email",hasher?.get(activity))
-                //intent.putExtra("user", user) //TODO cannot be serialized
                 startActivity(intent)
             }
 
@@ -113,5 +120,5 @@ class Groop_Join: AppCompatActivity() {
         }
     }
 
-    //TODO
+
 }
