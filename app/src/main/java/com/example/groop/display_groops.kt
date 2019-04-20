@@ -60,7 +60,11 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                     }
                     adapter.notifyDataSetChanged()
                 }
+                else{
+                    my_groops=activity_list_temp
+                }
             }
+        search_by_distance.visibility=View.GONE
         search_by_distance.setOnFocusChangeListener { v, hasFocus ->
             var searchBy = (""+search_by_distance.text).toIntOrNull()
 
@@ -73,6 +77,9 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                             adapter.notifyDataSetChanged()
                         }
                     }
+                }
+                else{
+                    my_groops=activity_list_temp
                 }
                 adapter.notifyDataSetChanged()
             }
