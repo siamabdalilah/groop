@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +38,9 @@ class User_View : AppCompatActivity() {
         setContentView(R.layout.display_users)
         recycler_1_1.layoutManager = LinearLayoutManager(this@User_View)
         recycler_1_1.adapter = adapter
-        tabs_home.setupWithViewPager(viewpager_home)
+        var lvAdapter=HomeAdapter2()
+        listview_1_1.layoutManager=LinearLayoutManager(this@User_View)
+        listview_1_1.adapter=HomeAdapter2()
         var intent = Intent()
         var user_viewed_email = intent.getStringExtra("user_viewed_email")
         db.collection("users").document(user_viewed_email).get().addOnSuccessListener { snap->
@@ -48,6 +52,8 @@ class User_View : AppCompatActivity() {
                     for(doc in snap.documents){
                         activity_list_temp.add(doc.id)
                     }
+                lvAdapter.notifyDataSetChanged()
+
                 }
 
         }
@@ -94,6 +100,42 @@ class User_View : AppCompatActivity() {
             var img: ImageView = itemView.findViewById(R.id.user_img)
             var name: TextView = itemView.findViewById(R.id.user_name)
             var bio: TextView = itemView.findViewById(R.id.user_bio)
+            var row = itemView
+
+        }
+    }
+
+    inner class HomeAdapter2 : RecyclerView.Adapter<HomeAdapter2.JokeViewHolder2>() {
+
+        override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder2 {
+            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.simple_list_item_1, p0, false) //TODO change layout back
+            return JokeViewHolder2(itemView)
+        }
+
+        //what to do with each element
+        override fun onBindViewHolder(p0: JokeViewHolder2, p1: Int) {
+            //gets joke aka song from the songlist and fills the fields of the itemView
+            //with the song data from the array
+            val activity_viewed= activity_list_temp[p1]
+            p0.name.text=activity_viewed
+            p0.row.setOnClickListener {
+                //TODO add this in when user_info added
+                //val intent = Intent(p0.itemView.context, user_info::class.java)
+                //intent.putExtra("user_viewed", user_viewed)
+                //intent.putExtra("user", user)
+                //startActivity(intent)
+            }
+
+        }
+
+
+        override fun getItemCount(): Int {
+            return my_groops.size
+        }
+
+
+        inner class JokeViewHolder2(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            var name: TextView = itemView.findViewById(R.id.arraylist_name)
             var row = itemView
 
         }
