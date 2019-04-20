@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.display_users.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.home_display.*
 import java.util.*
 
 class display_users: AppCompatActivity() {
@@ -36,7 +37,7 @@ class display_users: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_users)
-
+        tabs_home.setupWithViewPager(viewpager_home)
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
         var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))

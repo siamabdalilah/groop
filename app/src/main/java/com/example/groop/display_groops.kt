@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.home_groop_view.*
 import com.example.groop.Util.*
 import com.example.groop.Util.DBManager.Paths.getAllGroops
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.home_display.*
 
 
 class display_groops : AppCompatActivity(){
@@ -34,7 +35,7 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_groop_view)
-
+        tabs_home.setupWithViewPager(viewpager_home)
             home_groops_recycler.layoutManager = LinearLayoutManager(this)
             home_groops_recycler.adapter = adapter
             var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)

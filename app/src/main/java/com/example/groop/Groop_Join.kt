@@ -13,6 +13,7 @@ import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.home_display.*
 import kotlinx.android.synthetic.main.home_recycler_frag.*
 import kotlinx.android.synthetic.main.join_groop.*
 
@@ -29,6 +30,7 @@ class Groop_Join: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_groop)
+        tabs_home.setupWithViewPager(viewpager_home)
         join_groop_btn.visibility= View.GONE
         home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
         home_recycler_join_groop.adapter=adapter
