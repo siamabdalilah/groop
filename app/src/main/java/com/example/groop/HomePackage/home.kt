@@ -107,9 +107,9 @@ class home : AppCompatActivity() {
 
         override fun getPageTitle(position: Int): CharSequence {
             return when (position) {
-                0 -> "HOME"
+                0 -> "My Activities"
                 else -> {
-                    return "My Activites"
+                    return "My Groops"
                 }
             }
         }

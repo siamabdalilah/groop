@@ -22,7 +22,7 @@ class Groop_Join: AppCompatActivity() {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private val username:String= auth.currentUser!!.email!!
+    private lateinit var username:String
     private var user_groops:ArrayList<Groop> = ArrayList()
     private lateinit var this_groop:Groop
     private var adapter = HomeAdapter()
@@ -31,12 +31,12 @@ class Groop_Join: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_groop)
-
+       username = auth.currentUser!!.email!!
         join_groop_btn.visibility= View.GONE
         home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
         home_recycler_join_groop.adapter=adapter
 
-        val groop_id = "8jYLJboYHvZJCv4Sdts5"//intent.getStringExtra("this_groop")
+        val groop_id = "vYEqVQHd0BjHrg3ZvUg4"//intent.getStringExtra("this_groop")
         db.collection("groops").document(groop_id).get().addOnSuccessListener { snap->
             this_groop=DBManager.parseGroop(snap)
             groop_name.text=this_groop.name

@@ -27,7 +27,7 @@ class User_View : AppCompatActivity() {
     private lateinit var user_viewed: User
     private var adapter = HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
     private var my_groops: ArrayList<User> = ArrayList()
-    private var activity_list_temp: ArrayList<User> = ArrayList()
+    private var activity_list_temp: ArrayList<String> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var user_groops: ArrayList<Groop> = ArrayList()
 
@@ -44,6 +44,12 @@ class User_View : AppCompatActivity() {
             user_name_1_1.text=user_viewed.name
             bio_1_1.text=user_viewed.bio
             DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
+            db.collection("users").document(username).collection("activities").get().addOnSuccessListener { snap->
+                    for(doc in snap.documents){
+                        activity_list_temp.add(doc.id)
+                    }
+                }
+
         }
 
     }
