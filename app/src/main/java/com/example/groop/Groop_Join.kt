@@ -58,7 +58,9 @@ class Groop_Join: AppCompatActivity() {
         db.collection("user").document(username).get().addOnSuccessListener {snapshot->
             user_groops = snapshot.get("joinGroops") as ArrayList<Groop>
             if(!user_groops.contains(this_groop)){
-               join_groop_btn.visibility= View.VISIBLE
+                if(this_groop.capacity!=this_groop.numMembers){
+                    join_groop_btn.visibility= View.VISIBLE
+                }
             }
         }
 
