@@ -46,7 +46,6 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
             //my_groops=DBManager.getSortedGroopList(my_groops,user.location)
             activity_list_temp=my_groops
             adapter.notifyDataSetChanged()
-            var searchBy: String = search_by_category.text as String
             search_by_category.setOnFocusChangeListener { v, hasFocus ->
                 var searchBy = ""+search_by_category.text
                 if(!hasFocus){
@@ -77,7 +76,7 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                 adapter.notifyDataSetChanged()
             }
         }
-        }
+    }
 
 
 

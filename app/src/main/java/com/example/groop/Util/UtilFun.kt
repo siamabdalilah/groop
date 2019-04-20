@@ -43,7 +43,7 @@ fun setupNav(activity: AppCompatActivity, toolbar: Toolbar, bottomBar: BottomNav
         }
         else                -> {
             Log.wtf("wtf", "How the f did this happen")
-            activity as HomeActivity
+            activity as MainActivity
         }
     }
 

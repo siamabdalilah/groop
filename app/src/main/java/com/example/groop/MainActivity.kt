@@ -20,6 +20,7 @@ import com.google.android.gms.location.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
+import com.schibstedspain.leku.LocationPickerActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val db = FirebaseFirestore.getInstance()
     private var isLocated = false
+
+    val gl = GroopLocation(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
         switch_button.setOnClickListener { switch() }
         finish_button.setOnClickListener { login() }
         locate_button.setOnClickListener { locate() }
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         //TODO - check to make sure Google Play account can use messaging
     }
+
 
     fun switch() {
         TransitionManager.beginDelayedTransition(login_screen)

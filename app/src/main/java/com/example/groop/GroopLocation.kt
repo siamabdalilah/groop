@@ -3,6 +3,7 @@ package com.example.groop
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Criteria
 import android.location.Location
@@ -16,26 +17,36 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.firebase.firestore.GeoPoint
-import com.schibstedspain.leku.LocationPickerActivity
+import com.schibstedspain.leku.*
+import com.schibstedspain.leku.geocoder.GeocoderPresenter
+import pl.charmas.android.reactivelocation2.ReactiveLocationProvider
 
 class GroopLocation(private val activity: Activity) {
-    private val fusedLocationClient = FusedLocationProviderClient(activity)
 
-    private lateinit var location: Location
+    val fusedLocationClient = FusedLocationProviderClient(activity)
 
     fun getLocation(): Location {
-
+        android.util.Log.d("location", "got here3")
         val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
-            val loc = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), true))
+            android.util.Log.d("location", "got here")
+//            var loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            var loc  = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+//            if (loc == null){
+//                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+//            }
+            if(loc == null){
+                loc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
+            }
             return loc;
 
 
         }else{
+            android.util.Log.d("location", "got here2")
             ActivityCompat.requestPermissions(
                 activity,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
             )
             return getLocation()
         }
@@ -43,12 +54,36 @@ class GroopLocation(private val activity: Activity) {
 
     fun pickLocation(defaulLocation: GeoPoint? = null){
         val defLoc = if (defaulLocation == null) {
-            val loc = getLocation()
-            GeoPoint(loc.latitude, loc.longitude)
+            @SuppressWarnings("MissingPermission")
+            val loc = fusedLocationClient.lastLocation
+
+            while(!loc.isComplete){}
+            GeoPoint(loc.result?.latitude ?: 0.0, loc.result?.longitude ?: 0.0)
         } else defaulLocation
         val locationPickerIntent = LocationPickerActivity.Builder()
             .withLocation(defLoc.latitude, defLoc.longitude).withDefaultLocaleSearchZone()
-            .withGeolocApiKey("")
+            .withGeolocApiKey("AIzaSyD7np_VilrYuOrBvwSlrCJvKXTPtVVXAjY").build(activity)
+
+        activity.startActivityForResult(locationPickerIntent, 2)
+    }
+
+    fun getGeoPoint(requestCode: Int, resultCode: Int, data: Intent?): GeoPoint?{
+        if (resultCode == Activity.RESULT_OK && data != null){
+            if (requestCode == 1 || requestCode == 2){
+                val lat = data.getDoubleExtra(LATITUDE, 0.0)
+                val lon = data.getDoubleExtra(LONGITUDE, 0.0)
+                return GeoPoint(lat, lon)
+            }else{
+                return null
+            }
+        }else{
+            return null
+        }
+    }
+
+    fun getAddress(requestCode: Int, resultCode: Int, data: Intent?) : String{
+        if (requestCode == 1 || requestCode == 2) return data?.getStringExtra(ADDRESS)?:""
+        return ""
     }
 
     companion object {
@@ -56,12 +91,13 @@ class GroopLocation(private val activity: Activity) {
 
             val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED
+            ) {
                 val loc = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), true))
                 return loc;
 
 
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(
                     activity,
                     arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
@@ -69,35 +105,5 @@ class GroopLocation(private val activity: Activity) {
                 return getLocation(activity)
             }
         }
-    }
-
-    private fun locate(activity: Activity, fusedLocationClient: FusedLocationProviderClient) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissions(
-                activity,
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
-            )
-            return
-
-        }
-        fusedLocationClient.lastLocation.addOnSuccessListener {
-            if (it == null) {
-//                toast(this, "Failed. Please try again")
-                fusedLocationClient.requestLocationUpdates(LocationRequest.create(), object : LocationCallback() {
-                    override fun onLocationResult(p0: LocationResult?) {
-                        super.onLocationResult(p0)
-                        toast(activity, "got here")
-                        locate(activity, fusedLocationClient)
-                    }
-                }, null)
-
-            } else {
-                location = it
-
-            }
-        }
-
     }
 }
