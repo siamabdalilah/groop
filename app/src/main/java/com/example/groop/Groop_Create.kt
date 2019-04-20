@@ -39,6 +39,7 @@ class Groop_Create: AppCompatActivity() {
             gl.pickLocation()
         }
 
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

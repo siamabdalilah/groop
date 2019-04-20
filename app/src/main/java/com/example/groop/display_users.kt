@@ -122,10 +122,10 @@ class display_users: AppCompatActivity() {
             Picasso.with(this@display_users).load(user_viewed.profilePicture).into(p0.img)
             p0.row.setOnClickListener {
                 //TODO add this in when user_info added
-                //val intent = Intent(p0.itemView.context, user_info::class.java)
-                //intent.putExtra("user_viewed", user_viewed)
+                val intent = Intent(p0.itemView.context, User_View::class.java)
+                intent.putExtra("user_viewed_email", user_viewed.email)
                 //intent.putExtra("user", user)
-                //startActivity(intent)
+                startActivity(intent)
             }
 
         }

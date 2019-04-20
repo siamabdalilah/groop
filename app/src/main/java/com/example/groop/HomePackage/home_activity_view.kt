@@ -17,6 +17,7 @@ import com.example.groop.GroopLocation
 import com.example.groop.R
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
+import com.example.groop.activity_create
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.home_recycler_frag.*
@@ -40,21 +41,20 @@ class home_activity_view: AppCompatActivity() {
 
         override fun onStart() {
             super.onStart()
-            username =auth.currentUser!!.email as String
+            username =auth.currentUser!!.email!!
 
             home_recycler.layoutManager = LinearLayoutManager(context)
             home_recycler.adapter = adapter
             db.collection("activities").get().addOnSuccessListener { snapshot ->
                 activity_list= DBManager.getAllActivities(snapshot)
+                activity_list_temp.addAll(activity_list)
                 adapter.notifyDataSetChanged()
             }
             //activity_list= DBManager.getAllActivities();
             adapter.notifyDataSetChanged()
-            var searchBy: String = activity_search_home.text as String
             activity_search_home.setOnFocusChangeListener { v, hasFocus ->
                 var searchBy = ""+activity_search_home.text
                 if(!hasFocus){
-                    activity_list_temp=activity_list
                     if(searchBy!=""){
                         activity_list.clear()
                         if(activity_list_temp.contains(searchBy)){
@@ -62,9 +62,14 @@ class home_activity_view: AppCompatActivity() {
                             adapter.notifyDataSetChanged()
                         }
                     }
+                    else{
+                        activity_list=activity_list_temp
+
+                    }
                     adapter.notifyDataSetChanged()
                 }
             }
+
         }
 
 
