@@ -7,9 +7,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <uses-feature android:name="android.hardware.location.network" android:required="false" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false"  />
-
+    <uses-feature
+            android:name="android.hardware.location.network"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.location.gps"
+            android:required="false"/>
 
     <application
             android:allowBackup="true"
@@ -18,11 +21,20 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyD7np_VilrYuOrBvwSlrCJvKXTPtVVXAjY"/>
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <activity android:name=".EditUserInfoActivity">
+        </activity>
+
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyD7np_VilrYuOrBvwSlrCJvKXTPtVVXAjY"/>
+
+        <uses-library
+                android:name="org.apache.http.legacy"
+                android:required="false"/>
 
         <activity android:name=".UserChatActivity">
         </activity>
+
         <activity android:name=".GroopChatActivity">
         </activity>
 
@@ -33,24 +45,29 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
         <activity
                 android:name="com.schibstedspain.leku.LocationPickerActivity"
                 android:label="@string/leku_title_activity_location_picker"
+                android:parentActivityName=".MainActivity"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-                android:windowSoftInputMode="adjustPan"
-                android:parentActivityName=".MainActivity">
+                android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                       android:resource="@xml/leku_searchable" />
+
+            <meta-data
+                    android:name="android.app.searchable"
+                    android:resource="@xml/leku_searchable"/>
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity" />
+                    android:value=".MainActivity"/>
         </activity>
         <activity android:name=".HomePackage.home">
         </activity>
         <activity android:name=".display_groops">
+        </activity>
+        <activity android:name=".Groop_Join">
         </activity>
         <activity android:name=".display_users">
         </activity>

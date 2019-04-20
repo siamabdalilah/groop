@@ -9,8 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.groop.HomePackage.edit_activity_info
-import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
@@ -32,10 +30,10 @@ class Groop_Join: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_groop)
         join_groop_btn.visibility= View.GONE
-        home_recycler.layoutManager = LinearLayoutManager(this@Groop_Join)
-        recyclerView.adapter=adapter
+        home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
+        home_recycler_join_groop.adapter=adapter
         val intent = Intent()
-        val groop_id = intent.getStringExtra("this_groop")
+        val groop_id = "8jYLJboYHvZJCv4Sdts5"//intent.getStringExtra("this_groop")
         db.collection("groops").document(groop_id).get().addOnSuccessListener { snap->
             this_groop=DBManager.parseGroop(snap)
             groop_name.text=this_groop.name
@@ -56,7 +54,8 @@ class Groop_Join: AppCompatActivity() {
         // var user = intent.extras.get("user") as User
         //val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
         db.collection("user").document(username).get().addOnSuccessListener {snapshot->
-            user_groops = snapshot.get("joinGroops") as ArrayList<Groop>
+
+            user_groops = snapshot.get("joinedGroops") as ArrayList<Groop>
             if(!user_groops.contains(this_groop)){
                 if(this_groop.capacity!=this_groop.numMembers){
                     join_groop_btn.visibility= View.VISIBLE

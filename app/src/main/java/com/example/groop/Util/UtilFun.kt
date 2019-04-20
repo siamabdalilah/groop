@@ -78,6 +78,10 @@ fun setupNav(activity: AppCompatActivity, toolbar: Toolbar, bottomBar: BottomNav
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 activity.startActivity(intent)
             }
+            "Edit Profile" -> {
+                val i = Intent(activity, EditUserInfoActivity::class.java)
+                activity.startActivity(i)
+            }
             else -> {
                 Log.wtf("menu", it.title.toString())
             }

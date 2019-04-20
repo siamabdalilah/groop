@@ -23,7 +23,7 @@ import pl.charmas.android.reactivelocation2.ReactiveLocationProvider
 
 class GroopLocation(private val activity: Activity) {
 
-    val fusedLocationClient = FusedLocationProviderClient(activity)
+//    val fusedLocationClient = FusedLocationProviderClient(activity)
 
     fun getLocation(): Location {
         android.util.Log.d("location", "got here3")
@@ -55,10 +55,11 @@ class GroopLocation(private val activity: Activity) {
     fun pickLocation(defaulLocation: GeoPoint? = null){
         val defLoc = if (defaulLocation == null) {
             @SuppressWarnings("MissingPermission")
-            val loc = fusedLocationClient.lastLocation
+            val loc = getLocation()//fusedLocationClient.lastLocation
 
-            while(!loc.isComplete){}
-            GeoPoint(loc.result?.latitude ?: 0.0, loc.result?.longitude ?: 0.0)
+//            while(!loc.isComplete){}
+//            GeoPoint(loc.result?.latitude ?: 0.0, loc.result?.longitude ?: 0.0)
+            GeoPoint(loc.latitude,loc.longitude)
         } else defaulLocation
         val locationPickerIntent = LocationPickerActivity.Builder()
             .withLocation(defLoc.latitude, defLoc.longitude).withDefaultLocaleSearchZone()
