@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Groop</string>
+
+    <string name="activity_prompt">Choose An Activity</string>
+
+    <string-array name="activities_arrays">
+        <item>Water Polo</item>
+        <item>CSE 438</item>
+    </string-array>
 </resources>

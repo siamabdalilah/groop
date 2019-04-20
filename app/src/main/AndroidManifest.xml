@@ -20,6 +20,9 @@
             android:theme="@style/AppTheme">
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyD7np_VilrYuOrBvwSlrCJvKXTPtVVXAjY"/>
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+        <activity android:name=".UserChatActivity">
+        </activity>
         <activity android:name=".GroopChatActivity">
         </activity>
 

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
+
+    <EditText
+            android:layout_width="121dp"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="192dp"
+            tools:layout_editor_absoluteX="168dp"
+            android:id="@+id/textView16"
+            android:inputType="time"
+            />
+
+    <TextView
+            android:text="CREATE GROOP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="29dp"
+            tools:layout_editor_absoluteX="136dp"
+            android:id="@+id/textView4"
+            />
+
+    <TextView
+            android:text="Groop Name:"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            tools:layout_editor_absoluteY="100dp"
+            tools:layout_editor_absoluteX="53dp"
+            android:id="@+id/textView6"
+            />
+
+    <TextView
+            android:text="Max Participants:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="158dp"
+            tools:layout_editor_absoluteX="53dp"
+            android:id="@+id/textView7"
+            />
+
+    <TextView
+            android:text="Start Time:"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            tools:layout_editor_absoluteY="206dp"
+            tools:layout_editor_absoluteX="53dp"
+            android:id="@+id/textView9"
+            />
+
+    <TextView
+            android:text="Type:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="260dp"
+            tools:layout_editor_absoluteX="53dp"
+            android:id="@+id/textView10"
+            />
+
+    <TextView
+            android:text="Description:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="336dp"
+            tools:layout_editor_absoluteX="53dp"
+            android:id="@+id/textView12"
+            />
+
+    <EditText
+            android:layout_width="346dp"
+            android:layout_height="121dp"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/home_activity_edit_description"
+            android:minLines="4"
+            android:textSize="14sp"
+            android:hint="This is about me"
+            tools:layout_editor_absoluteX="49dp"
+            tools:layout_editor_absoluteY="367dp"
+            />
+
+    <Button
+            android:text="CREATE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/home_activity_edit_button"
+            tools:layout_editor_absoluteY="637dp"
+            tools:layout_editor_absoluteX="259dp"
+            />
+
+    <Button
+            android:text="Locate Event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/home_activity_edit_button"
+            tools:layout_editor_absoluteY="533dp"
+            tools:layout_editor_absoluteX="136dp"
+            />
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="86dp"
+            tools:layout_editor_absoluteX="163dp"
+            android:id="@+id/textView14"
+            android:hint="Name"
+            />
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="147dp"
+            tools:layout_editor_absoluteX="182dp"
+            android:id="@+id/textView15"
+            android:hint="(Optional) 5"
+            />
+
+
+    <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="142dp"
+            android:layout_height="23dp"
+            tools:layout_editor_absoluteY="260dp"
+            tools:layout_editor_absoluteX="163dp"
+            />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
