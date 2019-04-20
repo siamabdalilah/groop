@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.findDistance
+import com.example.groop.Util.setupNav
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,7 +38,6 @@ class display_users: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_users)
-        tabs_home.setupWithViewPager(viewpager_home)
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
         var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))

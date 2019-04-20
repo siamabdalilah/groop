@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Log
 import com.example.groop.DataModels.Message
 import com.example.groop.DataModels.User
+import com.example.groop.DataModels.UserWithoutEmail
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.model.DocumentKey
@@ -85,7 +86,7 @@ class DBManager {
             return User(
                 doc.id, doc.get("name").toString(), doc.get("location") as GeoPoint,
                 doc.get("bio").toString(), doc.get("profilePicture").toString(),
-                createdGroops, joinedGroops, activityList
+                createdGroops, joinedGroops//, activityList
             )
         }
 
@@ -510,6 +511,17 @@ class DBManager {
             }
 
             return messages
+        }
+
+        fun getUserByEmail(email: String): User? {
+            val task = db.collection("users").document(email).get()
+            while(!task.isComplete){
+            }
+            return parseUser(task.result!!)
+        }
+
+        fun updateUser(user: User){
+            db.collection("users").document(user.email).set(user)
         }
 
     }

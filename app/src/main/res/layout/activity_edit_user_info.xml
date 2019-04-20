@@ -14,4 +14,58 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"/>
 
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="Bio"
+
+
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:inputType="textMultiLine"
+                    android:layout_width="match_parent"
+                    android:id="@+id/edit_user_bio_text"
+                    android:enabled="false"
+                    android:layout_height="100sp"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+        <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Edit Bio"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:id="@+id/edit_user_bio"
+                />
+
+        <com.google.android.material.button.MaterialButton
+                android:layout_gravity="top|right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Update Location"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:id="@+id/update_user_location"
+                />
+    </LinearLayout>
+
 </LinearLayout>

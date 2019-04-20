@@ -38,9 +38,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val i = Intent(this, Groop_Join::class.java)
-        startActivity(i)
-        return
 
         if (auth.currentUser != null) {
             val intent = Intent(this, home::class.java)

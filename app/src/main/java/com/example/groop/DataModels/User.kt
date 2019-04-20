@@ -10,6 +10,11 @@ import java.io.Serializable
                     var joinedGroops: ArrayList<DocumentReference> = ArrayList(),
                     var activities: ArrayList<Activity_groop> = ArrayList()): Serializable
 
+    data class UserWithoutEmail(var name: String="", var location: GeoPoint=GeoPoint(0.0,0.0), var bio: String = "",
+                                var profilePicture: String? = null, var createdGroops: ArrayList<DocumentReference> = ArrayList(),
+                                var joinedGroops: ArrayList<DocumentReference> = ArrayList(),
+                                var activities: ArrayList<Activity_groop> = ArrayList())
+
 
 
 //   class User:Serializable{

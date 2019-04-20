@@ -35,7 +35,6 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_groop_view)
-        tabs_home.setupWithViewPager(viewpager_home)
             home_groops_recycler.layoutManager = LinearLayoutManager(this)
             home_groops_recycler.adapter = adapter
             var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
