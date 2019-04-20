@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.create_groop.*
+import kotlinx.android.synthetic.main.home_display.*
 import kotlinx.android.synthetic.main.join_groop.*
 import java.util.*
 
@@ -27,6 +28,7 @@ class Groop_Create: AppCompatActivity() {
         //TODO needs to be finished
         super.onCreate(savedInstanceState)
         setContentView(R.layout.create_groop)
+        tabs_home.setupWithViewPager(viewpager_home)
         addItemsOnSpinner2()
         db.collection("user").document(username).get().addOnSuccessListener { snap->
             name=snap.get("name").toString()
