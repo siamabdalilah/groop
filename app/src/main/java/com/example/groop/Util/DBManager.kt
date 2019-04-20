@@ -6,10 +6,12 @@ import com.example.groop.DataModels.Message
 import com.example.groop.DataModels.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.model.DocumentKey
+import com.google.firebase.firestore.model.ResourcePath
 import com.google.firebase.firestore.model.value.TimestampValue
 import java.lang.IllegalArgumentException
-import java.util.Date
 import java.sql.Timestamp
+import java.util.*
 
 class DBManager {
 
@@ -372,6 +374,46 @@ class DBManager {
             activity["listOfGroops"] = ArrayList<DocumentReference>()
             activity["listOfUsers"] = ArrayList<DocumentReference>()
             db.collection(Paths.activities).document(activityName).set(activity)
+        }
+
+        /**
+         * Adds a specified user to the specified Groop
+         * This version takes a User and Groop object and does
+         * it all that way
+         */
+        fun joinGroop(user: User, groop: Groop) {
+            //make sure that the Groop passed in has an ID field
+            if (groop.id == null) {
+                return
+            }
+            //add the user to the groop's list of members
+            db.collection(groops).document(groop.id.toString()).get()
+                .addOnSuccessListener {snapshot ->
+                    //add stuff to the array
+                    val members: ArrayList<DocumentReference> = snapshot.get("members")
+                            as ArrayList<DocumentReference>
+
+                    members.add(db.collection(users).document(user.email))
+
+                    //and now remake the array
+                    db.collection(groops).document(groop.id.toString())
+                        .update("members", members)
+                }
+
+            //and now add the groop to the user's list of joined groops
+            db.collection(users).document(user.email).get()
+                .addOnSuccessListener {snapshot ->
+                    //add stuff to the array
+                    val joinedGroops: ArrayList<DocumentReference> = snapshot.get("joinedGroops")
+                        as ArrayList<DocumentReference>
+
+                    joinedGroops.add(db.collection(groops).document(groop.id.toString()))
+
+                    //and remake the array
+                    db.collection(users).document(user.email)
+                        .update("joinedGroops", joinedGroops)
+                }
+            //badaboom
         }
 
         /////////////////////////////////MESSAGING
