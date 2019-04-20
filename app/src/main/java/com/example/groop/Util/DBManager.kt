@@ -46,6 +46,7 @@ class DBManager {
          */
         fun parseGroop(doc: DocumentSnapshot): Groop {
             //TODO: not quite sure how firebase handles arrays, actually
+
             val members = doc.get("members") as ArrayList<DocumentReference>
 
             var d: Date? = doc.getDate("startTime")
@@ -128,7 +129,10 @@ class DBManager {
             //add each group to the list through this ridiculous process
             for (doc in docList) {
                 //add a new Groop to the list
-                val g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO this does not convert
+                var g:Groop? = null
+                if(doc.contains("name")) {
+                    g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO this does not convert
+                }
                 if (g != null) {
                     groopList.add(g)
                 }
@@ -218,7 +222,10 @@ class DBManager {
             for (groop in listOfGroopDocuments) {
                 //mostly, we're just going to invoke the parseGroop method
                 groop.get().addOnSuccessListener { snapshot ->
-                    val g = parseGroop(snapshot)
+                    var g: Groop? = null
+                    if(snapshot.contains("name")) {
+                        val g = parseGroop(snapshot)
+                    }
                     if (g != null) {
                         groops.add(g)
                     }
@@ -290,7 +297,10 @@ class DBManager {
 
                     //mostly, we're just going to invoke the parseGroop method
                     groop.get().addOnSuccessListener { doc ->
-                        val g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO throws deserialization error
+                        var g:Groop? =null
+                        if(doc.contains("name")) {
+                            g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO throws deserialization error
+                        }
                         if (g != null) {
                             groops.add(g)
                         }

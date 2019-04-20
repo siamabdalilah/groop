@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.top_bar.view.*
 class home : AppCompatActivity() {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private var adapter = HomeAdapter()
+  //  private var adapter = HomeAdapter()
     private var activity_list: ArrayList<String> =ArrayList()
 
 
@@ -54,7 +54,7 @@ class home : AppCompatActivity() {
 
 
     //recycler view adapter
-    inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
+  /*  inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder {
             val itemView = LayoutInflater.from(p0.context).inflate(R.layout.home_recycler_frag, p0, false)
             return JokeViewHolder(itemView)
@@ -80,7 +80,7 @@ class home : AppCompatActivity() {
             var row = itemView
 
         }
-    }
+    }*/
     class MyPagerAdapter(fm: FragmentManager, context: Context) : FragmentPagerAdapter(fm) {
         var context=context
         val intent = Intent()

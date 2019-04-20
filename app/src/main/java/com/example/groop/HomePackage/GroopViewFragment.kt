@@ -50,7 +50,7 @@ class GroopViewFragment : Fragment() {
         home_groops_recycler.layoutManager = LinearLayoutManager(context)
         home_groops_recycler.adapter = adapter
 
-        DBManager.getGroopsBy(username,this::GetCreatedGroops) //TODO this is not working
+        //DBManager.getGroopsBy(username,this::GetCreatedGroops) //TODO this is not working
         DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
         adapter.notifyDataSetChanged()
 
