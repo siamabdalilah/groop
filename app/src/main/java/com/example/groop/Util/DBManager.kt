@@ -92,7 +92,7 @@ class DBManager {
 
         fun parseMessage(doc: DocumentSnapshot) : Message {
             return Message(
-                doc.get("from").toString(), doc.get("timeStamp") as Date,
+                doc.get("from").toString(), (doc.get("timeStamp")as com.google.firebase.Timestamp).toDate() as Date,
                 doc.get("content").toString(), doc.get("to").toString()
             )
         }
@@ -475,7 +475,7 @@ class DBManager {
             //don't need a "to" field on this li'l guy at all
             val message = Message(from, currentDate, content)
             //add the message to the groop's collection
-            db.collection(Paths.groops).document(groopID).set(message)
+            db.collection(Paths.groops).document(groopID).collection(Paths.messages).document().set(message)
                     //update the UI if applicable
                 .addOnSuccessListener {
                     sent()

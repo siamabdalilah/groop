@@ -28,7 +28,6 @@ class Groop_Create: AppCompatActivity() {
         //TODO needs to be finished
         super.onCreate(savedInstanceState)
         setContentView(R.layout.create_groop)
-        tabs_home.setupWithViewPager(viewpager_home)
         addItemsOnSpinner2()
         db.collection("user").document(username).get().addOnSuccessListener { snap->
             name=snap.get("name").toString()

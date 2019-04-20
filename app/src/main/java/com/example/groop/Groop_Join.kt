@@ -27,15 +27,15 @@ class Groop_Join: AppCompatActivity() {
     private lateinit var this_groop:Groop
     private var adapter = HomeAdapter()
     private var jusers: ArrayList<String> = ArrayList()
-    private var hasher: Map<String,String>?=null
+    private var hasher: Map<String,String> = HashMap()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_groop)
-        tabs_home.setupWithViewPager(viewpager_home)
+
         join_groop_btn.visibility= View.GONE
         home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
         home_recycler_join_groop.adapter=adapter
-        val intent = Intent()
+
         val groop_id = "8jYLJboYHvZJCv4Sdts5"//intent.getStringExtra("this_groop")
         db.collection("groops").document(groop_id).get().addOnSuccessListener { snap->
             this_groop=DBManager.parseGroop(snap)
@@ -68,8 +68,8 @@ class Groop_Join: AppCompatActivity() {
             startActivity(intent)
         }
         messege_groop_btn.setOnClickListener {
-            val intent = Intent(this@Groop_Join, MyFirebaseMessagingService::class.java)
-            intent.putExtra("groop_id",this_groop.id)
+            val intent = Intent(this@Groop_Join, GroopChatActivity::class.java)
+            intent.putExtra("groopId",this_groop.id)
             var keys:ArrayList<String> = ArrayList()
             var vals:ArrayList<String> = ArrayList()
             for(pair in hasher!!){

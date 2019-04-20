@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.Message
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -29,10 +30,15 @@ class GroopChatActivity : AppCompatActivity() {
     //INTENT PARAMETERS
     //the Groop of interest
     lateinit var groopId: String
-    //and the current user's email
-    lateinit var currentUser: String
+    lateinit var groopHashKeys: ArrayList<String>
+    lateinit var groopHashEmails: ArrayList<String>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private val auth = FirebaseAuth.getInstance()
+
+    var currentUser: String=auth.currentUser!!.email!!
+
+
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_groop_chat)
 
@@ -62,17 +68,15 @@ class GroopChatActivity : AppCompatActivity() {
         // so let's get that li'l guy
         //key should be "groopId"
         groopId = intent.getStringExtra("groopId")
-        //also need the current user
-        currentUser = intent.getStringExtra("user")
+            groopHashKeys = intent.getStringArrayListExtra("groop_hash_keys")
+            groopHashEmails = intent.getStringArrayListExtra("groop_hash_emails")
+
 
         //must include the groop id
         if (groopId == null) {
             Log.d(TAG, "Groop not passed in with ID")
         }
-        //likewise must include a user
-        if (currentUser == null) {
-            Log.d(TAG, "intent does not include a user")
-        }
+
 
         //okay, first off, we've got to connect to the database and
         // load all of the messages
