@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
 import com.example.groop.Util.DBManager
+import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
@@ -27,11 +29,13 @@ class User_View : AppCompatActivity() {
     private var my_groops: ArrayList<User> = ArrayList()
     private var activity_list_temp: ArrayList<User> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
+    private var user_groops: ArrayList<Groop> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_users)
+        recycler_1_1.layoutManager = LinearLayoutManager(this@User_View)
+        recycler_1_1.adapter = adapter
         tabs_home.setupWithViewPager(viewpager_home)
         var intent = Intent()
         var user_viewed_email = intent.getStringExtra("user_viewed_email")
@@ -39,15 +43,20 @@ class User_View : AppCompatActivity() {
             user_viewed=DBManager.parseUser(snap)
             user_name_1_1.text=user_viewed.name
             bio_1_1.text=user_viewed.bio
-
+            DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
         }
+
+    }
+    fun GetJoinedArray(arr:ArrayList<Groop>){
+        user_groops.addAll(arr)
+        adapter.notifyDataSetChanged()
 
     }
     //recycler view adapter
     inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
 
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder {
-            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.display_users_recycler_item, p0, false)
+            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.recycler_view_item_1_1, p0, false)
             return JokeViewHolder(itemView)
         }
 
