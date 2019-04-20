@@ -1,6 +1,7 @@
 package com.example.groop
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -121,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 db.collection("users").document(user.email).set(user)
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent(this, home::class.java)
                 startActivity(intent)
             } else {
                 toast(this, "Failed. Try again")
@@ -138,6 +139,19 @@ class MainActivity : AppCompatActivity() {
             )
             return
         }
+//        fusedLocationClient.requestLocationUpdates(LocationRequest.create(), object : LocationCallback() {
+//            override fun onLocationResult(p0: LocationResult?) {
+//                super.onLocationResult(p0)
+//                toast(this@MainActivity, "got here")
+//                if (p0 == null) return locate()
+//                location = p0.lastLocation
+//                isLocated = true
+//                TransitionManager.beginDelayedTransition(login_screen_button_container)
+//                locate_button.visibility = View.GONE
+//                finish_button.setOnClickListener { signup() }
+//            }
+//        }, null)
+
 
         fusedLocationClient.lastLocation.addOnSuccessListener {
             if (it == null) {

@@ -26,7 +26,7 @@ class GroopListAdapter(val groops: ArrayList<Groop>, val context: Context) : Rec
         holder.creator.text = "Billamson McGee" // nope
         holder.distance.text = "" + 0 // nope
         holder.groopName.text = g.name
-        holder.numParticipants.text = "" + g.members!!.size // guessing g.numMembers is something different
+        holder.numParticipants.text = g.members!!.size.toString() // guessing g.numMembers is something different
         holder.location.text = "St Louis, MO" //nope
     }
 
