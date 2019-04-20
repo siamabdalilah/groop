@@ -14,4 +14,11 @@ import java.util.*
  * content is the actual text of the message
  */
 data class Message (var from: String = "", var timeStamp: Date = Date(),
-                    var content: String = "", var to: String? = null) : Serializable
+                    var content: String = "", var to: String? = null) : Serializable {
+    /**
+     * The worst toString function yet made
+     */
+    override fun toString() : String {
+        return from + ": " + content + "(" + timeStamp.toString() + ")"
+    }
+}
