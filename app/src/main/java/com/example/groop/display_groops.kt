@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.home_groop_view.*
 import com.example.groop.Util.*
 import com.example.groop.Util.DBManager.Paths.getAllGroops
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_display_groops.*
 
 
 class display_groops : AppCompatActivity(){
@@ -38,8 +39,8 @@ class display_groops : AppCompatActivity(){
         setContentView(R.layout.activity_display_groops)
 
 
-        home_groops_recycler.layoutManager = LinearLayoutManager(this)
-        home_groops_recycler.adapter = adapter
+        home_groops_recycler2.layoutManager = LinearLayoutManager(this)
+        home_groops_recycler2.adapter = adapter
         var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
         user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
 
@@ -52,8 +53,8 @@ class display_groops : AppCompatActivity(){
         //my_groops=DBManager.getSortedGroopList(my_groops,user.location)
 
         adapter.notifyDataSetChanged()
-        search_by_category.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = ""+search_by_category.text
+        search_by_category2.setOnFocusChangeListener { v, hasFocus ->
+            var searchBy = ""+search_by_category2.text
             if(!hasFocus){
                 if(searchBy!=""){
                     my_groops.clear()
@@ -71,9 +72,9 @@ class display_groops : AppCompatActivity(){
 
         }
 
-        search_by_distance.visibility=View.GONE
-        search_by_distance.setOnFocusChangeListener { v, hasFocus ->
-            var searchBy = (""+search_by_distance.text).toIntOrNull()
+        search_by_distance2.visibility=View.GONE
+        search_by_distance2.setOnFocusChangeListener { v, hasFocus ->
+            var searchBy = (""+search_by_distance2.text).toIntOrNull()
 
             if(!hasFocus){
                 if(searchBy!=null){
@@ -90,6 +91,10 @@ class display_groops : AppCompatActivity(){
                 }
                 adapter.notifyDataSetChanged()
             }
+        }
+        create_groop_for_display_groops2.setOnClickListener {
+            var intent = Intent(this@display_groops,Groop_Create::class.java)
+            startActivity(intent)
         }
     }
 

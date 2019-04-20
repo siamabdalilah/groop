@@ -56,7 +56,11 @@ class display_users: AppCompatActivity() {
 
             db.collection("users").get().addOnSuccessListener { snapshot ->
                 my_groops = DBManager.getAllUsers(snapshot)
-                my_groops.remove(user)
+                for(usr in my_groops){
+                    if(usr.email==username){
+                        my_groops.remove(usr)
+                    }
+                }
                 activity_list_temp.addAll(my_groops)
                 adapter.notifyDataSetChanged()
             }
@@ -128,7 +132,7 @@ class display_users: AppCompatActivity() {
             //with the song data from the array
             val user_viewed= my_groops[p1]
             p0.name.text = "Name: "+user_viewed.name
-            p0.bio.text="Currently: "+user_viewed.bio
+            p0.bio.text="bio: "+user_viewed.bio
             Picasso.with(this@display_users).load(user_viewed.profilePicture).into(p0.img)
             p0.row.setOnClickListener {
                 //TODO add this in when user_info added

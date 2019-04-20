@@ -2,6 +2,7 @@ package com.example.groop.HomePackage
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +10,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.groop.DataModels.GroopListAdapter
+import com.example.groop.Groop_Create
 
 import com.example.groop.R
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
+import kotlinx.android.synthetic.main.fragment_groop_view.*
 import kotlinx.android.synthetic.main.home_groop_view.*
 
 
@@ -69,6 +72,10 @@ class GroopViewFragment : Fragment() {
                 }
                 adapter.notifyDataSetChanged()
             }
+        }
+        create_groop_for_display_groops.setOnClickListener {
+            var intent = Intent(context, Groop_Create::class.java)
+            startActivity(intent)
         }
 
     }

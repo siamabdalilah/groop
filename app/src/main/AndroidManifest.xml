@@ -38,7 +38,8 @@
         <activity android:name=".GroopChatActivity">
         </activity>
         <activity android:name=".Groop_Create">
-
+        </activity>
+        <activity android:name=".User_View">
         </activity>
 
         <service

@@ -13,13 +13,13 @@
             android:inputType="textPersonName"
             android:text="5"
             android:ems="10"
-            android:id="@+id/search_by_distance"
+            android:id="@+id/search_by_distance2"
             app:layout_constraintStart_toEndOf="@+id/textView2"
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="28dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/search_by_category"
+            app:layout_constraintTop_toBottomOf="@+id/search_by_category2"
             />
 
     <TextView
@@ -35,10 +35,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="395dp"
-            android:layout_height="566dp"
-            android:id="@+id/home_groops_recycler"
+            android:layout_height="422dp"
+            android:id="@+id/home_groops_recycler2"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/search_by_distance"
+            app:layout_constraintTop_toBottomOf="@+id/search_by_distance2"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
             android:inputType="textPersonName"
             android:text="Baseball"
             android:ems="10"
-            android:id="@+id/search_by_category"
+            android:id="@+id/search_by_category2"
             app:layout_constraintStart_toEndOf="@+id/textView"
             android:layout_marginStart="55dp"
             android:layout_marginTop="40dp"
@@ -64,6 +64,16 @@
             android:id="@+id/textView" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
             android:layout_marginTop="50dp" app:layout_constraintTop_toTopOf="parent"/>
 
+    <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Groop"
+            android:id="@+id/create_groop_for_display_groops2"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/home_groops_recycler2"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="50dp"
+            />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

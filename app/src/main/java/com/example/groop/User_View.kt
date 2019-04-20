@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.groop.DataModels.GroopListAdapter
 import com.example.groop.DataModels.User
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
@@ -27,83 +28,48 @@ class User_View : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private val username = auth.currentUser!!.email!!
     private lateinit var user_viewed: User
-    private var adapter = HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
-    private var my_groops: ArrayList<User> = ArrayList()
+    private lateinit var adapter : GroopListAdapter
+    private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<String> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private var user_groops: ArrayList<Groop> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.display_users)
+        setContentView(R.layout.user_viewer)
         recycler_1_1.layoutManager = LinearLayoutManager(this@User_View)
+        adapter = GroopListAdapter(my_groops,this@User_View)
         recycler_1_1.adapter = adapter
         var lvAdapter=HomeAdapter2()
         listview_1_1.layoutManager=LinearLayoutManager(this@User_View)
-        listview_1_1.adapter=HomeAdapter2()
-        var intent = Intent()
+        listview_1_1.adapter=lvAdapter
+
         var user_viewed_email = intent.getStringExtra("user_viewed_email")
         db.collection("users").document(user_viewed_email).get().addOnSuccessListener { snap->
             user_viewed=DBManager.parseUser(snap)
             user_name_1_1.text=user_viewed.name
             bio_1_1.text=user_viewed.bio
             DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
-            db.collection("users").document(username).collection("activities").get().addOnSuccessListener { snap->
+            db.collection("users").document(user_viewed.email).collection("activities").get().addOnSuccessListener { snap->
                     for(doc in snap.documents){
                         activity_list_temp.add(doc.id)
+                        lvAdapter.notifyDataSetChanged()
                     }
-                lvAdapter.notifyDataSetChanged()
-
                 }
-
         }
-
+        message_1_1.setOnClickListener {
+            var intent = Intent(this@User_View,UserChatActivity::class.java)
+            intent.putExtra("user", username)
+            intent.putExtra("otherUser", user_viewed.email)
+            startActivity(intent)
+        }
     }
     fun GetJoinedArray(arr:ArrayList<Groop>){
-        user_groops.addAll(arr)
+        my_groops.addAll(arr)
         adapter.notifyDataSetChanged()
 
     }
-    //recycler view adapter
-    inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
 
-        override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder {
-            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.groop_card, p0, false) //TODO change layout back
-            return JokeViewHolder(itemView)
-        }
-
-        //what to do with each element
-        override fun onBindViewHolder(p0: JokeViewHolder, p1: Int) {
-            //gets joke aka song from the songlist and fills the fields of the itemView
-            //with the song data from the array
-            val user_viewed= my_groops[p1]
-            p0.name.text = "Name: "+user_viewed.name
-            p0.bio.text="Currently: "+user_viewed.bio
-            Picasso.with(this@User_View).load(user_viewed.profilePicture).into(p0.img)
-            p0.row.setOnClickListener {
-                //TODO add this in when user_info added
-                //val intent = Intent(p0.itemView.context, user_info::class.java)
-                //intent.putExtra("user_viewed", user_viewed)
-                //intent.putExtra("user", user)
-                //startActivity(intent)
-            }
-
-        }
-
-
-        override fun getItemCount(): Int {
-            return my_groops.size
-        }
-
-
-        inner class JokeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var img: ImageView = itemView.findViewById(R.id.user_img)
-            var name: TextView = itemView.findViewById(R.id.user_name)
-            var bio: TextView = itemView.findViewById(R.id.user_bio)
-            var row = itemView
-
-        }
-    }
 
     inner class HomeAdapter2 : RecyclerView.Adapter<HomeAdapter2.JokeViewHolder2>() {
 
