@@ -29,7 +29,7 @@ class groop_join: AppCompatActivity() {
         db.collection("groops").document(groop_id).get().addOnSuccessListener { snap->
             this_groop=DBManager.parseGroop(snap)
             groop_name.text=this_groop.name
-            jgroop_creator.text=this_groop.creator
+            jgroop_creator.text=this_groop.creatorName
             jgroop_bio.text=this_groop.description
             jgroop_location.text=this_groop.location.toString()
             jgroop_time.text=this_groop.startTime.toString()
