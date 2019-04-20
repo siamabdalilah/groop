@@ -3,6 +3,7 @@ package com.example.groop
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -20,7 +21,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.display_users.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.bottom_bar.view.*
 import kotlinx.android.synthetic.main.home_display.*
+import kotlinx.android.synthetic.main.top_bar.view.*
 import java.util.*
 
 class display_users: AppCompatActivity() {
@@ -38,6 +41,8 @@ class display_users: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_users)
+        setupNav(this, display_users_top_bar.top_bar, display_users_bottom_bar.bottom_bar_layout)
+
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
         var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
@@ -67,6 +72,11 @@ class display_users: AppCompatActivity() {
                 searchBy()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_menu, menu)
+        return true
     }
 
 

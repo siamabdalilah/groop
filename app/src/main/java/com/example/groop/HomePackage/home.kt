@@ -35,6 +35,8 @@ class home : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private var adapter = HomeAdapter()
     private var activity_list: ArrayList<String> =ArrayList()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_display)

@@ -47,8 +47,10 @@ class DBManager {
         fun parseGroop(doc: DocumentSnapshot): Groop {
             //TODO: not quite sure how firebase handles arrays, actually
             val members = doc.get("members") as ArrayList<DocumentReference>
-           var d: Date? = doc.getDate("startTime")
+
+            var d: Date? = doc.getDate("startTime")
             Log.d("ANDROID",d.toString())
+
             return Groop(
                 (doc.get("capacity") as Long).toInt(), doc.get("createdBy").toString(),
                 doc.get("creatorName").toString(),

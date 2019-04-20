@@ -4,6 +4,7 @@ package com.example.groop
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -16,14 +17,13 @@ import kotlinx.android.synthetic.main.home_groop_view.*
 import com.example.groop.Util.*
 import com.example.groop.Util.DBManager.Paths.getAllGroops
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.home_display.*
 
 
 class display_groops : AppCompatActivity(){
 
     private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
-//    private val user= intent.getSerializableExtra("user") as User //TODO
-val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
+    //    private val user= intent.getSerializableExtra("user") as User //TODO
+    val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
     private val username = user.email
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var adapter = HomeAdapter()
@@ -34,37 +34,42 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_groop_view)
-            home_groops_recycler.layoutManager = LinearLayoutManager(this)
-            home_groops_recycler.adapter = adapter
-            var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
-            user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
-            db.collection("groops").get().addOnSuccessListener { snapshot ->
-                my_groops=getAllGroops(snapshot)
-                activity_list_temp.addAll(my_groops)
-                adapter.notifyDataSetChanged()
-            }
-            //my_groops=DBManager.getSortedGroopList(my_groops,user.location)
+        setContentView(R.layout.activity_display_groops)
 
+
+        home_groops_recycler.layoutManager = LinearLayoutManager(this)
+        home_groops_recycler.adapter = adapter
+        var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
+        user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
+
+
+        db.collection("groops").get().addOnSuccessListener { snapshot ->
+            my_groops=getAllGroops(snapshot)
+            activity_list_temp.addAll(my_groops)
             adapter.notifyDataSetChanged()
-            search_by_category.setOnFocusChangeListener { v, hasFocus ->
-                var searchBy = ""+search_by_category.text
-                if(!hasFocus){
-                    if(searchBy!=""){
-                        my_groops.clear()
-                        for(grp in activity_list_temp){
-                            if(grp.type==searchBy){
-                                my_groops.add(grp)
-                            }
+        }
+        //my_groops=DBManager.getSortedGroopList(my_groops,user.location)
+
+        adapter.notifyDataSetChanged()
+        search_by_category.setOnFocusChangeListener { v, hasFocus ->
+            var searchBy = ""+search_by_category.text
+            if(!hasFocus){
+                if(searchBy!=""){
+                    my_groops.clear()
+                    for(grp in activity_list_temp){
+                        if(grp.type==searchBy){
+                            my_groops.add(grp)
                         }
                     }
-                    else{
-                        my_groops.addAll(activity_list_temp)
-                    }
-                    adapter.notifyDataSetChanged()
                 }
-
+                else{
+                    my_groops.addAll(activity_list_temp)
+                }
+                adapter.notifyDataSetChanged()
             }
+
+        }
+
         search_by_distance.visibility=View.GONE
         search_by_distance.setOnFocusChangeListener { v, hasFocus ->
             var searchBy = (""+search_by_distance.text).toIntOrNull()
@@ -85,6 +90,11 @@ val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), 
                 adapter.notifyDataSetChanged()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_menu, menu)
+        return true
     }
 
 

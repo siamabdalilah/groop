@@ -84,64 +84,53 @@ class home_groop_view : AppCompatActivity(){
             my_groops.addAll(arr)
             adapter.notifyDataSetChanged()
         }
-
-        // USES groop CLASS NOW DELETED
-//        fun groopsContainsActivity(g:ArrayList<groop>, category:String):ArrayList<groop>{
-//            var result: ArrayList<groop> = ArrayList()
-//            for(p in g){
-//                if(p.getCategory()==category){
-//                    result.add(p)
-//                }
-//            }
-//            return result
-//        }
-
-
-        //recycler view adapter
-        inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
-
-            override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder {
-                val itemView = LayoutInflater.from(p0.context).inflate(R.layout.home_groop_recycler_item, p0, false)
-                return JokeViewHolder(itemView)
-            }
-
-            //what to do with each element
-            override fun onBindViewHolder(p0: JokeViewHolder, p1: Int) {
-                //gets joke aka song from the songlist and fills the fields of the itemView
-                //with the song data from the array
-                val activity = my_groops[p1]
-                p0.name.text = "Name: "+activity.name
-                p0.curParticiants.text="Currently: "+activity.members!!.size.toString()
-                p0.participants.text = "Participants: "+activity.capacity.toString()
-                var lng = myLoc.longitude*10000000
-                var lat = myLoc.latitude*1000000
-                p0.distance.text="Distance: "+findDistance(activity.location, GeoPoint(lat,lng))
-                p0.time.text="Time: "+activity.startTime.toString()
-                p0.row.setOnClickListener {
-                    search_by_distance.visibility= View.VISIBLE
-                    val intent = Intent(p0.itemView.context, com.example.groop.Groop_Join::class.java)
-                    intent.putExtra("activity", activity)
-                    startActivity(intent)
-                }
-
-            }
-
-
-            override fun getItemCount(): Int {
-                return my_groops.size
-            }
-
-
-            inner class JokeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-                var name: TextView = itemView.findViewById(R.id.home_groop_name)
-                var participants: TextView = itemView.findViewById(R.id.home_groop_participants)
-                var curParticiants: TextView = itemView.findViewById(R.id.home_groop_currParticipants)
-                var distance: TextView = itemView.findViewById(R.id.home_groop_distance)
-                var time: TextView = itemView.findViewById(R.id.home_groop_time)
-                var row = itemView
-
-            }
-        }
-
     }
+}
+
+
+
+
+//inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
+//
+//    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder {
+//        val itemView = LayoutInflater.from(p0.context).inflate(R.layout.home_groop_recycler_item, p0, false)
+//        return JokeViewHolder(itemView)
+//    }
+//
+//    //what to do with each element
+//    override fun onBindViewHolder(p0: JokeViewHolder, p1: Int) {
+//        //gets joke aka song from the songlist and fills the fields of the itemView
+//        //with the song data from the array
+//        val activity = my_groops[p1]
+//        p0.name.text = "Name: "+activity.name
+//        p0.curParticiants.text="Currently: "+activity.members!!.size.toString()
+//        p0.participants.text = "Participants: "+activity.capacity.toString()
+//        var lng = myLoc.longitude*10000000
+//        var lat = myLoc.latitude*1000000
+//        p0.distance.text="Distance: "+findDistance(activity.location, GeoPoint(lat,lng))
+//        p0.time.text="Time: "+activity.startTime.toString()
+//        p0.row.setOnClickListener {
+//            search_by_distance.visibility= View.VISIBLE
+//            val intent = Intent(p0.itemView.context, com.example.groop.Groop_Join::class.java)
+//            intent.putExtra("activity", activity)
+//            startActivity(intent)
+//        }
+//
+//    }
+//
+//
+//    override fun getItemCount(): Int {
+//        return my_groops.size
+//    }
+//
+//
+//    inner class JokeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        var name: TextView = itemView.findViewById(R.id.home_groop_name)
+//        var participants: TextView = itemView.findViewById(R.id.home_groop_participants)
+//        var curParticiants: TextView = itemView.findViewById(R.id.home_groop_currParticipants)
+//        var distance: TextView = itemView.findViewById(R.id.home_groop_distance)
+//        var time: TextView = itemView.findViewById(R.id.home_groop_time)
+//        var row = itemView
+//
+//    }
 }
