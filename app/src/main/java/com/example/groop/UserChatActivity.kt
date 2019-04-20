@@ -2,23 +2,19 @@ package com.example.groop
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
-import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.Message
 import com.example.groop.Util.DBManager
-import com.example.groop.Util.Groop
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 
-class GroopChatActivity : AppCompatActivity() {
+class UserChatActivity : AppCompatActivity() {
 
-    val TAG = "GROOP_CHAT"
+    val TAG = "USER_CHAT"
     lateinit var db: FirebaseFirestore
     var messages: ArrayList<Message> = ArrayList()
     //UI ELEMENTS
@@ -27,14 +23,14 @@ class GroopChatActivity : AppCompatActivity() {
     lateinit var sendButton: Button
 
     //INTENT PARAMETERS
-    //the Groop of interest
-    lateinit var groopId: String
-    //and the current user's email
+    //the current user's email
     lateinit var currentUser: String
+    //and the user that will be messaged
+    lateinit var otherUser: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_groop_chat)
+        setContentView(R.layout.activity_user_chat)
 
         //get the database up and running
         db = FirebaseFirestore.getInstance()
@@ -61,29 +57,29 @@ class GroopChatActivity : AppCompatActivity() {
         //should have passed in a Groop object when entering this activity,
         // so let's get that li'l guy
         //key should be "groopId"
-        groopId = intent.getStringExtra("groopId")
+        otherUser = intent.getStringExtra("otherUser")
         //also need the current user
         currentUser = intent.getStringExtra("user")
 
-        //must include the groop id
-        if (groopId == null) {
-            Log.d(TAG, "Groop not passed in with ID")
+        //must include the other user
+        if (otherUser == null) {
+            Log.d(TAG, "intent does not include other user")
         }
-        //likewise must include a user
+        //likewise must include the current user
         if (currentUser == null) {
-            Log.d(TAG, "intent does not include a user")
+            Log.d(TAG, "intent does not include current user")
         }
 
         //okay, first off, we've got to connect to the database and
         // load all of the messages
-        db.collection(DBManager.Paths.groops).document(groopId)
+        db.collection(DBManager.Paths.users).document(currentUser)
             .collection(DBManager.Paths.messages).get()
             .addOnSuccessListener { snapshot ->
                 updateMessageUI(snapshot)
             }
         //then set up a listener to do the exact same thing every
         // time there is a change in the database
-        db.collection(DBManager.Paths.groops).document(groopId)
+        db.collection(DBManager.Paths.users).document(currentUser)
             .collection(DBManager.Paths.messages)
             .addSnapshotListener { snapshot, exception ->
                 if (snapshot != null) {
@@ -93,12 +89,13 @@ class GroopChatActivity : AppCompatActivity() {
     }
 
     /**
-     * Just resets the adapter as we are often wont to do
-     * Hoo BOY this is gonna look atrocious lol
+     * Updates the ListView to reflect a new message
+     * being sent or received
      */
     fun updateMessageUI(snapshot: QuerySnapshot) {
         //update the messages arraylist
-        messages = DBManager.getMessageHistory(snapshot)
+        //pass in other user to filter the results
+        messages = DBManager.getMessageHistory(snapshot, otherUser)
         //then update the associated UI element
         list.adapter = ArrayAdapter<Message>(this,
             android.R.layout.simple_list_item_1, messages)
@@ -108,7 +105,6 @@ class GroopChatActivity : AppCompatActivity() {
      * Sends a new message!
      */
     fun sendNewMessage(content: String) {
-        //pretty straightforward
-        DBManager.sendMessageToGroop(currentUser, groopId, content)
+        DBManager.sendMessageToUser(currentUser, otherUser, content)
     }
 }
