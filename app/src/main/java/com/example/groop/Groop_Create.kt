@@ -19,6 +19,7 @@ import java.util.*
 
 import android.app.Activity;
 import android.view.View;
+import java.time.LocalDate
 
 
 class Groop_Create: AppCompatActivity() {
@@ -58,7 +59,7 @@ class Groop_Create: AppCompatActivity() {
                 var activityU = spinner2.getSelectedItem().toString()
                 var capacity = 0
                 if (max_participants_id.text.toString() != "") {
-                    capacity = max_participants_id.text.toString() as Int
+                    capacity = max_participants_id.text.toString().toInt()
                 } else {
                     capacity = 10
                 }
@@ -67,7 +68,7 @@ class Groop_Create: AppCompatActivity() {
                 var members: ArrayList<DocumentReference> = ArrayList()
                 members.add(docRef)
                 var description = jgroop_bio.text.toString()
-                var startTime = starttime_id.text as Date
+                var startTime = LocalDate.parse(starttime_id.text.toString())
                 val groop = Groop(capacity, createdBy,creatorName,description,location,members,
                     name,1,startTime,activityU,address=address)
                 DBManager.createGroop(groop)
