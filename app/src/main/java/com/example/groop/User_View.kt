@@ -29,6 +29,7 @@ class User_View : AppCompatActivity() {
     private val username = auth.currentUser!!.email!!
     private lateinit var user_viewed: User
     private lateinit var adapter : GroopListAdapter
+    private lateinit var lvAdapter: HomeAdapter2
     private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<String> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -40,7 +41,7 @@ class User_View : AppCompatActivity() {
         recycler_1_1.layoutManager = LinearLayoutManager(this@User_View)
         adapter = GroopListAdapter(my_groops,this@User_View)
         recycler_1_1.adapter = adapter
-        var lvAdapter=HomeAdapter2()
+        lvAdapter=HomeAdapter2()
         listview_1_1.layoutManager=LinearLayoutManager(this@User_View)
         listview_1_1.adapter=lvAdapter
 
@@ -86,17 +87,18 @@ class User_View : AppCompatActivity() {
             p0.name.text=activity_viewed
             p0.row.setOnClickListener {
                 //TODO add this in when user_info added
-                //val intent = Intent(p0.itemView.context, user_info::class.java)
+                val intent = Intent(p0.itemView.context, View_Users_Activity::class.java)
                 //intent.putExtra("user_viewed", user_viewed)
-                //intent.putExtra("user", user)
-                //startActivity(intent)
+                intent.putExtra("activity", activity_viewed)
+                intent.putExtra("username",user_viewed.email)
+                startActivity(intent)
             }
 
         }
 
 
         override fun getItemCount(): Int {
-            return my_groops.size
+            return activity_list_temp.size
         }
 
 

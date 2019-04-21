@@ -41,6 +41,7 @@
         </activity>
         <activity android:name=".User_View">
         </activity>
+        <activity android:name=".View_Users_Activity"></activity>
 
         <service
                 android:name=".MyFirebaseMessagingService"

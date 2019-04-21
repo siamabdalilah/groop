@@ -6,17 +6,6 @@
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
         >
 
-    <EditText
-            android:layout_width="121dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/starttime_id"
-            android:inputType="time"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/max_participants_id"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="106dp"
-            />
-
     <TextView
             android:text="CREATE GROOP"
             android:layout_width="wrap_content"
@@ -60,7 +49,7 @@
             android:layout_marginTop="30dp"
             app:layout_constraintTop_toBottomOf="@+id/max_participants_id"
             app:layout_constraintEnd_toStartOf="@+id/starttime_id"
-            android:layout_marginEnd="70dp"
+            android:layout_marginEnd="65dp"
             />
 
     <TextView
@@ -143,6 +132,19 @@
             app:layout_constraintTop_toBottomOf="@+id/textView9"
             android:layout_marginEnd="87dp"
             app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    <EditText
+            android:id="@+id/starttime_id"
+            android:clickable="true"
+            android:editable="false"
+            android:hint="pick date"
+            android:layout_height="35dp"
+            android:layout_width="112dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="117dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/max_participants_id"
             />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

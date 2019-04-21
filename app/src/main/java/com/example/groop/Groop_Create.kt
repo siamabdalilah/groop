@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
@@ -15,6 +16,10 @@ import kotlinx.android.synthetic.main.create_groop.*
 import kotlinx.android.synthetic.main.home_display.*
 import kotlinx.android.synthetic.main.join_groop.*
 import java.util.*
+
+import android.app.Activity;
+import android.view.View;
+
 
 class Groop_Create: AppCompatActivity() {
     private var activity_list: ArrayList<String> = ArrayList()
@@ -36,6 +41,10 @@ class Groop_Create: AppCompatActivity() {
 
         create_id.setOnClickListener(){
             gl.pickLocation()
+        }
+        starttime_id.setOnClickListener {
+            var newFragment:DialogFragment= DatePickerFragment()
+            newFragment.show(getSupportFragmentManager(),"Date Picker")
         }
 
 
@@ -60,7 +69,7 @@ class Groop_Create: AppCompatActivity() {
                 var description = jgroop_bio.text.toString()
                 var startTime = starttime_id.text as Date
                 val groop = Groop(capacity, createdBy,creatorName,description,location,members,
-                    name,1,startTime,activityU)
+                    name,1,startTime,activityU,address=address)
                 DBManager.createGroop(groop)
                 val intent = Intent(this@Groop_Create, home::class.java)
                 startActivity(intent)
