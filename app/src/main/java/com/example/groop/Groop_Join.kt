@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
@@ -34,6 +35,8 @@ class Groop_Join: AppCompatActivity() {
        username = auth.currentUser!!.email!!
         join_groop_btn.visibility= View.GONE
         //TODO delete_groop_for_groop_join.visibility=View.GONE
+        //TODO leave_groop_for_groop_join.visibility=View.GONE
+        //TODO edit_groop_for_groop_join.visibility=View.GONE
         home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
         home_recycler_join_groop.adapter=adapter
 
@@ -82,6 +85,28 @@ class Groop_Join: AppCompatActivity() {
             intent.putExtra("groop_hash_emails",vals)
             startActivity(intent)
         }
+
+        /*
+        //TODO
+        leave_groop_for_groop_join.setOnClickListener{
+            DBManager.leaveGroop(this_groop,username)
+            val intent = Intent(this@Groop_Join, home::class.java)
+            startActivity(intent)
+        }
+        delete_groop_for_groop_join.setOnClickListener{
+            DBManager.deleteGroop(this_groop)
+            val intent = Intent(this@Groop_Join, home::class.java)
+            startActivity(intent)
+        }
+        edit_groop_for_groop_join.setOnClickListener{
+            val intent = Intent(this@Groop_Join, Edit_Groop::class.java)
+            intent.putExtra("groop_id",this_groop.id)
+            startActivity(intent)
+
+        }
+        */
+
+
     }
     fun GetJoinedArray(arr:ArrayList<Groop>){
         user_groops.addAll(arr)
@@ -97,6 +122,7 @@ class Groop_Join: AppCompatActivity() {
         }
         if(this_groop.createdBy==username){
            //TODO delete_groop_for_groop_join.visibility=View.VISIBLE
+            //TODO edit_groop_for_groop_join.visibility=View.VISIBLE
         }
     }
     //recycler view adapter

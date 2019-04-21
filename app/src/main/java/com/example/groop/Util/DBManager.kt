@@ -582,6 +582,26 @@ class DBManager {
             }
             doc.delete()
         }
+        fun editGroop(groop:Groop){
+            val doc = db.collection(Paths.groops).document(groop.id!!)
+                doc.get().addOnSuccessListener { snap->
+                val temp_groop = parseGroop(snap)
+                    if(temp_groop.capacity>groop.numMembers){
+                        Log.d("ANDROID","error: numMembers was larger than reset capacity")
+                    }
+                    else{
+                        temp_groop.capacity=groop.capacity
+                        temp_groop.address= groop.address
+                        temp_groop.description=groop.description
+                        temp_groop.name=groop.name
+                        temp_groop.location=groop.location
+                        temp_groop.startTime=groop.startTime
+                        temp_groop.type=groop.type
+                    }
+                    doc.set(temp_groop)
+            }
+            doc.set(groop)
+        }
 
     }
 }
