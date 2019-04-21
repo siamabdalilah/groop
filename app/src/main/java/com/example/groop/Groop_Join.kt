@@ -33,6 +33,7 @@ class Groop_Join: AppCompatActivity() {
         setContentView(R.layout.join_groop)
        username = auth.currentUser!!.email!!
         join_groop_btn.visibility= View.GONE
+        //TODO delete_groop_for_groop_join.visibility=View.GONE
         home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
         home_recycler_join_groop.adapter=adapter
 
@@ -88,6 +89,14 @@ class Groop_Join: AppCompatActivity() {
             if(this_groop.capacity!=this_groop.numMembers){
                 join_groop_btn.visibility= View.VISIBLE
             }
+        }
+        else{
+            if(this_groop.createdBy!=username) {
+               //TODO leave_groop_for_groop_join.visibility = View.VISIBLE
+            }
+        }
+        if(this_groop.createdBy==username){
+           //TODO delete_groop_for_groop_join.visibility=View.VISIBLE
         }
     }
     //recycler view adapter

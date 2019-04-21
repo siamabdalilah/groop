@@ -376,7 +376,16 @@ class DBManager {
         fun createGroop(groop: Groop) {
             //again, Firestore does everything for us
             //document will just have an auto-generated ID
-            db.collection(Paths.groops).document().set(groop)
+
+            val doc = db.collection(Paths.groops).document()
+                doc.set(groop).addOnSuccessListener {
+                db.collection("users").document(groop.createdBy!!).get().addOnSuccessListener { snap ->
+                    val temp_user = parseUser(snap)
+                    temp_user.createdGroops.add(doc)
+                    temp_user.joinedGroops.add(doc)
+                    db.collection("users").document(groop.createdBy!!).set(temp_user)
+                }
+            }
         }
 
         /**
