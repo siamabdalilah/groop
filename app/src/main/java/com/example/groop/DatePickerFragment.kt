@@ -46,8 +46,9 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         tv.text = tv.text.toString() + "\nYear: " + year
         tv.text = tv.text.toString() + "\nMonth: " + month
         tv.text = tv.text.toString() + "\nDay of Month: " + day
+        tv.text=""+year+"-"+month+"-"+day
 
-        val stringOfDate = day.toString() + "/" + month + "/" + year
-        tv.text = tv.text.toString() + "\n\nFormatted date: " + stringOfDate
+       // val stringOfDate = day.toString() + "/" + month + "/" + year
+        //tv.text = tv.text.toString() + "\n\nFormatted date: " + stringOfDate
     }
 }
