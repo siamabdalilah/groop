@@ -51,7 +51,6 @@ class GroopViewFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         userEmail = auth.currentUser!!.email!!
-        myGroops.add(Groop())
         adapter = GroopListAdapter(myGroops, activity as AppCompatActivity)
 
 
