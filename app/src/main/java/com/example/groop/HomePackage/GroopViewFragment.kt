@@ -54,16 +54,12 @@ class GroopViewFragment : Fragment() {
         adapter = GroopListAdapter(myGroops, activity as AppCompatActivity)
 
 
-        search_by_distance.visibility = View.GONE
-        textView2.visibility = View.GONE
-
         home_groops_recycler.layoutManager = LinearLayoutManager(activity)
         home_groops_recycler.adapter = adapter
 
 
         DBManager.getGroopsBy(userEmail, this::getCreatedGroops) //TODO this is not working
         DBManager.getGroopsJoinedBy(userEmail, this::getJoinedArray)
-        toast(activity as Context, "massive fml")
         adapter.notifyDataSetChanged()
 
 
@@ -92,7 +88,6 @@ class GroopViewFragment : Fragment() {
                         if (it.name.toLowerCase().matches(Regex(".*$searchBy.*"))){
                             return@filter true
                         }
-                        toast(activity as Context, searchBy)
 
                         if (it.type.toLowerCase().matches(Regex(".*$searchBy.*"))){
                             return@filter true
@@ -121,8 +116,6 @@ class GroopViewFragment : Fragment() {
     }
 
     fun getCreatedGroops(arr: ArrayList<Groop>) {
-        toast(activity as Context,  arr.size.toString())
-        toast(activity as Context, "fml")
         myGroops.addAll(arr)
         adapter.notifyDataSetChanged()
     }
