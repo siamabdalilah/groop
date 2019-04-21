@@ -381,6 +381,7 @@ class DBManager {
             //document will just have an auto-generated ID
 
             val doc = db.collection(Paths.groops).document()
+            groop.id=doc.id
                 doc.set(groop).addOnSuccessListener {
                 db.collection("users").document(groop.createdBy!!).get().addOnSuccessListener { snap ->
                     val temp_user = parseUser(snap)
