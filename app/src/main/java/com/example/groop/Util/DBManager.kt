@@ -554,5 +554,34 @@ class DBManager {
             return groops
         }
 
+        fun leaveGroop(groop: Groop, username: String){
+            val doc = db.collection("groops").document(groop.id!!)
+            doc.get().addOnSuccessListener { snap->
+                val temp_groop = parseGroop(snap)
+                temp_groop.members?.remove(db.collection("users").document(username))
+                temp_groop.numMembers--
+                doc.set(temp_groop)
+            }
+            db.collection("users").document(username).get().addOnSuccessListener { snap->
+                val temp_user = parseUser(snap)
+                temp_user.createdGroops.remove(doc)
+                temp_user.joinedGroops.remove(doc)
+            }
+        }
+        fun deleteGroop(groop: Groop){
+            val doc = db.collection("groops").document(groop.id!!)
+            for(usrRef in groop.members!!){
+                usrRef.get().addOnSuccessListener { snap->
+                    val temp_user = parseUser(snap)
+                    temp_user.joinedGroops.remove(doc)
+                    if(temp_user.email==groop.createdBy) {
+                        temp_user.createdGroops.remove(doc)
+                    }
+                    usrRef.set(temp_user)
+                }
+            }
+            doc.delete()
+        }
+
     }
 }
