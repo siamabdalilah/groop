@@ -49,7 +49,7 @@ class User_View : AppCompatActivity() {
             user_viewed=DBManager.parseUser(snap)
             user_name_1_1.text=user_viewed.name
             bio_1_1.text=user_viewed.bio
-            DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
+            DBManager.getGroopsJoinedBy(user_viewed_email,this::GetJoinedArray)
             db.collection("users").document(user_viewed.email).collection("activities").get().addOnSuccessListener { snap->
                     for(doc in snap.documents){
                         activity_list_temp.add(doc.id)
