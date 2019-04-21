@@ -105,7 +105,10 @@ class display_groops : AppCompatActivity(){
                 adapter.notifyDataSetChanged()
             }
         })
-
+    create_groop_for_display_groops2.setOnClickListener {
+        var intent = Intent(this@display_groops, Groop_Create::class.java)
+        startActivity(intent)
+    }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
