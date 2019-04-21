@@ -64,8 +64,9 @@ class Groop_Join: AppCompatActivity() {
         join_groop_btn.setOnClickListener {
             user_groops.add(this_groop)
             db.collection("user").document(username).update("joinedGroops",user_groops)
-            val intent = Intent(this@Groop_Join, display_groops::class.java)
-            startActivity(intent)
+//            val intent = Intent(this@Groop_Join, display_groops::class.java)
+////            startActivity(intent)
+            finish()
         }
         messege_groop_btn.setOnClickListener {
             val intent = Intent(this@Groop_Join, GroopChatActivity::class.java)

@@ -539,5 +539,11 @@ class DBManager {
             db.collection("users").document(user.email).set(user)
         }
 
+
+        fun getSortedGroopList(groops: ArrayList<Groop>, loc: GeoPoint) : ArrayList<Groop>{
+            groops.sortBy { findDistance(it.location, loc) }
+            return groops
+        }
+
     }
 }
