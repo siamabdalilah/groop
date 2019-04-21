@@ -31,7 +31,7 @@ class display_groops : AppCompatActivity(){
     private var created_groops: ArrayList<Groop> = ArrayList()
     private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<Groop> = ArrayList()
-    private var adapter = GroopListAdapter(my_groops, this)
+    private var adapter = HomeAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

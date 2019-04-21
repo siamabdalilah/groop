@@ -62,4 +62,5 @@ class Groop: Serializable {
         this.type = type
         this.id = id
     }
+    constructor()
 }

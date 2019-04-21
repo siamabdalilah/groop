@@ -46,6 +46,7 @@ class display_users: AppCompatActivity() {
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
         var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
+
         db.collection("users").document(username).get().addOnSuccessListener { it ->
             var bio = it.get("bio").toString()
             var name = it.get("name").toString()
@@ -61,7 +62,7 @@ class display_users: AppCompatActivity() {
                 adapter.notifyDataSetChanged()
             }
         }
-//        var searchBy: String = user_search_by_category.text as String
+
         user_search_by_category.setOnFocusChangeListener { v, hasFocus ->
             if(!hasFocus){
                searchBy()
