@@ -18,7 +18,7 @@ import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.fragment_groop_view.*
-import kotlinx.android.synthetic.main.home_groop_view.*
+
 
 
 class GroopViewFragment : Fragment() {
