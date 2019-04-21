@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.GroopListAdapter
 import com.example.groop.DataModels.User
 import com.google.firebase.firestore.GeoPoint
-import kotlinx.android.synthetic.main.home_groop_view.*
 import com.example.groop.Util.*
 import com.example.groop.Util.DBManager.Paths.getAllGroops
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,7 +31,7 @@ class display_groops : AppCompatActivity(){
     private var created_groops: ArrayList<Groop> = ArrayList()
     private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<Groop> = ArrayList()
-    private var adapter = GroopListAdapter(my_groops, this)
+    private var adapter = HomeAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

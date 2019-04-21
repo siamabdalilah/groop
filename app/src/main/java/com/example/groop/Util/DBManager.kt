@@ -290,6 +290,8 @@ class DBManager {
                 //still don't know what's up with how arrays return in firebase
                 val listOfGroopDocuments = snapshot.get(createdOrJoined)
                         as ArrayList<DocumentReference>
+                Log.d("GettingGroops", listOfGroopDocuments.size.toString())
+
                 //parse each groop and add it to the list
                 //must use this style of iteration because we need to access the
                 // index to know when to employ the callback
@@ -301,6 +303,7 @@ class DBManager {
                         if(doc.contains("name")) {
                             g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO throws deserialization error
                         }
+
                         if (g != null) {
                             groops.add(g)
                         }
@@ -317,7 +320,7 @@ class DBManager {
                             //so now we've finished all of the get requests
                             //safe to call the callback function
                             gotten(groops)
-                            Log.d("ANDROID","got here")
+                            Log.d("GettingGroops","done parsing groops")
                         }
                     }
                 }
