@@ -47,10 +47,13 @@ class DBManager {
         fun parseGroop(doc: DocumentSnapshot): Groop {
             //TODO: not quite sure how firebase handles arrays, actually
 
+
             val members = doc.get("members") as ArrayList<DocumentReference>
 
             var d: Date? = doc.getDate("startTime")
             Log.d("ANDROID",d.toString())
+
+            val adr = if (doc.get("address") == null) "" else doc.get("address") as String
 
             return Groop(
                 (doc.get("capacity") as Long).toInt(), doc.get("createdBy").toString(),
@@ -58,7 +61,7 @@ class DBManager {
                 doc.get("description").toString(), doc.get("location") as GeoPoint,
                 members, doc.get("name").toString(),
                 (doc.get("numMembers") as Long).toInt(), doc.getDate("startTime") as Date,
-                doc.get("type").toString(), doc.id
+                doc.get("type").toString(), doc.id, adr
             )
         }
 
@@ -224,7 +227,7 @@ class DBManager {
                 groop.get().addOnSuccessListener { snapshot ->
                     var g: Groop? = null
                     if(snapshot.contains("name")) {
-                        val g = parseGroop(snapshot)
+                        g = parseGroop(snapshot)
                     }
                     if (g != null) {
                         groops.add(g)
