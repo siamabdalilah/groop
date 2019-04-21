@@ -79,7 +79,7 @@
             android:layout_height="121dp"
             android:inputType="textMultiLine"
             android:ems="10"
-            android:id="@+id/home_id"
+            android:id="@+id/cgroop_bio"
             android:minLines="4"
             android:textSize="14sp"
             android:hint="This is about me"

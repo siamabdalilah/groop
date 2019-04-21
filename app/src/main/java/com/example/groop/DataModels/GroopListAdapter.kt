@@ -45,6 +45,7 @@ class GroopListAdapter(var groops: ArrayList<Groop>, val activity: AppCompatActi
 
         holder.viewHolder.setOnClickListener{
             val intent = Intent(activity, Groop_Join::class.java)
+            intent.putExtra("this_groop", g.id)
             activity.startActivity(intent)
         }
     }

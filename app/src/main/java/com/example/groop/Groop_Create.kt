@@ -18,7 +18,9 @@ import kotlinx.android.synthetic.main.join_groop.*
 import java.util.*
 
 import android.app.Activity;
+import android.util.Log
 import android.view.View;
+import java.time.LocalDate
 
 
 class Groop_Create: AppCompatActivity() {
@@ -34,7 +36,7 @@ class Groop_Create: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.create_groop)
         addItemsOnSpinner2()
-        db.collection("user").document(username).get().addOnSuccessListener { snap->
+        db.collection("users").document(username).get().addOnSuccessListener { snap->
             name=snap.get("name").toString()
             docRef=snap.reference
         }
@@ -58,7 +60,7 @@ class Groop_Create: AppCompatActivity() {
                 var activityU = spinner2.getSelectedItem().toString()
                 var capacity = 0
                 if (max_participants_id.text.toString() != "") {
-                    capacity = max_participants_id.text.toString() as Int
+                    capacity = max_participants_id.text.toString().toInt()
                 } else {
                     capacity = 10
                 }
@@ -66,10 +68,13 @@ class Groop_Create: AppCompatActivity() {
                 var creatorName = name
                 var members: ArrayList<DocumentReference> = ArrayList()
                 members.add(docRef)
-                var description = jgroop_bio.text.toString()
-                var startTime = starttime_id.text as Date
+                var description = cgroop_bio.text.toString()
+                var startTime = java.sql.Date.valueOf(starttime_id.text.toString())
+
                 val groop = Groop(capacity, createdBy,creatorName,description,location,members,
-                    name,1,startTime,activityU,address=address)
+                    id_name.text.toString(),1,startTime,activityU,address=address)
+
+                Log.d("creategroop", groop.toString())
                 DBManager.createGroop(groop)
                 val intent = Intent(this@Groop_Create, home::class.java)
                 startActivity(intent)

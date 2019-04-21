@@ -40,7 +40,7 @@ class Groop_Join: AppCompatActivity() {
         home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
         home_recycler_join_groop.adapter=adapter
 
-        val groop_id = "vYEqVQHd0BjHrg3ZvUg4"//intent.getStringExtra("this_groop")
+        val groop_id = intent.getStringExtra("this_groop")
         db.collection("groops").document(groop_id).get().addOnSuccessListener { snap->
             this_groop=DBManager.parseGroop(snap)
             groop_name.text=this_groop.name
