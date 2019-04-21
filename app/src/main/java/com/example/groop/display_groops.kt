@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.GroopListAdapter
 import com.example.groop.DataModels.User
 import com.google.firebase.firestore.GeoPoint
-import kotlinx.android.synthetic.main.home_groop_view.*
+
 import com.example.groop.Util.*
 import com.example.groop.Util.DBManager.Paths.getAllGroops
 import com.google.firebase.firestore.FirebaseFirestore
