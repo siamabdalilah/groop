@@ -63,13 +63,13 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
     var address=gl.getAddress(requestCode,resultCode,data)
     var location= gl.getGeoPoint(requestCode,resultCode,data)
     if(address!=null && location!=null) {
-        if (edit_groop_spinner2.getSelectedItem() != null) {
+        if (edit_groop_spinner2.getSelectedItem().toString() != null) {
             this_groop.type = edit_groop_spinner2.getSelectedItem().toString()
             if (edit_groop_max_participants.text.toString() != "") {
                this_groop.capacity = edit_groop_max_participants.text.toString() as Int
             }
             this_groop.description = edit_groop_bio.text.toString()
-            this_groop.startTime = edit_groop_starttime.text as Date
+            this_groop.startTime = java.sql.Date.valueOf(edit_groop_starttime.text.toString())
             DBManager.editGroop(this_groop)
             val intent = Intent(this@Edit_Groop, home::class.java)
             startActivity(intent)
