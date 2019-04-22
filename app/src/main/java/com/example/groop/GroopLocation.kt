@@ -5,9 +5,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.GeoPoint
 import com.schibstedspain.leku.*
 import com.schibstedspain.leku.geocoder.GeocoderPresenter
 import pl.charmas.android.reactivelocation2.ReactiveLocationProvider
+import java.util.*
 
 class GroopLocation(private val activity: Activity) {
 
@@ -83,7 +86,7 @@ class GroopLocation(private val activity: Activity) {
     }
 
     fun getAddress(requestCode: Int, resultCode: Int, data: Intent?) : String{
-        if (requestCode == 1 || requestCode == 2) return data?.getStringExtra(ADDRESS)?:""
+        if (requestCode == 1 || requestCode == 2) return data?.getStringExtra(LOCATION_ADDRESS) ?:""
         return ""
     }
 
