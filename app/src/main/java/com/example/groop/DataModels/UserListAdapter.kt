@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.R
 import com.example.groop.User_View
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.user_card.view.*
 
 class UserListAdapter(var users: ArrayList<User>, val activity: Activity) : RecyclerView.Adapter<UserListAdapter.UserHolder>(){
@@ -22,11 +23,14 @@ class UserListAdapter(var users: ArrayList<User>, val activity: Activity) : Recy
     override fun onBindViewHolder(holder: UserListAdapter.UserHolder, position: Int) {
         holder.username.text = users[position].name
         holder.holder.setOnClickListener {
-            val intent = Intent(activity, User_View::class.java)
+            val auth = FirebaseAuth.getInstance()
+            if(auth.currentUser!!.email!=users[position].email) {
+                val intent = Intent(activity, User_View::class.java)
 
-            intent.putExtra("user_name", users[position].name)
-            intent.putExtra("user_email", users[position].email)
-            activity.startActivity(intent)
+                intent.putExtra("user_name", users[position].name)
+                intent.putExtra("user_email", users[position].email)
+                activity.startActivity(intent)
+            }
         }
     }
 

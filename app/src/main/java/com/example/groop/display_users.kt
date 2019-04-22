@@ -28,7 +28,7 @@ class display_users: AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private val username = auth.currentUser!!.email!!
     private lateinit var user:User
-    private lateinit var adapter : UserListAdapter//= HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
+    private lateinit var adapter : UserListAdapter
     private var users: ArrayList<User> = ArrayList()
     private var activity_list_temp: ArrayList<User> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -41,44 +41,41 @@ class display_users: AppCompatActivity() {
 
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
-        var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this, LocationServices.getFusedLocationProviderClient(this))
+        var gl=GroopLocation(this)
+        var locationTemp = gl.getLocation()
 
-        db.collection("users").document(username).get().addOnSuccessListener { it ->
-            var bio = it.get("bio").toString()
-            var name = it.get("name").toString()
-            var location = it.getGeoPoint("location") as GeoPoint
-            user = User(username, name, location, bio)
-            user.location = GeoPoint(locationTemp.latitude, locationTemp.longitude)
-
-
-            db.collection("users").get().addOnSuccessListener { snapshot ->
-                users = DBManager.getAllUsers(snapshot)
-                var b = false
-                lateinit var usera:User
-                for(usr in users){
-                    if(usr.email==username){
-                        b=true
-                        usera=usr
-                    }
-                }
-                if(b){
-                    users.remove(usera)
-                }
-                activity_list_temp.addAll(users)
-                adapter.users = users
-                parseActs()
-
-                android.util.Log.d("ActivityListSize",users[4].activities.size.toString())
-
-                adapter.notifyDataSetChanged()
-            }
-        }
-
-//        search_users.setOnFocusChangeListener { v, hasFocus ->
-//            if(!hasFocus){
-//               searchBy()
+//        db.collection("users").document(username).get().addOnSuccessListener { it ->
+//            var bio = it.get("bio").toString()
+//            var name = it.get("name").toString()
+//            var location = it.getGeoPoint("location") as GeoPoint
+//            user = User(username, name, location, bio)
+//            user.location = GeoPoint(locationTemp.latitude, locationTemp.longitude)
+//
+//
+//            db.collection("users").get().addOnSuccessListener { snapshot ->
+//                users = DBManager.getAllUsers(snapshot)
+//                var b = false
+//                lateinit var usera:User
+//                for(usr in users){
+//                    if(usr.email==username){
+//                        b=true
+//                        usera=usr
+//                    }
+//                }
+//                if(b){
+//                    users.remove(usera)
+//                }
+//                activity_list_temp.clear()
+//                activity_list_temp.addAll(users)
+//                adapter.users = users
+//                parseActs()
+//
+//                android.util.Log.d("ActivityListSize",users[4].activities.size.toString())
+//
+//                adapter.notifyDataSetChanged()
 //            }
 //        }
+
 
         search_users.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -139,6 +136,35 @@ class display_users: AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        var gl=GroopLocation(this)
+        var locationTemp = gl.getLocation()
+
+        db.collection("users").document(username).get().addOnSuccessListener { it ->
+            var bio = it.get("bio").toString()
+            var name = it.get("name").toString()
+            var location = it.getGeoPoint("location") as GeoPoint
+            user = User(username, name, location, bio)
+            user.location = GeoPoint(locationTemp.latitude, locationTemp.longitude)
+
+
+            db.collection("users").get().addOnSuccessListener { snapshot ->
+                users = DBManager.getAllUsers(snapshot)
+
+                users.removeIf { it.email == user.email }
+                activity_list_temp.clear()
+                activity_list_temp.addAll(users)
+                adapter.users = users
+                parseActs()
+
+                android.util.Log.d("ActivityListSize", users[4].activities.size.toString())
+
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_menu, menu)
         return true
@@ -146,7 +172,7 @@ class display_users: AppCompatActivity() {
 
 
     fun searchBy(){
-        users.clear()
+        users=ArrayList<User>()
         users.addAll(activity_list_temp)
         var tempList: ArrayList<User> = ArrayList()
         var tempList2: ArrayList<User> = ArrayList()

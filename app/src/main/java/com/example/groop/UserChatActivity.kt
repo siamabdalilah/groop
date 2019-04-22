@@ -3,10 +3,7 @@ package com.example.groop
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
+import android.widget.*
 import com.example.groop.DataModels.Message
 import com.example.groop.Util.DBManager
 import com.google.firebase.firestore.FirebaseFirestore
@@ -65,6 +62,8 @@ class UserChatActivity : AppCompatActivity() {
         if (otherUser == null) {
             Log.d(TAG, "intent does not include other user")
         }
+       // var title=findViewById<TextView>(R.id.title)
+        //title.text = title.text.toString()+otherUser
         //likewise must include the current user
         if (currentUser == null) {
             Log.d(TAG, "intent does not include current user")
@@ -97,6 +96,7 @@ class UserChatActivity : AppCompatActivity() {
         //pass in other user to filter the results
         messages = DBManager.getMessageHistory(snapshot, otherUser)
         //then update the associated UI element
+        messages.sortBy { it.timeStamp }
         list.adapter = ArrayAdapter<Message>(this,
             android.R.layout.simple_list_item_1, messages)
     }
