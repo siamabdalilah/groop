@@ -94,22 +94,28 @@ class display_users: AppCompatActivity() {
     fun searchBy(){
         my_groops.clear()
         my_groops.addAll(activity_list_temp)
+        var tempList: ArrayList<User> = ArrayList()
+        var tempList2: ArrayList<User> = ArrayList()
         var searchByDist = user_search_by_distance.text.toString().toIntOrNull()
         if(searchByDist!=null){
-            my_groops.clear()
+            //my_groops.clear()
             for(usr in my_groops){
                 if(findDistance(usr.location,user.location) <=searchByDist){
-                    my_groops.remove(usr)
-                    adapter.notifyDataSetChanged()
+                    tempList.add(usr)
+
                 }
             }
         }
-        adapter.notifyDataSetChanged()
+        else{
+            tempList.addAll(activity_list_temp)
+        }
+
 
         var searchByCat = "" + user_search_by_category.text
         if(searchByCat!=""){
             //checking if each user is interested in the activity
-            for(usr in my_groops){
+
+            for(usr in tempList){
                 var hasActivity=false
                 //for each activity in the given user check if he is interested in the specified activity
                 for(activityT in usr.activities){
@@ -118,10 +124,16 @@ class display_users: AppCompatActivity() {
                     }
                 }
                 if(!hasActivity){
-                    my_groops.remove(usr)
+                    tempList2.add(usr)
                 }
             }
         }
+        tempList.removeAll(tempList2)
+        my_groops.clear()
+        my_groops.addAll(tempList)
+//        my_groops.filter{
+//
+//        }
         adapter.notifyDataSetChanged()
     }
 
@@ -144,7 +156,7 @@ class display_users: AppCompatActivity() {
             p0.row.setOnClickListener {
                 //TODO add this in when user_info added
                 val intent = Intent(p0.itemView.context, User_View::class.java)
-                intent.putExtra("user_viewed_email", user_viewed.email)
+                intent.putExtra("user_email", user_viewed.email)
                 //intent.putExtra("user", user)
                 startActivity(intent)
             }

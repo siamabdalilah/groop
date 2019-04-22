@@ -41,7 +41,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="395dp"
-            android:layout_height="566dp"
+            android:layout_height="450dp"
             android:id="@+id/user_display_recycler"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"

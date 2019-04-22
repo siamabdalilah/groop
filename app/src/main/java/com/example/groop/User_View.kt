@@ -127,6 +127,7 @@ class User_View : AppCompatActivity() {
                 //intent.putExtra("user_viewed", user_viewed)
                 intent.putExtra("activity", activity_viewed)
                 intent.putExtra("username",user_viewed.email)
+                intent.putExtra("user_email",user_viewed.email)
                 startActivity(intent)
             }
 
