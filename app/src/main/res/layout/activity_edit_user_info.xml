@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:id="@+id/edit_user_bio_text"
                     android:enabled="false"
-                    android:layout_height="100sp"/>
+                    android:layout_height="106dp"/>
 
 
         </com.google.android.material.textfield.TextInputLayout>

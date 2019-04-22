@@ -21,9 +21,11 @@ class View_Users_Activity:AppCompatActivity() {
         //TODO needs to be finished
         super.onCreate(savedInstanceState)
         setContentView(R.layout.view_users_activity)
+
         var activity=intent.getStringExtra("activity")
          username = intent.getStringExtra("username")
         activity_name_user_view.text=activity
+
         db.collection("users").document(username).collection("activities")
             .document(activity).get().addOnSuccessListener { snap->
             bio_user_view.text= Editable.Factory.getInstance().newEditable(snap.get("description").toString())
