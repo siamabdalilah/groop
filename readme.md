@@ -18,7 +18,9 @@ at just one time. Groop has a lot of space to grow.
 
 One bug that has been fixed to our knoledge is the gps services working on the emulator. It has always worked very well on actual phones, but 
 used to be buggy. It should be fine now, but make sure you turn on location before using the app and if you are signed in and its not working
-sign out then locate yourself then sign in again. Also Groop will implement notifications to messenging with firebase messenging. 
+sign out then locate yourself then sign in again. Also Groop will implement notifications to messenging with firebase messenging. An active bug
+is in the create groop activity on the emulator, once you click the locate button it can take a couple seconds to find your location and 
+redirect you. However, if you try to locate again while it is loading if can cause crashes.
 
 Completed tasks are: sorting by distance and category and some box's have dynamic search. You can view all groops, all users, as well as your groops
 and your activites. You can edit and delete groops that you have made and join and leave other's groops. When viewing groops or all users, you can
