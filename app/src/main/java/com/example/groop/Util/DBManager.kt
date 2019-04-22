@@ -71,29 +71,33 @@ class DBManager {
          * DEPRECATED
          */
         fun parseUser(doc: DocumentSnapshot): User {
-            //TODO: Again, not really sure how arrays work
-            val createdGroops = doc.get("createdGroops") as ArrayList<DocumentReference>
-            val joinedGroops = doc.get("joinedGroops") as ArrayList<DocumentReference>
 
-            val activityList: ArrayList<Activity_groop> = ArrayList<Activity_groop>()
-            //each user document contains a collection of arraylists
-            // so we need to go through every document in that there
-            // collection and add it to an arraylist
-            doc.getReference().collection("activities")
-                .get().addOnSuccessListener { query ->
-                    val docList = query.documents
-                    //for every document, call the parseActivity function
-                    // in order to get an Activity object
-                    for (activityDoc in docList) {
-                        activityList.add(parseActivity(activityDoc))
+
+                //TODO: Again, not really sure how arrays work
+                val createdGroops = doc.get("createdGroops") as ArrayList<DocumentReference>
+                val joinedGroops = doc.get("joinedGroops") as ArrayList<DocumentReference>
+
+                val activityList: ArrayList<Activity_groop> = ArrayList<Activity_groop>()
+                //each user document contains a collection of arraylists
+                // so we need to go through every document in that there
+                // collection and add it to an arraylist
+                doc.getReference().collection("activities")
+                    .get().addOnSuccessListener { query ->
+                        val docList = query.documents
+                        //for every document, call the parseActivity function
+                        // in order to get an Activity object
+                        for (activityDoc in docList) {
+                            activityList.add(parseActivity(activityDoc))
+                        }
                     }
-                }
 
-            return User(
-                doc.id, doc.get("name").toString(), doc.get("location") as GeoPoint,
-                doc.get("bio").toString(), doc.get("profilePicture").toString(),
-                createdGroops, joinedGroops//, activityList
-            )
+                return User(
+                    doc.id, doc.get("name").toString(), doc.get("location") as GeoPoint,
+                    doc.get("bio").toString(), doc.get("profilePicture").toString(),
+                    createdGroops, joinedGroops//, activityList
+                )
+
+
         }
 
         fun parseMessage(doc: DocumentSnapshot) : Message {
@@ -163,7 +167,8 @@ class DBManager {
             //add each user to the list
             for (doc in docList) {
                 //add a new user to the list by automatically parsing it
-                val u = parseUser(doc)//doc.toObject(User::class.java)
+                   val u = parseUser(doc)//doc.toObject(User::class.java)
+
                 if (u != null) {
                     userList.add(u)
                 }
