@@ -67,10 +67,14 @@ class Groop_Join: AppCompatActivity() {
 
         join_groop_btn.setOnClickListener {
             user_groops.add(this_groop)
-            db.collection("user").document(username).update("joinedGroops",user_groops)
-//            val intent = Intent(this@Groop_Join, display_groops::class.java)
-////            startActivity(intent)
-            finish()
+           // db.collection("user").document(username).update("joinedGroops",user_groops)
+
+            db.collection("users").document(username).get().addOnSuccessListener { snap->
+                DBManager.joinGroop(DBManager.parseUser(snap),this_groop)
+                val intent = Intent(this@Groop_Join, display_groops::class.java)
+                startActivity(intent)
+            }
+            //finish()
         }
         messege_groop_btn.setOnClickListener {
             val intent = Intent(this@Groop_Join, GroopChatActivity::class.java)
@@ -110,7 +114,14 @@ class Groop_Join: AppCompatActivity() {
     }
     fun GetJoinedArray(arr:ArrayList<Groop>){
         user_groops.addAll(arr)
-        if(!user_groops.contains(this_groop)){
+        var b = true
+        for(grp in user_groops){
+            if(grp.id==this_groop.id){
+                b=false
+                continue
+            }
+        }
+        if(b){
             if(this_groop.capacity!=this_groop.numMembers){
                 join_groop_btn.visibility= View.VISIBLE
             }

@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.home_display.*
 
 import com.example.groop.R
 import com.example.groop.Util.setupNav
+import com.example.groop.display_groops
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.bottom_bar.view.*
 import kotlinx.android.synthetic.main.top_bar.view.*
@@ -45,6 +46,10 @@ class home : AppCompatActivity() {
         findViewById<ViewPager>(R.id.viewpager_home).adapter=fragmentAdapter
        // viewpager_home.adapter = fragmentAdapter
         tabs_home.setupWithViewPager(viewpager_home)
+
+        var i = Intent(this@home,display_groops::class.java)
+        startActivity(i)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

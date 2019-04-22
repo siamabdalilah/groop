@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 
+
         if (auth.currentUser != null) {
             val intent = Intent(this, home::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
