@@ -103,11 +103,11 @@ class display_groops : AppCompatActivity(){
                         if (it.type.toLowerCase().matches(Regex(".*$searchBy.*"))){
                             return@filter true
                         }
-                        /*
+
                         if (it.address.toLowerCase().matches(Regex(searchBy))){
                             return@filter true
                         }
-                        */
+
 
                         false
                     } as ArrayList<Groop>

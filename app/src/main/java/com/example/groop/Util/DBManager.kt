@@ -32,7 +32,7 @@ class DBManager {
          * containing a representation of an activity
          * DEPRECATED
          */
-        private fun parseActivity(doc: DocumentSnapshot): Activity_groop {
+        fun parseActivity(doc: DocumentSnapshot): Activity_groop {
             return Activity_groop(
                 doc.id,
                 doc.get("description").toString()
@@ -89,6 +89,7 @@ class DBManager {
                         for (activityDoc in docList) {
                             activityList.add(parseActivity(activityDoc))
                         }
+                        Log.d("activitylistsize", doc.get("name").toString() + " " + activityList.size.toString())
                     }
 
                 return User(

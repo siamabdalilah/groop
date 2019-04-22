@@ -1,29 +1,23 @@
 package com.example.groop
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
 import com.example.groop.DataModels.UserListAdapter
 import com.example.groop.Util.DBManager
+import com.example.groop.Util.Groop
 import com.example.groop.Util.findDistance
 import com.example.groop.Util.setupNav
-import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.android.synthetic.main.display_users.*
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.bottom_bar.view.*
-import kotlinx.android.synthetic.main.home_display.*
 import kotlinx.android.synthetic.main.top_bar.view.*
 import java.util.*
 
@@ -71,20 +65,77 @@ class display_users: AppCompatActivity() {
                     users.remove(usera)
                 }
                 activity_list_temp.addAll(users)
+                adapter.users = users
+                parseActs()
+
+                android.util.Log.d("ActivityListSize",users[4].activities.size.toString())
 
                 adapter.notifyDataSetChanged()
             }
         }
 
-        user_search_by_category.setOnFocusChangeListener { v, hasFocus ->
-            if(!hasFocus){
-               searchBy()
+//        search_users.setOnFocusChangeListener { v, hasFocus ->
+//            if(!hasFocus){
+//               searchBy()
+//            }
+//        }
+
+        search_users.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // Do Nothing
             }
-        }
-        user_search_by_distance.setOnFocusChangeListener { v, hasFocus ->
-            if(!hasFocus){
-                searchBy()
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Do Nothing
             }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val searchBy = s.toString().toLowerCase().replace(",", " ")
+                    .replace(Regex("[ ]+"), " ").replace(Regex("[^a-z0-9 ]"), "")
+                    .trim()
+
+                if (searchBy == ""){
+                    adapter.users = users
+                }else{
+                    adapter.users = users.filter{
+                        if (it.name.toLowerCase().startsWith(searchBy) ?: false){
+                            return@filter true
+                        }
+
+                        android.util.Log.wtf("activitylistsizes", it.activities.size.toString())
+                        for (activityGroop in it.activities){
+                            Log.d("actname", activityGroop.name)
+                            if (activityGroop.name.toLowerCase().matches(Regex(".*$searchBy.*"))){
+                                return@filter true
+                            }
+                        }
+
+                        false
+                    } as ArrayList<User>
+                }
+                adapter.notifyDataSetChanged()
+            }
+
+        })
+
+    }
+
+    private fun parseActs(){
+        var count = 0;
+        for (user in users){
+            db.collection("users").document(user.email)
+                .collection("activities").get().addOnSuccessListener {
+                    val docs = it.documents
+                    for (doc in docs){
+                        user.activities.add(DBManager.parseActivity(doc))
+                    }
+                    count++
+                    if (count == users.size){
+                        adapter.users = users
+                        Log.d("activityList", "Got gere")
+                        adapter.notifyDataSetChanged()
+                    }
+                }
         }
     }
 
@@ -99,22 +150,10 @@ class display_users: AppCompatActivity() {
         users.addAll(activity_list_temp)
         var tempList: ArrayList<User> = ArrayList()
         var tempList2: ArrayList<User> = ArrayList()
-        var searchByDist = user_search_by_distance.text.toString().toIntOrNull()
-        if(searchByDist!=null){
-            //my_groops.clear()
-            for(usr in users){
-                if(findDistance(usr.location,user.location) <=searchByDist){
-                    tempList.add(usr)
-
-                }
-            }
-        }
-        else{
-            tempList.addAll(activity_list_temp)
-        }
 
 
-        var searchByCat = "" + user_search_by_category.text
+
+        var searchByCat = "" + search_users.text
         if(searchByCat!=""){
             //checking if each user is interested in the activity
 
@@ -137,47 +176,9 @@ class display_users: AppCompatActivity() {
 //        my_groops.filter{
 //
 //        }
+
+        adapter.users = users
         adapter.notifyDataSetChanged()
     }
 
-    //recycler view adapter
-    inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
-
-        override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder {
-            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.display_users_recycler_item, p0, false)
-            return JokeViewHolder(itemView)
-        }
-
-        //what to do with each element
-        override fun onBindViewHolder(p0: JokeViewHolder, p1: Int) {
-            //gets joke aka song from the songlist and fills the fields of the itemView
-            //with the song data from the array
-            val user_viewed= users[p1]
-            p0.name.text = "Name: "+user_viewed.name
-            p0.bio.text="bio: "+user_viewed.bio
-            Picasso.with(this@display_users).load(user_viewed.profilePicture).into(p0.img)
-            p0.row.setOnClickListener {
-                //TODO add this in when user_info added
-                val intent = Intent(p0.itemView.context, User_View::class.java)
-                intent.putExtra("user_email", user_viewed.email)
-                //intent.putExtra("user", user)
-                startActivity(intent)
-            }
-
-        }
-
-
-        override fun getItemCount(): Int {
-            return users.size
-        }
-
-
-        inner class JokeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var img: ImageView = itemView.findViewById(R.id.user_img)
-            var name: TextView = itemView.findViewById(R.id.user_name)
-            var bio: TextView = itemView.findViewById(R.id.user_bio)
-            var row = itemView
-
-        }
-    }
 }
