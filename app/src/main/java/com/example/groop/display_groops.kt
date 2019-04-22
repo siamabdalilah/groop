@@ -118,6 +118,25 @@ class display_groops : AppCompatActivity(){
     }
     }
 
+    override fun onResume() {
+        super.onResume()
+        db.collection("users").document(auth.currentUser?.email ?: "").get()
+            .addOnSuccessListener { snap ->
+                user = parseUser(snap)
+                db.collection("groops").get().addOnSuccessListener { snapshot ->
+                    val loc = gl.getLocation()
+                    my_groops = getAllGroops(snapshot, GeoPoint(loc.latitude, loc.longitude))
+                    //my_groops = DBManager.sortGroops(my_groops, user.location)
+                    Log.d("groops", my_groops.size.toString())
+                    adapter.groops = my_groops
+                    activity_list_temp.addAll(my_groops)
+                    adapter.notifyDataSetChanged()
+                    Log.d("groops", adapter.groops.size.toString())
+                }
+            }
+        adapter.notifyDataSetChanged()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_menu, menu)
         return true

@@ -29,7 +29,7 @@ class Groop_Join: AppCompatActivity() {
     private lateinit var this_groop:Groop
     private var adapter = HomeAdapter()
     private var jusers: ArrayList<String> = ArrayList()
-    private var hasher: Map<String,String> = HashMap()
+    private var hasher: MutableMap<String,String> = HashMap()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_groop)
@@ -53,7 +53,7 @@ class Groop_Join: AppCompatActivity() {
                 for(usr in this_groop.members!!){
                     usr.get().addOnSuccessListener { snap->
                         jusers.add(snap.get("name").toString())
-                        hasher.plus(Pair(snap.get("name").toString(),snap.id))
+                        hasher.put(snap.get("name").toString(),snap.get("email").toString())
                         adapter.notifyDataSetChanged()
                     }
                 }
@@ -70,8 +70,7 @@ class Groop_Join: AppCompatActivity() {
                 // db.collection("user").document(username).update("joinedGroops",user_groops)
 
                 db.collection("users").document(username).get().addOnSuccessListener { snap ->
-                    DBManager.joinGroop(DBManager.parseUser(snap), this_groop)
-                    finish()
+                    DBManager.joinGroop(DBManager.parseUser(snap), this_groop,::finish)
                 }
             }
             else if(btn_status=="DELETE"){
@@ -79,8 +78,7 @@ class Groop_Join: AppCompatActivity() {
                finish()
             }
             else if(btn_status=="LEAVE"){
-                DBManager.leaveGroop(this_groop,username)
-                finish()
+                DBManager.leaveGroop(this_groop,username,::finish)
             }
             else{
 
@@ -161,7 +159,7 @@ class Groop_Join: AppCompatActivity() {
             p0.row.setOnClickListener {
                 val intent = Intent(p0.itemView.context, User_View::class.java)
                 intent.putExtra("user_name", activity)
-                intent.putExtra("user_email",hasher?.get(activity))
+                intent.putExtra("user_email",hasher.get(activity))
                 startActivity(intent)
             }
 

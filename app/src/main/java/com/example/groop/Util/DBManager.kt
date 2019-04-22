@@ -440,7 +440,7 @@ class DBManager {
          * This version takes a User and Groop object and does
          * it all that way
          */
-        fun joinGroop(user: User, groop: Groop) {
+        fun joinGroop(user: User, groop: Groop, sent: () -> Any? = {}) {
             //make sure that the Groop passed in has an ID field
             if (groop.id == null) {
                 return
@@ -453,13 +453,14 @@ class DBManager {
                             as ArrayList<DocumentReference>
 
                     val memberDocRef = db.collection(users).document(user.email)
-
+                    val numMems=(snapshot.get("numMembers") as Long).toInt()
                     members.add(memberDocRef)
 
                     //and now remake the array
                     db.collection(groops).document(groop.id.toString())
                         .update("members", members)
-
+                    db.collection(groops).document(groop.id.toString())
+                        .update("numMembers",numMems+1)
                     //also change the Groop object that was passed in,
                     // just for fun
                     groop.members?.add(memberDocRef)
@@ -471,14 +472,15 @@ class DBManager {
                     //add stuff to the array
                     val joinedGroops: ArrayList<DocumentReference> = snapshot.get("joinedGroops")
                         as ArrayList<DocumentReference>
-
                     val groopDocRef = db.collection(groops).document(groop.id.toString())
 
                     joinedGroops.add(groopDocRef)
 
                     //and remake the array
                     db.collection(users).document(user.email)
-                        .update("joinedGroops", joinedGroops)
+                        .update("joinedGroops", joinedGroops).addOnSuccessListener {
+                            sent()
+                        }
 
                     //also change the User object that was passed in,
                     // just for fun
@@ -588,7 +590,7 @@ class DBManager {
             return groops
         }
 
-        fun leaveGroop(groop: Groop, username: String){
+        fun leaveGroop(groop: Groop, username: String, sent: () -> Any? = {}){
             val doc = db.collection("groops").document(groop.id!!)
             doc.get().addOnSuccessListener { snap->
                 val temp_groop = parseGroop(snap)
@@ -615,7 +617,9 @@ class DBManager {
                         user_remove(temp_user.createdGroops,doc_iter2)
                     }
                 }
-                db.collection("users").document(username).set(temp_user)
+                db.collection("users").document(username).set(temp_user).addOnCompleteListener {
+                    sent()
+                }
             }
         }
 
