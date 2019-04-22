@@ -11,11 +11,13 @@ import kotlinx.android.synthetic.main.activity_edit_user_info.*
 
 class EditUserInfoActivity : AppCompatActivity() {
     private var user: User? = null
-    val gl = GroopLocation(this)
+    private lateinit var gl :GroopLocation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_user_info)
+
+        gl = GroopLocation(this)
 
         user = DBManager.getUserByEmail(FirebaseAuth.getInstance().currentUser!!.email!!)
         if (user == null) finish()

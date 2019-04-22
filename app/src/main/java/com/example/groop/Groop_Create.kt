@@ -28,14 +28,18 @@ class Groop_Create: AppCompatActivity() {
     private var activity_list: ArrayList<String> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
-    private var gl=GroopLocation(this@Groop_Create)
+    private lateinit var gl : GroopLocation
     private var username=auth.currentUser!!.email!!
     private var name = ""
     private lateinit var docRef: DocumentReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO needs to be finished
         super.onCreate(savedInstanceState)
         setContentView(R.layout.create_groop)
+
+        gl = GroopLocation(this@Groop_Create)
+
         addItemsOnSpinner2()
         db.collection("users").document(username).get().addOnSuccessListener { snap->
             name=snap.get("name").toString()

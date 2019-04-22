@@ -11,12 +11,14 @@ import android.transition.TransitionManager
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+//import com.example.groop.DataModels.GeoPointHolder
 import com.example.groop.DataModels.User
 import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.isEmail
 import com.example.groop.Util.toast
 import com.google.android.gms.location.*
+import com.google.android.gms.vision.barcode.Barcode
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
@@ -36,8 +38,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-
+//        GeoPointHolder.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         if (auth.currentUser != null) {
             val intent = Intent(this, home::class.java)
