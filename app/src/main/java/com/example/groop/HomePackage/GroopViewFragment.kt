@@ -121,7 +121,7 @@ class GroopViewFragment : Fragment() {
 
 
     fun getJoinedArray(arr: ArrayList<Groop>) {
-       // myGroops.addAll(arr)
+        // myGroops.addAll(arr)
         var p = false
         for(grp in arr){
             for(grp2 in myGroops){
