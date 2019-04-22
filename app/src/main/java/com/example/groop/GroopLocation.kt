@@ -34,7 +34,6 @@ class GroopLocation(private val activity: Activity) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
             android.util.Log.d("location", "got here")
-//            var loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             var loc  = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
 //            if (loc == null){
 //                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
@@ -55,18 +54,17 @@ class GroopLocation(private val activity: Activity) {
         }
     }
 
-    fun pickLocation(defaulLocation: GeoPoint? = null){
-        val defLoc = if (defaulLocation == null) {
-            @SuppressWarnings("MissingPermission")
-            val loc = getLocation()//fusedLocationClient.lastLocation
+    fun pickLocation(defaultLocation: GeoPoint? = null){
+        var intentBuilder = LocationPickerActivity.Builder()
+            .withDefaultLocaleSearchZone()
+            .withGeolocApiKey("AIzaSyD7np_VilrYuOrBvwSlrCJvKXTPtVVXAjY")
 
-//            while(!loc.isComplete){}
-//            GeoPoint(loc.result?.latitude ?: 0.0, loc.result?.longitude ?: 0.0)
-            GeoPoint(loc.latitude,loc.longitude)
-        } else defaulLocation
-        val locationPickerIntent = LocationPickerActivity.Builder()
-            .withLocation(defLoc.latitude, defLoc.longitude).withDefaultLocaleSearchZone()
-            .withGeolocApiKey("AIzaSyD7np_VilrYuOrBvwSlrCJvKXTPtVVXAjY").build(activity)
+
+        if (defaultLocation != null){
+            intentBuilder = intentBuilder.withLocation(defaultLocation.latitude,
+                defaultLocation.longitude)
+        }
+        val locationPickerIntent = intentBuilder.build(activity)
 
         activity.startActivityForResult(locationPickerIntent, 2)
     }

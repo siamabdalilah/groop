@@ -71,7 +71,7 @@ class GroopListAdapter(var groops: ArrayList<Groop>, val activity: AppCompatActi
             d /= 1000
             return d.roundToInt().toString() + "k"
         }
-        return d.roundToInt().toString() + "k"
+        return d.roundToInt().toString()
     }
 
 }

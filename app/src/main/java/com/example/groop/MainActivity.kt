@@ -94,6 +94,8 @@ class MainActivity : AppCompatActivity() {
         }
         val password = user_password.text.toString()
 
+        if (!grabLocationPermissions()) return
+
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 val intent = Intent(this, home::class.java)
@@ -134,15 +136,36 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun locate() {
+    private fun grabLocationPermissions() : Boolean{
+        var state = true
         if (ContextCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
             )
-            return
+            state = false
         }
+        if (ContextCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+            )
+            state = false
+        }
+        return state
+    }
+
+    private fun locate() {
+//        if (ContextCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION)
+//            != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(
+//                this,
+//                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
+//            )
+//            return
+//        }
 //        fusedLocationClient.requestLocationUpdates(LocationRequest.create(), object : LocationCallback() {
 //            override fun onLocationResult(p0: LocationResult?) {
 //                super.onLocationResult(p0)
@@ -156,7 +179,16 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }, null)
 
+        if (!grabLocationPermissions()) return
 
+        if (ContextCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
+            )
+            state = false
+        }
         fusedLocationClient.lastLocation.addOnSuccessListener {
             if (it == null) {
                 fusedLocationClient.requestLocationUpdates(LocationRequest.create(), object : LocationCallback() {
