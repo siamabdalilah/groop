@@ -2,6 +2,7 @@ package com.example.groop
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +34,7 @@ class User_View : AppCompatActivity() {
     private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<String> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
+    private lateinit var user_viewed_email:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +46,11 @@ class User_View : AppCompatActivity() {
         listview_1_1.layoutManager=LinearLayoutManager(this@User_View)
         listview_1_1.adapter=lvAdapter
 
-        var user_viewed_email = intent.getStringExtra("user_email")
+        user_viewed_email = intent.getStringExtra("user_email")
         db.collection("users").document(user_viewed_email).get().addOnSuccessListener { snap->
-            user_viewed=DBManager.parseUser(snap)
+            if(snap.contains("createdGroops")) {
+                user_viewed = DBManager.parseUser(snap)
+            }
             user_name_1_1.text=user_viewed.name
             bio_1_1.text=user_viewed.bio
             DBManager.getGroopsJoinedBy(user_viewed_email,this::GetJoinedArray)
@@ -65,9 +68,42 @@ class User_View : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        db.collection("users").document(user_viewed_email).get().addOnSuccessListener { snap->
+            if(snap.contains("createdGroops")) {
+                user_viewed = DBManager.parseUser(snap)
+            }
+            user_name_1_1.text=user_viewed.name
+            bio_1_1.text=user_viewed.bio
+            DBManager.getGroopsJoinedBy(user_viewed_email,this::GetJoinedArray)
+            db.collection("users").document(user_viewed.email).collection("activities").get().addOnSuccessListener { snap->
+                for(doc in snap.documents){
+                    activity_list_temp.add(doc.id)
+                    lvAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+    }
     fun GetJoinedArray(arr:ArrayList<Groop>){
-        my_groops.addAll(arr)
+        var p = false
+        for(grp in arr){
+            for(grp2 in my_groops){
+                if(grp.id==grp2.id){
+                    p=true
+                }
+            }
+            if(!p){
+                my_groops.add(grp)
+            }
+            p=false
+        }
+        Log.d("gettinggroops", my_groops.toString())
+        Log.d("gettinggroops", adapter.groops.toString())
         adapter.notifyDataSetChanged()
+
 
     }
 

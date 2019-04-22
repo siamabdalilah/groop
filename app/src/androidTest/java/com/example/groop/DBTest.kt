@@ -1,5 +1,6 @@
 package com.example.groop
 
+import android.util.Log
 import androidx.test.InstrumentationRegistry
 import androidx.test.filters.LargeTest
 import androidx.test.runner.AndroidJUnit4
@@ -27,6 +28,7 @@ class DBTest {
 
     @Before
     fun setup() {
+        Log.wtf("testRunning", "fml")
         groop=Groop( 0, "tester@tester.com","tester", "this is a test",
        GeoPoint(0.0,0.0), ArrayList(),
        "name", 1, Date(), "TEST",
@@ -34,28 +36,27 @@ class DBTest {
         )
     }
 
-    @LargeTest
+
+
+    @Test
     fun testSimpleInsert() {
-
-        val setup = "hello"
-        val punchline = "goodbye"
-
-        DBManager.createGroop(groop)
-        val date = Calendar.getInstance()
-        while(groop.id==null){
-            //wait
-            var date_now = Calendar.getInstance()
-            if((date_now.timeInMillis-date.timeInMillis)>10000){
-                break
+        Log.wtf("testRunning", "fml")
+        DBManager.createGroop(groop, fun () {
+            db.collection("groops").document(groop.id.toString()).get().addOnSuccessListener { snap->
+                assertTrue(snap!=null)
+                DBManager.deleteGroop(groop)
+                db.collection("groops").document(groop.id.toString()).get().addOnSuccessListener { snap->
+                    assertTrue(snap==null)
+                }
+                    .addOnFailureListener {
+                        assertTrue(true)
+                    }
             }
-        }
-       db.collection("groops").document(groop.id.toString()).get().addOnSuccessListener { snap->
-           assertTrue(snap!=null)
-           DBManager.deleteGroop(groop)
-           db.collection("groops").document(groop.id.toString()).get().addOnSuccessListener { snap->
-               assertTrue(snap==null)
-           }
-       }
+                .addOnFailureListener {
+                    assertTrue(false)
+                }
+        })
+
 
 
     }

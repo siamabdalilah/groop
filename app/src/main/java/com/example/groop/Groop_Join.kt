@@ -39,6 +39,7 @@ class Groop_Join: AppCompatActivity() {
         //TODO delete_groop_for_groop_join.visibility=View.GONE
         //TODO leave_groop_for_groop_join.visibility=View.GONE
         edit_groop_for_groop_join.visibility=View.GONE
+        messege_groop_btn.visibility=View.GONE
         home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
         home_recycler_join_groop.adapter=adapter
 
@@ -132,12 +133,14 @@ class Groop_Join: AppCompatActivity() {
         else{
             if(this_groop.createdBy!=username) {
                 join_groop_btn.text="LEAVE GROOP"
+                messege_groop_btn.visibility=View.VISIBLE
                 btn_status="LEAVE"
                //TODO leave_groop_for_groop_join.visibility = View.VISIBLE
             }
         }
         if(this_groop.createdBy==username){
             join_groop_btn.text="DELETE GROOP"
+            messege_groop_btn.visibility=View.VISIBLE
             btn_status="DELETE"
            //TODO delete_groop_for_groop_join.visibility=View.VISIBLE
             edit_groop_for_groop_join.visibility=View.VISIBLE
