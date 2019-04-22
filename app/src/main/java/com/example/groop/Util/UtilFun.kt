@@ -2,6 +2,7 @@ package com.example.groop.Util
 
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -103,7 +104,7 @@ fun degreesToRadians(degree: Double) : Double {
  * this bizarrely complicated algorithm we found online
  */
 fun findDistance(one: GeoPoint, two: GeoPoint) : Double {
-    //converted into radians
+    /*//converted into radians
     val oneLat: Double = degreesToRadians(one.latitude)
     val oneLong: Double = degreesToRadians(one.longitude)
     val twoLat: Double = degreesToRadians(two.latitude)
@@ -123,5 +124,23 @@ fun findDistance(one: GeoPoint, two: GeoPoint) : Double {
     val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     val distance = earthRadius * c
 
-    return distance
+    return distance*/
+
+    return findDistanceDumbWay(one, two)
+}
+
+/**
+ * Uses a library function to compute distance :(
+ */
+fun findDistanceDumbWay(one: GeoPoint, two: GeoPoint) : Double {
+    val dist: FloatArray = FloatArray(3)
+
+    //admit defeat
+    Location.distanceBetween(
+        one.latitude, one.longitude,
+        two.latitude, two.longitude,
+        dist
+    )
+
+    return dist[0].toDouble() / 1000
 }
