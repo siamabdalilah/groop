@@ -71,19 +71,16 @@ class Groop_Join: AppCompatActivity() {
 
                 db.collection("users").document(username).get().addOnSuccessListener { snap ->
                     DBManager.joinGroop(DBManager.parseUser(snap), this_groop)
-                    val intent = Intent(this@Groop_Join, display_groops::class.java)
-                    startActivity(intent)
+                    finish()
                 }
             }
             else if(btn_status=="DELETE"){
                 DBManager.deleteGroop(this_groop)
-                val intent = Intent(this@Groop_Join, home::class.java)
-                startActivity(intent)
+               finish()
             }
             else if(btn_status=="LEAVE"){
                 DBManager.leaveGroop(this_groop,username)
-                val intent = Intent(this@Groop_Join, home::class.java)
-                startActivity(intent)
+                finish()
             }
             else{
 

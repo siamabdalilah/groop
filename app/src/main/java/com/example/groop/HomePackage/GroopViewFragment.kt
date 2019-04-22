@@ -110,8 +110,30 @@ class GroopViewFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        myGroops.clear()
+        Log.d("ANDROID","onResume")
+        DBManager.getGroopsJoinedBy(userEmail, this::getJoinedArray)
+        adapter.notifyDataSetChanged()
+    }
+
+
+
     fun getJoinedArray(arr: ArrayList<Groop>) {
-        myGroops.addAll(arr)
+       // myGroops.addAll(arr)
+        var p = false
+        for(grp in arr){
+            for(grp2 in myGroops){
+                if(grp.id==grp2.id){
+                    p=true
+                }
+            }
+            if(!p){
+                myGroops.add(grp)
+            }
+            p=false
+        }
         Log.d("gettinggroops", myGroops.toString())
         Log.d("gettinggroops", adapter.groops.toString())
         adapter.notifyDataSetChanged()
