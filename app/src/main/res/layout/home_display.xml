@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="565dp"
                 android:id="@+id/viewpager_home"
-                />
+        />
     </LinearLayout>
 
     <include

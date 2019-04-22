@@ -28,6 +28,7 @@ class Edit_Groop: AppCompatActivity() {
     private var name = ""
     private lateinit var this_groop:Groop
     private lateinit var docRef: DocumentReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO needs to be finished
         super.onCreate(savedInstanceState)

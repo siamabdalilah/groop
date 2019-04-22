@@ -47,9 +47,6 @@ class home : AppCompatActivity() {
        // viewpager_home.adapter = fragmentAdapter
         tabs_home.setupWithViewPager(viewpager_home)
 
-        var i = Intent(this@home,display_groops::class.java)
-        startActivity(i)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
