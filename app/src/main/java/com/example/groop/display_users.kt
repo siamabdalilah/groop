@@ -35,7 +35,7 @@ class display_users: AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private val username = auth.currentUser!!.email!!
     private lateinit var user:User
-    private lateinit var adapter : UserListAdapter//= HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
+    private lateinit var adapter : HomeAdapter//= HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
     private var users: ArrayList<User> = ArrayList()
     private var activity_list_temp: ArrayList<User> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -44,7 +44,7 @@ class display_users: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_users)
         setupNav(this, display_users_top_bar.top_bar, display_users_bottom_bar.bottom_bar_layout)
-        adapter = UserListAdapter(users, this)
+        adapter = HomeAdapter()
 
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
@@ -71,8 +71,9 @@ class display_users: AppCompatActivity() {
                 if(b){
                     users.remove(usera)
                 }
+                activity_list_temp.clear()
                 activity_list_temp.addAll(users)
-
+                users=activity_list_temp
                 adapter.notifyDataSetChanged()
             }
         }
