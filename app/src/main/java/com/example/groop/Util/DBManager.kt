@@ -144,7 +144,8 @@ class DBManager {
             //if the caller has specified that they want the list of groops to be
             // sorted based on a particular point
             if (reference != null) {
-                return sortGroops(groopList, reference)
+//                return sortGroops(groopList, reference)
+                return getSortedGroopList(groopList, reference)
             } else {
                 return groopList
             }
@@ -602,6 +603,8 @@ class DBManager {
                 lateinit var doc_temp: DocumentReference
 
                 for(doc_iter in temp_user.joinedGroops){
+                    Log.d("doc_id", doc.id)
+                    Log.d("doc_id", doc_iter.id)
                     if(doc_iter.id==doc.id){
                         user_remove(temp_user.joinedGroops,doc_iter)
                     }

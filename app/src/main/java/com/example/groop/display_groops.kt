@@ -19,6 +19,8 @@ import com.example.groop.DataModels.User
 import com.google.firebase.firestore.GeoPoint
 import com.example.groop.Util.*
 import com.example.groop.Util.DBManager.Paths.getAllGroops
+import com.example.groop.Util.DBManager.Paths.parseUser
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_display_groops.*
 
@@ -26,15 +28,16 @@ import kotlinx.android.synthetic.main.activity_display_groops.*
 class display_groops : AppCompatActivity(){
 
     private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
-    //    private val user= intent.getSerializableExtra("user") as User //TODO
-    val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
-    private val username = user.email
+    private lateinit var user: User
+    //val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
     private var joined_groops: ArrayList<Groop> = ArrayList()
     private var created_groops: ArrayList<Groop> = ArrayList()
     private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<Groop> = ArrayList()
     private lateinit var adapter: GroopListAdapter
+    private val gl = GroopLocation(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,21 +49,25 @@ class display_groops : AppCompatActivity(){
         home_groops_recycler2.layoutManager = LinearLayoutManager(this)
         home_groops_recycler2.adapter = adapter
 
-        var locationTemp = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
-        user.location= GeoPoint(locationTemp.latitude,locationTemp.longitude)
 
 
-
-
-        db.collection("groops").get().addOnSuccessListener { snapshot ->
-            my_groops = getAllGroops(snapshot,user.location)
-            //my_groops = DBManager.sortGroops(my_groops, user.location)
-            Log.d("groops", my_groops.size.toString())
-            adapter.groops = my_groops
-            activity_list_temp.addAll(my_groops)
-            adapter.notifyDataSetChanged()
-            Log.d("groops", adapter.groops.size.toString())
+        db.collection("users").document(auth.currentUser?.email ?: "").get()
+            .addOnSuccessListener { snap ->
+            user = parseUser(snap)
+            db.collection("groops").get().addOnSuccessListener { snapshot ->
+                val loc = gl.getLocation()
+                my_groops = getAllGroops(snapshot, GeoPoint(loc.latitude, loc.longitude))
+                //my_groops = DBManager.sortGroops(my_groops, user.location)
+                Log.d("groops", my_groops.size.toString())
+                adapter.groops = my_groops
+                activity_list_temp.addAll(my_groops)
+                adapter.notifyDataSetChanged()
+                Log.d("groops", adapter.groops.size.toString())
+            }
         }
+
+
+
 
 
         adapter.notifyDataSetChanged()

@@ -62,6 +62,8 @@ class GroopListAdapter(var groops: ArrayList<Groop>, val activity: AppCompatActi
     }
 
     private fun truncateDist(dist: Double) : String{
+        Log.d("dist", dist.toString())
+
         var d = dist
         if (dist > 100){
             d = d.roundToInt() + 0.0
@@ -71,7 +73,7 @@ class GroopListAdapter(var groops: ArrayList<Groop>, val activity: AppCompatActi
             d /= 1000
             return d.roundToInt().toString() + "k"
         }
-        return d.roundToInt().toString() + "k"
+        return d.roundToInt().toString()
     }
 
 }
