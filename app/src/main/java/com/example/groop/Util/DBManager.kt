@@ -186,7 +186,7 @@ class DBManager {
             }
         }
         fun sortGroops(groops: ArrayList<Groop>, reference: GeoPoint): ArrayList<Groop> {
-            //BASE CASE
+            /*//BASE CASE
             if (groops.size < 2) {
                 return groops
             }
@@ -207,7 +207,25 @@ class DBManager {
             } as ArrayList<Groop>
 
             //apparently this is how array concatenation works lol
-            return (sortGroops(less, reference) + equal + sortGroops(more, reference)) as ArrayList<Groop>
+            return (sortGroops(less, reference) + equal + sortGroops(more, reference)) as ArrayList<Groop>*/
+
+            //bubble sort babyyyy
+            for (i: Int in 0 until groops.size) {
+                var lowest: Double = 10000000.0
+                var lowestLoc: Int = i
+                for (j: Int in i until groops.size) {
+                    val dist = findDistance(groops[j].location, reference)
+                    if (dist < lowest) {
+                        lowest = dist
+                        lowestLoc = j
+                    }
+                }
+                val temp = groops[lowestLoc]
+                groops[i] = groops[lowestLoc]
+                groops[lowestLoc] = temp
+            }
+
+            return groops.reversed() as ArrayList<Groop>
         }
 
         /////////////////////////GETS LIST OF GROOPS
