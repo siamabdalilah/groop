@@ -144,7 +144,8 @@ class DBManager {
             //if the caller has specified that they want the list of groops to be
             // sorted based on a particular point
             if (reference != null) {
-                return sortGroops(groopList, reference)
+//                return sortGroops(groopList, reference)
+                return getSortedGroopList(groopList, reference)
             } else {
                 return groopList
             }

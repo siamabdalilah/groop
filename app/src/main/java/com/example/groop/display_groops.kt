@@ -30,7 +30,6 @@ class display_groops : AppCompatActivity(){
     private val myLoc = GeoPoint(0.0,0.0)//TODO GroopLocation.getLocation(this)
     private lateinit var user: User
     //val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
-    private val username = user.email
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private var joined_groops: ArrayList<Groop> = ArrayList()
@@ -38,6 +37,7 @@ class display_groops : AppCompatActivity(){
     private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<Groop> = ArrayList()
     private lateinit var adapter: GroopListAdapter
+    private val gl = GroopLocation(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,8 @@ class display_groops : AppCompatActivity(){
             .addOnSuccessListener { snap ->
             user = parseUser(snap)
             db.collection("groops").get().addOnSuccessListener { snapshot ->
-                my_groops = getAllGroops(snapshot,user.location)
+                val loc = gl.getLocation()
+                my_groops = getAllGroops(snapshot, GeoPoint(loc.latitude, loc.longitude))
                 //my_groops = DBManager.sortGroops(my_groops, user.location)
                 Log.d("groops", my_groops.size.toString())
                 adapter.groops = my_groops

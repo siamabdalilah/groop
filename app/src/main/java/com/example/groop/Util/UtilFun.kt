@@ -104,7 +104,7 @@ fun degreesToRadians(degree: Double) : Double {
  * this bizarrely complicated algorithm we found online
  */
 fun findDistance(one: GeoPoint, two: GeoPoint) : Double {
-    /*//converted into radians
+    //converted into radians
     val oneLat: Double = degreesToRadians(one.latitude)
     val oneLong: Double = degreesToRadians(one.longitude)
     val twoLat: Double = degreesToRadians(two.latitude)
@@ -124,9 +124,9 @@ fun findDistance(one: GeoPoint, two: GeoPoint) : Double {
     val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     val distance = earthRadius * c
 
-    return distance*/
+    return distance
 
-    return findDistanceDumbWay(one, two)
+//    return findDistanceDumbWay(one, two)
 }
 
 /**
