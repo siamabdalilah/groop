@@ -9,8 +9,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.groop.DataModels.User
+import com.example.groop.DataModels.UserListAdapter
 import com.example.groop.HomePackage.home
 import com.example.groop.Util.DBManager
+import com.example.groop.Util.DBManager.Paths.parseUser
 import com.example.groop.Util.Groop
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -18,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.home_display.*
 import kotlinx.android.synthetic.main.home_recycler_frag.*
 import kotlinx.android.synthetic.main.join_groop.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 class Groop_Join: AppCompatActivity() {
 
@@ -27,17 +32,18 @@ class Groop_Join: AppCompatActivity() {
     private var btn_status="JOIN"
     private var user_groops:ArrayList<Groop> = ArrayList()
     private lateinit var this_groop:Groop
-    private var adapter = HomeAdapter()
+    private lateinit var adapter: UserListAdapter
     private var jusers: ArrayList<String> = ArrayList()
     private var hasher: MutableMap<String,String> = HashMap()
+    private var users = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_groop)
-       username = auth.currentUser!!.email!!
-        //join_groop_btn.visibility= View.GONE
-        //TODO delete_groop_for_groop_join.visibility=View.GONE
-        //TODO leave_groop_for_groop_join.visibility=View.GONE
+        username = auth.currentUser!!.email!!
+
+        adapter = UserListAdapter(users, this)
+
         edit_groop_for_groop_join.visibility=View.GONE
         messege_groop_btn.visibility=View.GONE
         home_recycler_join_groop.layoutManager = LinearLayoutManager(this@Groop_Join)
@@ -45,24 +51,31 @@ class Groop_Join: AppCompatActivity() {
 
         val groop_id = intent.getStringExtra("this_groop")
         db.collection("groops").document(groop_id).get().addOnSuccessListener { snap->
+
             this_groop=DBManager.parseGroop(snap)
+
             groop_name.text=this_groop.name
             jgroop_creator.text=this_groop.creatorName
             jgroop_bio.text=this_groop.description
-            jgroop_location.text=this_groop.location.toString()
-            jgroop_time.text=this_groop.startTime.toString()
+            jgroop_location.text=this_groop.address
+
+            val formatter = SimpleDateFormat("dd MMMM yyyy")
+
+            jgroop_time.text= formatter.format(this_groop.startTime)
+
             if(this_groop.members!=null){
                 for(usr in this_groop.members!!){
-                    usr.get().addOnSuccessListener { snap->
-                        jusers.add(snap.get("name").toString())
-                        hasher.put(snap.get("name").toString(),snap.get("email").toString())
+                    usr.get().addOnSuccessListener { doc->
+                        jusers.add(doc.get("name").toString())
+                        hasher.put(doc.get("name").toString(),doc.get("email").toString())
+                        users.add(parseUser(doc))
+                        adapter.users = users
                         adapter.notifyDataSetChanged()
                     }
                 }
             }
         }
-        // var user = intent.extras.get("user") as User
-        //val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
+
         DBManager.getGroopsJoinedBy(username,this::GetJoinedArray)
 
 
