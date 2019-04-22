@@ -54,6 +54,7 @@ class Groop_Create: AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         var address=gl.getAddress(requestCode,resultCode,data)
+        Log.d("address", "address")
         var location= gl.getGeoPoint(requestCode,resultCode,data)
         if(address!=null && location!=null) {
             if (spinner2.getSelectedItem() != null) {
