@@ -1,7 +1,6 @@
 package com.example.groop.Util
 
 import android.app.Activity
-import android.location.Location
 import android.util.Log
 import com.example.groop.DataModels.Message
 import com.example.groop.DataModels.User
@@ -183,27 +182,7 @@ class DBManager {
         private class CustomComparator(reference:GeoPoint) : Comparator<Groop>{
             val reference=reference
            override fun compare(o1:Groop,o2:Groop):Int{
-               val referenceLat = reference.latitude
-               val referenceLong = reference.longitude
-
-               val o1Lat = o1.location.latitude
-               val o1Long = o1.location.longitude
-
-               val o2Lat = o2.location.latitude
-               val o2Long = o2.location.latitude
-
-               val dist1: FloatArray = FloatArray(3)
-               Location.distanceBetween(
-                   o1Lat, o1Long, referenceLat, referenceLong, dist1
-               )
-               val dist2: FloatArray = FloatArray(3)
-               Location.distanceBetween(
-                   o2Lat, o2Long, referenceLat, referenceLong, dist2
-               )
-
-               return dist1[0].compareTo(dist2[0])
-
-               //return findDistance(o1.location,reference).compareTo(findDistance(o2.location,reference))
+                return findDistance(o1.location,reference).compareTo(findDistance(o2.location,reference))
             }
         }
         fun sortGroops(groops: ArrayList<Groop>, reference: GeoPoint): ArrayList<Groop> {
@@ -597,8 +576,31 @@ class DBManager {
             }
             db.collection("users").document(username).get().addOnSuccessListener { snap->
                 val temp_user = parseUser(snap)
-                temp_user.createdGroops.remove(doc)
-                temp_user.joinedGroops.remove(doc)
+                var b = false
+                lateinit var doc_temp: DocumentReference
+
+                for(doc_iter in temp_user.joinedGroops){
+                    Log.d("doc_id", doc.id)
+                    Log.d("doc_id", doc_iter.id)
+                    if(doc_iter.id==doc.id){
+                        b=true
+                        doc_temp=doc_iter
+                    }
+                }
+                Log.d("doc_id", doc_temp.id)
+                if(b){
+                    temp_user.joinedGroops.remove(doc_temp)
+                }
+                b=false
+                for(doc_iter2 in temp_user.createdGroops){
+                    if(doc_iter2.id==doc.id){
+                        b=true
+                        doc_temp=doc_iter2
+                    }
+                }
+                if(b){
+                    temp_user.createdGroops.remove(doc_temp)
+                }
             }
         }
         fun deleteGroop(groop: Groop){

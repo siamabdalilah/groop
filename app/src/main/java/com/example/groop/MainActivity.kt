@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.schibstedspain.leku.LocationPickerActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.display_users.*
 
 class MainActivity : AppCompatActivity() {
     private var state = true // Login

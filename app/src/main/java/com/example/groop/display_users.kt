@@ -57,10 +57,16 @@ class display_users: AppCompatActivity() {
 
             db.collection("users").get().addOnSuccessListener { snapshot ->
                 my_groops = DBManager.getAllUsers(snapshot)
+                var b = false
+                lateinit var usera:User
                 for(usr in my_groops){
                     if(usr.email==username){
-                        my_groops.remove(usr)
+                        b=true
+                        usera=usr
                     }
+                }
+                if(b){
+                    my_groops.remove(usera)
                 }
                 activity_list_temp.addAll(my_groops)
                 adapter.notifyDataSetChanged()
