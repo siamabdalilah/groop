@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
+import com.example.groop.DataModels.UserListAdapter
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.findDistance
 import com.example.groop.Util.setupNav
@@ -33,8 +34,8 @@ class display_users: AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private val username = auth.currentUser!!.email!!
     private lateinit var user:User
-    private var adapter = HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
-    private var my_groops: ArrayList<User> = ArrayList()
+    private lateinit var adapter : UserListAdapter//= HomeAdapter() // display_groops.HomeAdapter() -> display_groops().HomeAdapater() for compilation --siam
+    private var users: ArrayList<User> = ArrayList()
     private var activity_list_temp: ArrayList<User> = ArrayList()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
@@ -42,6 +43,7 @@ class display_users: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.display_users)
         setupNav(this, display_users_top_bar.top_bar, display_users_bottom_bar.bottom_bar_layout)
+        adapter = UserListAdapter(users, this)
 
         user_display_recycler.layoutManager = LinearLayoutManager(this)
         user_display_recycler.adapter = adapter
@@ -56,19 +58,20 @@ class display_users: AppCompatActivity() {
 
 
             db.collection("users").get().addOnSuccessListener { snapshot ->
-                my_groops = DBManager.getAllUsers(snapshot)
+                users = DBManager.getAllUsers(snapshot)
                 var b = false
                 lateinit var usera:User
-                for(usr in my_groops){
+                for(usr in users){
                     if(usr.email==username){
                         b=true
                         usera=usr
                     }
                 }
                 if(b){
-                    my_groops.remove(usera)
+                    users.remove(usera)
                 }
-                activity_list_temp.addAll(my_groops)
+                activity_list_temp.addAll(users)
+
                 adapter.notifyDataSetChanged()
             }
         }
@@ -92,14 +95,14 @@ class display_users: AppCompatActivity() {
 
 
     fun searchBy(){
-        my_groops.clear()
-        my_groops.addAll(activity_list_temp)
+        users.clear()
+        users.addAll(activity_list_temp)
         var tempList: ArrayList<User> = ArrayList()
         var tempList2: ArrayList<User> = ArrayList()
         var searchByDist = user_search_by_distance.text.toString().toIntOrNull()
         if(searchByDist!=null){
             //my_groops.clear()
-            for(usr in my_groops){
+            for(usr in users){
                 if(findDistance(usr.location,user.location) <=searchByDist){
                     tempList.add(usr)
 
@@ -129,8 +132,8 @@ class display_users: AppCompatActivity() {
             }
         }
         tempList.removeAll(tempList2)
-        my_groops.clear()
-        my_groops.addAll(tempList)
+        users.clear()
+        users.addAll(tempList)
 //        my_groops.filter{
 //
 //        }
@@ -149,7 +152,7 @@ class display_users: AppCompatActivity() {
         override fun onBindViewHolder(p0: JokeViewHolder, p1: Int) {
             //gets joke aka song from the songlist and fills the fields of the itemView
             //with the song data from the array
-            val user_viewed= my_groops[p1]
+            val user_viewed= users[p1]
             p0.name.text = "Name: "+user_viewed.name
             p0.bio.text="bio: "+user_viewed.bio
             Picasso.with(this@display_users).load(user_viewed.profilePicture).into(p0.img)
@@ -165,7 +168,7 @@ class display_users: AppCompatActivity() {
 
 
         override fun getItemCount(): Int {
-            return my_groops.size
+            return users.size
         }
 
 
