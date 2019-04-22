@@ -14,10 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import com.example.groop.Util.toast
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import com.google.firebase.firestore.GeoPoint
 import com.schibstedspain.leku.*
 import com.schibstedspain.leku.geocoder.GeocoderPresenter
@@ -26,22 +23,37 @@ import java.util.*
 
 class GroopLocation(private val activity: Activity) {
 
-//    val fusedLocationClient = FusedLocationProviderClient(activity)
+    var fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
     fun getLocation(): Location {
+
         android.util.Log.d("location", "got here3")
         val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
             android.util.Log.d("location", "got here")
-            var loc  = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-//            if (loc == null){
-//                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-//            }
+
+            val locTask = fusedLocationClient.lastLocation
+            while(!locTask.isComplete){}
+
+            var loc = locTask.result
+
+            if (loc == null){
+                loc  = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            }
+
+            if (loc == null){
+                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            }
             if(loc == null){
                 loc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
             }
-            return loc;
+
+            if (loc == null){
+                cry()
+            }
+            return loc!!;
 
 
         }else{
@@ -53,6 +65,11 @@ class GroopLocation(private val activity: Activity) {
             return getLocation()
         }
     }
+
+    private fun cry(){
+        throw Exception()
+    }
+
 
     fun pickLocation(defaultLocation: GeoPoint? = null){
         var intentBuilder = LocationPickerActivity.Builder()
