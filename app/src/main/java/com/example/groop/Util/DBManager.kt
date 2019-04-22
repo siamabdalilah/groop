@@ -1,7 +1,6 @@
 package com.example.groop.Util
 
 import android.app.Activity
-import android.location.Location
 import android.util.Log
 import com.example.groop.DataModels.Message
 import com.example.groop.DataModels.User
@@ -180,10 +179,10 @@ class DBManager {
          * A QuickSort algorithm
          * This was useful: https://github.com/gazolla/Kotlin-Algorithm/blob/master/QuickSort/QuickSort.kt
          */
-        private class CustomComparator(reference: GeoPoint) : Comparator<Groop> {
-            val reference = reference
-            override fun compare(o1: Groop, o2: Groop): Int {
-                return findDistance(o1.location, reference).compareTo(findDistance(o2.location, reference))
+        private class CustomComparator(reference:GeoPoint) : Comparator<Groop>{
+            val reference=reference
+           override fun compare(o1:Groop,o2:Groop):Int{
+                return findDistance(o1.location,reference).compareTo(findDistance(o2.location,reference))
             }
         }
         fun sortGroops(groops: ArrayList<Groop>, reference: GeoPoint): ArrayList<Groop> {
@@ -577,8 +576,28 @@ class DBManager {
             }
             db.collection("users").document(username).get().addOnSuccessListener { snap->
                 val temp_user = parseUser(snap)
-                temp_user.createdGroops.remove(doc)
-                temp_user.joinedGroops.remove(doc)
+                var b = false
+                lateinit var doc_temp: DocumentReference
+
+                for(doc_iter in temp_user.joinedGroops){
+                    if(doc_iter.id==doc.id){
+                        b=true
+                        doc_temp=doc_iter
+                    }
+                }
+                if(b){
+                    temp_user.joinedGroops.remove(doc_temp)
+                }
+                b=false
+                for(doc_iter2 in temp_user.createdGroops){
+                    if(doc_iter2.id==doc.id){
+                        b=true
+                        doc_temp=doc_iter2
+                    }
+                }
+                if(b){
+                    temp_user.createdGroops.remove(doc_temp)
+                }
             }
         }
         fun deleteGroop(groop: Groop){
