@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import java.util.*
 
 class GroopChatActivity : AppCompatActivity() {
 
@@ -104,6 +105,7 @@ class GroopChatActivity : AppCompatActivity() {
         //update the messages arraylist
         messages = DBManager.getMessageHistory(snapshot)
         //then update the associated UI element
+        messages.sortBy { it.timeStamp }
         list.adapter = ArrayAdapter<Message>(this,
             android.R.layout.simple_list_item_1, messages)
     }

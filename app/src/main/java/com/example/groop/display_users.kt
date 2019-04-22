@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groop.DataModels.User
 import com.example.groop.Util.DBManager
+import com.example.groop.Util.Groop
 import com.example.groop.Util.findDistance
 import com.example.groop.Util.setupNav
 import com.google.android.gms.location.LocationServices
@@ -131,9 +132,16 @@ class display_users: AppCompatActivity() {
         tempList.removeAll(tempList2)
         my_groops.clear()
         my_groops.addAll(tempList)
-//        my_groops.filter{
-//
-//        }
+
+            /*
+            if (it.address.toLowerCase().matches(Regex(searchBy))){
+                return@filter true
+            }
+            */
+
+
+
+
         adapter.notifyDataSetChanged()
     }
 

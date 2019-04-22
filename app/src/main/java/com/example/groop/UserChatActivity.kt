@@ -97,6 +97,7 @@ class UserChatActivity : AppCompatActivity() {
         //pass in other user to filter the results
         messages = DBManager.getMessageHistory(snapshot, otherUser)
         //then update the associated UI element
+        messages.sortBy { it.timeStamp }
         list.adapter = ArrayAdapter<Message>(this,
             android.R.layout.simple_list_item_1, messages)
     }
