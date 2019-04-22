@@ -47,9 +47,6 @@ class home : AppCompatActivity() {
        // viewpager_home.adapter = fragmentAdapter
         tabs_home.setupWithViewPager(viewpager_home)
 
-        var i = Intent(this@home,display_groops::class.java)
-        startActivity(i)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,34 +55,7 @@ class home : AppCompatActivity() {
     }
 
 
-    //recycler view adapter
-  /*  inner class HomeAdapter : RecyclerView.Adapter<HomeAdapter.JokeViewHolder>() {
-        override fun onCreateViewHolder(p0: ViewGroup, p1: Int): JokeViewHolder {
-            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.home_recycler_frag, p0, false)
-            return JokeViewHolder(itemView)
-        }
 
-        //what to do with each element
-        override fun onBindViewHolder(p0: JokeViewHolder, p1: Int) {
-            //gets joke aka song from the songlist and fills the fields of the itemView
-            //with the song data from the array
-            val joke = activity_list[p1]
-            p0.category_text.text = joke
-
-        }
-
-
-        override fun getItemCount(): Int {
-            return activity_list.size
-        }
-
-
-        inner class JokeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var category_text: TextView = itemView.findViewById(R.id.category_text)
-            var row = itemView
-
-        }
-    }*/
     class MyPagerAdapter(fm: FragmentManager, context: Context) : FragmentPagerAdapter(fm) {
         var context=context
         val intent = Intent()

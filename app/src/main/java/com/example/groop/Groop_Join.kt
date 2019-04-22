@@ -30,6 +30,7 @@ class Groop_Join: AppCompatActivity() {
     private var adapter = HomeAdapter()
     private var jusers: ArrayList<String> = ArrayList()
     private var hasher: MutableMap<String,String> = HashMap()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.join_groop)
