@@ -14,10 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import com.example.groop.Util.toast
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import com.google.firebase.firestore.GeoPoint
 import com.schibstedspain.leku.*
 import com.schibstedspain.leku.geocoder.GeocoderPresenter
@@ -26,7 +23,7 @@ import java.util.*
 
 class GroopLocation(private val activity: Activity) {
 
-    val fusedLocationClient = FusedLocationProviderClient(activity.applicationContext)
+    var fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
     fun getLocation(): Location {
 
@@ -37,7 +34,10 @@ class GroopLocation(private val activity: Activity) {
             == PackageManager.PERMISSION_GRANTED) {
             android.util.Log.d("location", "got here")
 
-            var loc = fusedLocationClient.lastLocation.result
+            val locTask = fusedLocationClient.lastLocation
+            while(!locTask.isComplete){}
+
+            var loc = locTask.result
 
             if (loc == null){
                 loc  = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)

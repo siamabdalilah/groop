@@ -37,11 +37,12 @@ class display_groops : AppCompatActivity(){
     private var my_groops: ArrayList<Groop> = ArrayList()
     private var activity_list_temp: ArrayList<Groop> = ArrayList()
     private lateinit var adapter: GroopListAdapter
-    private val gl = GroopLocation(this)
+    private lateinit var gl: GroopLocation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_groops)
+        gl = GroopLocation(this)
 
         adapter = GroopListAdapter(my_groops, this )
 
