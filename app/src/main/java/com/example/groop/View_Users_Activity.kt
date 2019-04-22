@@ -2,6 +2,7 @@ package com.example.groop
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -19,14 +20,16 @@ class View_Users_Activity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO needs to be finished
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.create_groop)
-        var activity=intent.getStringExtra("activity_name")
-        var username = intent.getStringExtra("username")
+        setContentView(R.layout.view_users_activity)
+        var activity=intent.getStringExtra("activity")
+         username = intent.getStringExtra("username")
         activity_name_user_view.text=activity
         db.collection("users").document(username).collection("activities")
             .document(activity).get().addOnSuccessListener { snap->
             bio_user_view.text= Editable.Factory.getInstance().newEditable(snap.get("description").toString())
-
+                bio_user_view.setInputType(InputType.TYPE_NULL)
+                bio_user_view.setTextIsSelectable(false)
+                bio_user_view.setEnabled(false);
             }
     }
 }

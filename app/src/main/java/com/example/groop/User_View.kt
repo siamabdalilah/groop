@@ -45,7 +45,7 @@ class User_View : AppCompatActivity() {
         listview_1_1.layoutManager=LinearLayoutManager(this@User_View)
         listview_1_1.adapter=lvAdapter
 
-        var user_viewed_email = intent.getStringExtra("user_viewed_email")
+        var user_viewed_email = intent.getStringExtra("user_email")
         db.collection("users").document(user_viewed_email).get().addOnSuccessListener { snap->
             user_viewed=DBManager.parseUser(snap)
             user_name_1_1.text=user_viewed.name
