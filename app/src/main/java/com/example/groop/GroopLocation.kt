@@ -26,22 +26,34 @@ import java.util.*
 
 class GroopLocation(private val activity: Activity) {
 
-//    val fusedLocationClient = FusedLocationProviderClient(activity)
+    val fusedLocationClient = FusedLocationProviderClient(activity.applicationContext)
 
     fun getLocation(): Location {
+
         android.util.Log.d("location", "got here3")
         val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
             android.util.Log.d("location", "got here")
-            var loc  = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-//            if (loc == null){
-//                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-//            }
+
+            var loc = fusedLocationClient.lastLocation.result
+
+            if (loc == null){
+                loc  = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            }
+
+            if (loc == null){
+                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            }
             if(loc == null){
                 loc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
             }
-            return loc;
+
+            if (loc == null){
+                cry()
+            }
+            return loc!!;
 
 
         }else{
@@ -53,6 +65,11 @@ class GroopLocation(private val activity: Activity) {
             return getLocation()
         }
     }
+
+    private fun cry(){
+        throw Exception()
+    }
+
 
     fun pickLocation(defaultLocation: GeoPoint? = null){
         var intentBuilder = LocationPickerActivity.Builder()

@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     private var isLocated = false
 
-    val gl = GroopLocation(this)
+//    val gl = GroopLocation(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
