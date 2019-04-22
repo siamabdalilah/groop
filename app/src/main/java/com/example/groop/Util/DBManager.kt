@@ -179,11 +179,19 @@ class DBManager {
          * A QuickSort algorithm
          * This was useful: https://github.com/gazolla/Kotlin-Algorithm/blob/master/QuickSort/QuickSort.kt
          */
+        private class CustomComparator(reference:GeoPoint) : Comparator<Groop>{
+            val reference=reference
+           override fun compare(o1:Groop,o2:Groop):Int{
+                return findDistance(o1.location,reference).compareTo(findDistance(o2.location,reference))
+            }
+        }
         fun sortGroops(groops: ArrayList<Groop>, reference: GeoPoint): ArrayList<Groop> {
             //BASE CASE
             if (groops.size < 2) {
                 return groops
             }
+            Collections.sort(groops, CustomComparator(reference))
+            return groops
             //RECURSIVE CASE
             //filter all of the lists based on
             val pivot = groops.get(groops.size / 2)

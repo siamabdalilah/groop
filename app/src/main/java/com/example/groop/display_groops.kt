@@ -53,8 +53,8 @@ class display_groops : AppCompatActivity(){
 
 
         db.collection("groops").get().addOnSuccessListener { snapshot ->
-            my_groops = getAllGroops(snapshot)
-            my_groops = DBManager.getSortedGroopList(my_groops, user.location)
+            my_groops = getAllGroops(snapshot,user.location)
+            //my_groops = DBManager.sortGroops(my_groops, user.location)
             Log.d("groops", my_groops.size.toString())
             adapter.groops = my_groops
             activity_list_temp.addAll(my_groops)
