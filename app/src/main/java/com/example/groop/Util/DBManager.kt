@@ -403,7 +403,7 @@ class DBManager {
         /**
          * Creates a Groop with the specified information
          */
-        fun createGroop(groop: Groop) {
+        fun createGroop(groop: Groop,gotten: () -> Any?) {
             //again, Firestore does everything for us
             //document will just have an auto-generated ID
 
@@ -414,7 +414,10 @@ class DBManager {
                     val temp_user = parseUser(snap)
                     temp_user.createdGroops.add(doc)
                     temp_user.joinedGroops.add(doc)
-                    db.collection("users").document(groop.createdBy!!).set(temp_user)
+                    db.collection("users").document(groop.createdBy!!).set(temp_user).addOnSuccessListener {
+                        gotten()
+                    }
+
                 }
             }
         }
@@ -590,7 +593,8 @@ class DBManager {
             doc.get().addOnSuccessListener { snap->
                 val temp_groop = parseGroop(snap)
                 temp_groop.members?.remove(db.collection("users").document(username))
-                temp_groop.numMembers--
+                val cur_num = temp_groop.numMembers-1
+                temp_groop.numMembers=cur_num
                 doc.set(temp_groop)
             }
             db.collection("users").document(username).get().addOnSuccessListener { snap->
@@ -602,25 +606,21 @@ class DBManager {
                     Log.d("doc_id", doc.id)
                     Log.d("doc_id", doc_iter.id)
                     if(doc_iter.id==doc.id){
-                        b=true
-                        doc_temp=doc_iter
+                        user_remove(temp_user.joinedGroops,doc_iter)
                     }
                 }
-                Log.d("doc_id", doc_temp.id)
-                if(b){
-                    temp_user.joinedGroops.remove(doc_temp)
-                }
-                b=false
+
                 for(doc_iter2 in temp_user.createdGroops){
                     if(doc_iter2.id==doc.id){
-                        b=true
-                        doc_temp=doc_iter2
+                        user_remove(temp_user.createdGroops,doc_iter2)
                     }
                 }
-                if(b){
-                    temp_user.createdGroops.remove(doc_temp)
-                }
+                db.collection("users").document(username).set(temp_user)
             }
+        }
+
+        fun user_remove(arr:ArrayList<DocumentReference>, doc:DocumentReference){
+            arr.remove(doc)
         }
         fun deleteGroop(groop: Groop){
             val doc = db.collection("groops").document(groop.id!!)

@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.join_groop.*
 import java.util.*
 
 import android.app.Activity;
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.View;
 import java.time.LocalDate
@@ -76,9 +77,8 @@ class Groop_Create: AppCompatActivity() {
                     id_name.text.toString(),1,startTime,activityU,address=address)
 
                 Log.d("creategroop", groop.toString())
-                DBManager.createGroop(groop)
-                val intent = Intent(this@Groop_Create, home::class.java)
-                startActivity(intent)
+                DBManager.createGroop(groop,::finish)
+
             }
         }
     }
