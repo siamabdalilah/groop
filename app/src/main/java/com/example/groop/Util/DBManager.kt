@@ -1,17 +1,9 @@
 package com.example.groop.Util
 
-import android.app.Activity
 import android.util.Log
 import com.example.groop.DataModels.Message
 import com.example.groop.DataModels.User
-import com.example.groop.DataModels.UserWithoutEmail
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.model.DocumentKey
-import com.google.firebase.firestore.model.ResourcePath
-import com.google.firebase.firestore.model.value.TimestampValue
-import java.lang.IllegalArgumentException
-import java.sql.Timestamp
 import java.util.*
 
 class DBManager {
@@ -51,7 +43,7 @@ class DBManager {
             val members = doc.get("members") as ArrayList<DocumentReference>
 
             var d: Date? = doc.getDate("startTime")
-            Log.d("ANDROID",d.toString())
+            Log.d("ANDROID", d.toString())
 
             val adr = if (doc.get("address") == null) "" else doc.get("address") as String
 
@@ -96,9 +88,9 @@ class DBManager {
             )
         }
 
-        fun parseMessage(doc: DocumentSnapshot) : Message {
+        fun parseMessage(doc: DocumentSnapshot): Message {
             return Message(
-                doc.get("from").toString(), (doc.get("timeStamp")as com.google.firebase.Timestamp).toDate() as Date,
+                doc.get("from").toString(), (doc.get("timeStamp") as com.google.firebase.Timestamp).toDate() as Date,
                 doc.get("content").toString(), doc.get("to").toString()
             )
         }
@@ -132,8 +124,8 @@ class DBManager {
             //add each group to the list through this ridiculous process
             for (doc in docList) {
                 //add a new Groop to the list
-                var g:Groop? = null
-                if(doc.contains("name")) {
+                var g: Groop? = null
+                if (doc.contains("name")) {
                     g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO this does not convert
                 }
                 if (g != null) {
@@ -179,12 +171,13 @@ class DBManager {
          * A QuickSort algorithm
          * This was useful: https://github.com/gazolla/Kotlin-Algorithm/blob/master/QuickSort/QuickSort.kt
          */
-        private class CustomComparator(reference:GeoPoint) : Comparator<Groop>{
-            val reference=reference
-           override fun compare(o1:Groop,o2:Groop):Int{
-                return findDistance(o1.location,reference).compareTo(findDistance(o2.location,reference))
+        private class CustomComparator(reference: GeoPoint) : Comparator<Groop> {
+            val reference = reference
+            override fun compare(o1: Groop, o2: Groop): Int {
+                return findDistance(o1.location, reference).compareTo(findDistance(o2.location, reference))
             }
         }
+
         fun sortGroops(groops: ArrayList<Groop>, reference: GeoPoint): ArrayList<Groop> {
             //BASE CASE
             if (groops.size < 2) {
@@ -234,13 +227,12 @@ class DBManager {
                 //mostly, we're just going to invoke the parseGroop method
                 groop.get().addOnSuccessListener { snapshot ->
                     var g: Groop? = null
-                    if(snapshot.contains("name")) {
+                    if (snapshot.contains("name")) {
                         g = parseGroop(snapshot)
                     }
                     if (g != null) {
                         groops.add(g)
-                    }
-                    else {
+                    } else {
                         ++nulls
                     }
 
@@ -310,15 +302,14 @@ class DBManager {
 
                     //mostly, we're just going to invoke the parseGroop method
                     groop.get().addOnSuccessListener { doc ->
-                        var g:Groop? =null
-                        if(doc.contains("name")) {
+                        var g: Groop? = null
+                        if (doc.contains("name")) {
                             g = parseGroop(doc)//doc.toObject(Groop::class.java) //TODO throws deserialization error
                         }
 
                         if (g != null) {
                             groops.add(g)
-                        }
-                        else {
+                        } else {
                             ++nulls
                         }
 
@@ -331,7 +322,7 @@ class DBManager {
                             //so now we've finished all of the get requests
                             //safe to call the callback function
                             gotten(groops)
-                            Log.d("GettingGroops","done parsing groops")
+                            Log.d("GettingGroops", "done parsing groops")
                         }
                     }
                 }
@@ -389,8 +380,8 @@ class DBManager {
             //document will just have an auto-generated ID
 
             val doc = db.collection(Paths.groops).document()
-            groop.id=doc.id
-                doc.set(groop).addOnSuccessListener {
+            groop.id = doc.id
+            doc.set(groop).addOnSuccessListener {
                 db.collection("users").document(groop.createdBy!!).get().addOnSuccessListener { snap ->
                     val temp_user = parseUser(snap)
                     temp_user.createdGroops.add(doc)
@@ -425,7 +416,7 @@ class DBManager {
             }
             //add the user to the groop's list of members
             db.collection(groops).document(groop.id.toString()).get()
-                .addOnSuccessListener {snapshot ->
+                .addOnSuccessListener { snapshot ->
                     //add stuff to the array
                     val members: ArrayList<DocumentReference> = snapshot.get("members")
                             as ArrayList<DocumentReference>
@@ -445,10 +436,10 @@ class DBManager {
 
             //and now add the groop to the user's list of joined groops
             db.collection(users).document(user.email).get()
-                .addOnSuccessListener {snapshot ->
+                .addOnSuccessListener { snapshot ->
                     //add stuff to the array
                     val joinedGroops: ArrayList<DocumentReference> = snapshot.get("joinedGroops")
-                        as ArrayList<DocumentReference>
+                            as ArrayList<DocumentReference>
 
                     val groopDocRef = db.collection(groops).document(groop.id.toString())
 
@@ -474,8 +465,10 @@ class DBManager {
          * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
          * FUNCTION INSTEAD OF RETURNING UPON COMPLETION
          */
-        fun sendMessageToUser(from: String, to: String, content: String,
-                              sent: () -> Any? = {}) {
+        fun sendMessageToUser(
+            from: String, to: String, content: String,
+            sent: () -> Any? = {}
+        ) {
             val currentDate = Date()
 
             //sender and receiver messages are identical
@@ -486,9 +479,9 @@ class DBManager {
             //and then to the sender's
             db.collection(Paths.users).document(from).collection(Paths.messages)
                 .document().set(message)
-                    //after the sender's collection is changed, we want
-                    // to update the UI with the callback
-                    //might also do nothing
+                //after the sender's collection is changed, we want
+                // to update the UI with the callback
+                //might also do nothing
                 .addOnSuccessListener {
                     sent()
                 }
@@ -504,15 +497,17 @@ class DBManager {
          * IMPORTANT:  THIS OPERATES ON THE LEVEL OF CALLBACK FUNCTIONS--WILL CALL THE CALLBACK
          * FUNCTION INSTEAD OF RETURNING UPON COMPLETION
          */
-        fun sendMessageToGroop(from: String, groopID: String,
-                               content: String, sent: () -> Any? = {}) {
+        fun sendMessageToGroop(
+            from: String, groopID: String,
+            content: String, sent: () -> Any? = {}
+        ) {
             val currentDate = Date()
 
             //don't need a "to" field on this li'l guy at all
             val message = Message(from, currentDate, content)
             //add the message to the groop's collection
             db.collection(Paths.groops).document(groopID).collection(Paths.messages).document().set(message)
-                    //update the UI if applicable
+                //update the UI if applicable
                 .addOnSuccessListener {
                     sent()
                 }
@@ -528,7 +523,7 @@ class DBManager {
          * history.
          */
         fun getMessageHistory(query: QuerySnapshot, otherUser: String? = null)
-            : ArrayList<Message> {
+                : ArrayList<Message> {
             var messages = ArrayList<Message>()
 
             //first, look at every document in the specified query snapshot
@@ -541,7 +536,7 @@ class DBManager {
             //if another user was passed in as a parameter, then
             // filters the array based on that
             if (otherUser != null) {
-                messages = messages.filter {message ->
+                messages = messages.filter { message ->
                     message.from == otherUser || message.to == otherUser
                 } as ArrayList<Message>
             }
@@ -551,42 +546,63 @@ class DBManager {
 
         fun getUserByEmail(email: String): User? {
             val task = db.collection("users").document(email).get()
-            while(!task.isComplete){
+            while (!task.isComplete) {
             }
             return parseUser(task.result!!)
         }
 
-        fun updateUser(user: User){
+        fun updateUser(user: User) {
             db.collection("users").document(user.email).set(user)
         }
 
 
-        fun getSortedGroopList(groops: ArrayList<Groop>, loc: GeoPoint) : ArrayList<Groop>{
+        fun getSortedGroopList(groops: ArrayList<Groop>, loc: GeoPoint): ArrayList<Groop> {
             groops.sortBy { findDistance(it.location, loc) }
             return groops
         }
 
-        fun leaveGroop(groop: Groop, username: String){
+        fun leaveGroop(groop: Groop, username: String) {
             val doc = db.collection("groops").document(groop.id!!)
-            doc.get().addOnSuccessListener { snap->
+            doc.get().addOnSuccessListener { snap ->
                 val temp_groop = parseGroop(snap)
                 temp_groop.members?.remove(db.collection("users").document(username))
                 temp_groop.numMembers--
                 doc.set(temp_groop)
             }
-            db.collection("users").document(username).get().addOnSuccessListener { snap->
+            db.collection("users").document(username).get().addOnSuccessListener { snap ->
                 val temp_user = parseUser(snap)
-                temp_user.createdGroops.remove(doc)
-                temp_user.joinedGroops.remove(doc)
+                var b = false
+                lateinit var doc_temp: DocumentReference
+                for (doc_iter in temp_user.createdGroops) {
+                    if (doc_iter.id == doc.id) {
+                        b = true
+                        doc_temp = doc_iter
+
+                    }
+                }
+                if (b) {
+                    temp_user.createdGroops.remove(doc_temp)
+                }
+                b = false
+                for (doc_iter in temp_user.joinedGroops) {
+                    if (doc_iter.id == doc.id) {
+                        b = true
+                        doc_temp = doc_iter
+                    }
+                }
+                if (b) {
+                    temp_user.joinedGroops.remove(doc_temp)
+                }
             }
         }
-        fun deleteGroop(groop: Groop){
+
+        fun deleteGroop(groop: Groop) {
             val doc = db.collection("groops").document(groop.id!!)
-            for(usrRef in groop.members!!){
-                usrRef.get().addOnSuccessListener { snap->
+            for (usrRef in groop.members!!) {
+                usrRef.get().addOnSuccessListener { snap ->
                     val temp_user = parseUser(snap)
                     temp_user.joinedGroops.remove(doc)
-                    if(temp_user.email==groop.createdBy) {
+                    if (temp_user.email == groop.createdBy) {
                         temp_user.createdGroops.remove(doc)
                     }
                     usrRef.set(temp_user)
@@ -594,23 +610,23 @@ class DBManager {
             }
             doc.delete()
         }
-        fun editGroop(groop:Groop){
+
+        fun editGroop(groop: Groop) {
             val doc = db.collection(Paths.groops).document(groop.id!!)
-                doc.get().addOnSuccessListener { snap->
+            doc.get().addOnSuccessListener { snap ->
                 val temp_groop = parseGroop(snap)
-                    if(temp_groop.capacity>groop.numMembers){
-                        Log.d("ANDROID","error: numMembers was larger than reset capacity")
-                    }
-                    else{
-                        temp_groop.capacity=groop.capacity
-                        temp_groop.address= groop.address
-                        temp_groop.description=groop.description
-                        temp_groop.name=groop.name
-                        temp_groop.location=groop.location
-                        temp_groop.startTime=groop.startTime
-                        temp_groop.type=groop.type
-                    }
-                    doc.set(temp_groop)
+                if (temp_groop.capacity > groop.numMembers) {
+                    Log.d("ANDROID", "error: numMembers was larger than reset capacity")
+                } else {
+                    temp_groop.capacity = groop.capacity
+                    temp_groop.address = groop.address
+                    temp_groop.description = groop.description
+                    temp_groop.name = groop.name
+                    temp_groop.location = groop.location
+                    temp_groop.startTime = groop.startTime
+                    temp_groop.type = groop.type
+                }
+                doc.set(temp_groop)
             }
             doc.set(groop)
         }
