@@ -22,7 +22,9 @@ class edit_activity_info : AppCompatActivity() {
         var activity: String = intent.getStringExtra("activity")
         db.collection("users").document(username).collection("activities")
             .document(activity).get().addOnSuccessListener { snap ->
-                home_id.text = Editable.Factory.getInstance().newEditable(snap.get("description").toString())
+                if(snap.get("description")!=null) {
+                    home_id.text = Editable.Factory.getInstance().newEditable(snap.get("description").toString())
+                }
             }
         // var user = intent.extras.get("user") as User
         // val user = User("telemonian@gmail.com", "Billiamson McGee", GeoPoint(1.1, 0.0), "")
