@@ -7,7 +7,7 @@ https://blog.sendbird.com/android-chat-tutorial-building-a-messaging-ui-->
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="ma"
         android:paddingTop="8dp">
 
     <ImageView
