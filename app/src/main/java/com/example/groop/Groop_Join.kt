@@ -99,6 +99,7 @@ class Groop_Join : AppCompatActivity() {
             }
             intent.putExtra("groop_hash_keys", keys)
             intent.putExtra("groop_hash_emails", vals)
+            intent.putExtra("groop_name", this_groop.name)
             startActivity(intent)
         }
 

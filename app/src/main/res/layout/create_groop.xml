@@ -16,8 +16,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="174dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="136dp"
-    />
+            android:layout_marginStart="136dp"/>
+
 
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:minLines="4"
             android:layout_margin="16dp"
             android:inputType="textMultiLine">
-        >
+
         <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="121dp"
