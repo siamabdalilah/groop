@@ -49,22 +49,22 @@ class ChatAdapter(var messages: ArrayList<Message>, val username: String) : Recy
 
     inner class SentMessageHolder(view: View) : RecyclerView.ViewHolder(view){
         val message = view.text_message_body
-        val time = view.text_message_time
+//        val time = view.text_message_time
 
         fun bind(mess: Message){
             message.text = mess.content
-            time.text = mess.timeStamp.toString()
+//            time.text = mess.timeStamp.toString()
         }
     }
 
     inner class ReceivedMessageHolder(view: View): RecyclerView.ViewHolder(view){
         val message = view.text_message_body_received
-        val time = view.text_message_time
+//        val time = view.text_message_time
         val name = view.text_message_name
 
         fun bind(mess: Message){
             name.text = mess.from
-            time.text = mess.timeStamp.toString()
+//            time.text = mess.timeStamp.toString()
             message.text = mess.content
         }
     }

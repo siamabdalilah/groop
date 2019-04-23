@@ -11,6 +11,7 @@ import com.example.groop.DataModels.Message
 import com.example.groop.Util.DBManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.android.synthetic.main.activity_user_chat.*
 
 class UserChatActivity : AppCompatActivity() {
 
@@ -77,6 +78,8 @@ class UserChatActivity : AppCompatActivity() {
         adapter = ChatAdapter(messages, currentUser)
         list.layoutManager = LinearLayoutManager(this)
         list.adapter = adapter
+        title_user.text = otherUser
+
 
         //okay, first off, we've got to connect to the database and
         // load all of the messages
