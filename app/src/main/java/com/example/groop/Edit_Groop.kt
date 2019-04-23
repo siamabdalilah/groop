@@ -53,7 +53,7 @@ class Edit_Groop: AppCompatActivity() {
         }
 
         edit_groop_btn.setOnClickListener() {
-            gl.pickLocation()
+            gl.pickLocation(this_groop.location)
         }
         edit_groop_starttime.setOnClickListener {
             var newFragment: DialogFragment = DatePickerFragment()
@@ -70,7 +70,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
         if (edit_groop_spinner2.getSelectedItem().toString() != null) {
             this_groop.type = edit_groop_spinner2.getSelectedItem().toString()
             if (edit_groop_max_participants.text.toString() != "") {
-               this_groop.capacity = edit_groop_max_participants.text.toString() as Int
+               this_groop.capacity = edit_groop_max_participants.text.toString().toInt()
             }
             this_groop.description = edit_groop_bio.text.toString()
             this_groop.startTime = java.sql.Date.valueOf(edit_groop_starttime.text.toString())
