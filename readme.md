@@ -52,3 +52,4 @@ the product as it stands, Groop has a lot of room to grow throughout future upda
 
 We attribute the instructions for creating the chatting layout to https://blog.sendbird.com/android-chat-tutorial-building-a-messaging-ui
 We attribute the location picker activity to the Leku project. https://github.com/SchibstedSpain/Leku#license
+We attribute the use of spinners to https://www.mkyong.com/android/android-spinner-drop-down-list-example/
