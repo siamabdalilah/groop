@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_activity_view.*
 import kotlinx.android.synthetic.main.recycler_view_item.view.*
+import kotlinx.android.synthetic.main.user_card.view.*
 
 class ActivityViewFragment : Fragment() {
 
@@ -72,7 +73,7 @@ class ActivityViewFragment : Fragment() {
     inner class ActivityRecyclerAdapter : RecyclerView.Adapter<ActivityRecyclerAdapter.ActivityHolder>() {
 
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ActivityHolder {
-            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.recycler_view_item, p0, false)
+            val itemView = LayoutInflater.from(p0.context).inflate(R.layout.user_card, p0, false)
             return ActivityHolder(itemView)
         }
 
@@ -95,7 +96,7 @@ class ActivityViewFragment : Fragment() {
 
 
         inner class ActivityHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var category_text: TextView = itemView.category_text
+            var category_text: TextView = itemView.name_of_user
             var row = itemView
 
         }
