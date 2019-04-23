@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.groop.DataModels.ChatAdapter
 import com.example.groop.DataModels.Message
 import com.example.groop.Util.DBManager
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,7 +18,7 @@ class UserChatActivity : AppCompatActivity() {
     lateinit var db: FirebaseFirestore
     var messages: ArrayList<Message> = ArrayList()
     //UI ELEMENTS
-    lateinit var list: ListView
+    lateinit var list: RecyclerView
     lateinit var messageEntry: EditText
     lateinit var sendButton: Button
 
@@ -24,6 +27,8 @@ class UserChatActivity : AppCompatActivity() {
     lateinit var currentUser: String
     //and the user that will be messaged
     lateinit var otherUser: String
+
+    private lateinit var adapter : ChatAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +74,10 @@ class UserChatActivity : AppCompatActivity() {
             Log.d(TAG, "intent does not include current user")
         }
 
+        adapter = ChatAdapter(messages, currentUser)
+        list.layoutManager = LinearLayoutManager(this)
+        list.adapter = adapter
+
         //okay, first off, we've got to connect to the database and
         // load all of the messages
         db.collection(DBManager.Paths.users).document(currentUser)
@@ -97,8 +106,12 @@ class UserChatActivity : AppCompatActivity() {
         messages = DBManager.getMessageHistory(snapshot, otherUser)
         //then update the associated UI element
         messages.sortBy { it.timeStamp }
-        list.adapter = ArrayAdapter<Message>(this,
-            android.R.layout.simple_list_item_1, messages)
+        adapter.messages = messages
+        adapter.notifyDataSetChanged()
+        Log.d("fml", "received a message")
+
+//        list.adapter = ArrayAdapter<Message>(this,
+//            android.R.layout.simple_list_item_1, messages)
     }
 
     /**

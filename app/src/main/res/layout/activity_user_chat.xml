@@ -8,48 +8,64 @@
         tools:context=".UserChatActivity"
         >
     <TextView
-            android:text="Messaging"
+            android:text="Username?"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+
             app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/title"
-            android:textSize="30sp"
-            app:layout_constraintVertical_bias="0.056"
-            app:layout_constraintHorizontal_bias="0.425"/>
+            android:textSize="25sp"
+            android:layout_marginTop="20dp"/>
 
-    <EditText
-            android:layout_width="wrap_content"
+    <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:hint="Type message here"
-            android:ems="10"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/send"
-            android:id="@+id/new_message"
-            app:layout_constraintHorizontal_bias="0.151"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/message_list"/>
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="Type message here"
+                android:id="@+id/new_message"
+                android:layout_weight="11"
+                android:layout_marginEnd="8dp"
+        />
 
-    <Button
-            android:text="Send"
-            android:layout_width="wrap_content"
+        <Button
+                android:text="Send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/send"
+                android:layout_weight="1"
+                android:layout_gravity="end"
+                android:layout_marginBottom="1dp"/>
+    </LinearLayout>
+
+    <!--<ListView-->
+            <!--android:layout_width="395dp"-->
+            <!--android:layout_height="412dp"-->
+            <!--android:id="@+id/message_list"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/title" android:layout_marginEnd="8dp"-->
+            <!--app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"-->
+            <!--android:layout_marginStart="8dp"/>-->
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/new_message"
-            app:layout_constraintRight_toRightOf="parent"
-            android:id="@+id/send"
-            app:layout_constraintHorizontal_bias="0.91"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/message_list"/>
+            android:layout_marginTop="25dp"
+            android:layout_margin="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
 
-    <ListView
-            android:layout_width="395dp"
-            android:layout_height="412dp"
+            app:layout_constraintTop_toBottomOf="@+id/title"
             android:id="@+id/message_list"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/title" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"/>
+    >
+        \
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

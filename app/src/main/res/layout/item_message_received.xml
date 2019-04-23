@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Stolen from:
-https://blog.sendbird.com/android-chat-tutorial-building-a-messaging-ui-->
 
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -31,9 +29,9 @@ https://blog.sendbird.com/android-chat-tutorial-building-a-messaging-ui-->
             android:layout_marginTop="4dp" />
 
     <TextView
-            android:id="@+id/text_message_body"
+            android:id="@+id/text_message_body_received"
             android:text="hi man, how are you?"
-            android:background="@drawable/rounded_rectangle_orange"
+            android:background="@drawable/received_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="240dp"
@@ -45,13 +43,13 @@ https://blog.sendbird.com/android-chat-tutorial-building-a-messaging-ui-->
             android:layout_marginLeft="8dp" />
 
     <TextView
-            android:id="@+id/text_message_time"
+            android:id="@+id/text_message_time_received"
             android:text="11:40"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
-            app:layout_constraintLeft_toRightOf="@+id/text_message_body"
+            app:layout_constraintLeft_toRightOf="@+id/text_message_body_received"
             android:layout_marginLeft="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/text_message_body" />
+            app:layout_constraintBottom_toBottomOf="@+id/text_message_body_received" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
