@@ -283,13 +283,13 @@ class DBManager {
             }
         }
 
-        /**
-         * Returns an ArrayList of groops that have been created by
-         * the user specified by the email
-         */
-        fun getGroopsBy(email: String, gotten: (ArrayList<Groop>) -> Any?) {
-            getUserGroops(email, "createdGroops", gotten)
-        }
+//        /**
+//         * Returns an ArrayList of groops that have been created by
+//         * the user specified by the email
+//         */
+//        fun getGroopsBy(email: String, gotten: (ArrayList<Groop>) -> Any?) {
+//            getUserGroops(email, "createdGroops", gotten)
+//        }
 
         /**
          * Returns an ArrayList of Groop objects that have been

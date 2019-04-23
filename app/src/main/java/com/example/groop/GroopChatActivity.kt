@@ -8,7 +8,9 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.groop.DataModels.ChatAdapter
 import com.example.groop.DataModels.Message
 import com.example.groop.Util.DBManager
 import com.example.groop.Util.Groop
@@ -16,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.android.synthetic.main.activity_groop_chat.*
 import java.util.*
 
 class GroopChatActivity : AppCompatActivity() {
@@ -24,7 +27,7 @@ class GroopChatActivity : AppCompatActivity() {
     lateinit var db: FirebaseFirestore
     var messages: ArrayList<Message> = ArrayList()
     //UI ELEMENTS
-    lateinit var list: ListView
+    lateinit var list: RecyclerView
     lateinit var messageEntry: EditText
     lateinit var sendButton: Button
 
@@ -36,10 +39,12 @@ class GroopChatActivity : AppCompatActivity() {
 
     private val auth = FirebaseAuth.getInstance()
 
-    var currentUser: String=auth.currentUser!!.email!!
+    val currentUser: String = auth.currentUser!!.email!!
+    lateinit var adapter : ChatAdapter
 
 
-        override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_groop_chat)
 
@@ -53,6 +58,13 @@ class GroopChatActivity : AppCompatActivity() {
         messageEntry = findViewById(R.id.new_message)
         //the button
         sendButton = findViewById(R.id.send)
+
+
+        title_groop.text = intent.getStringExtra("groop_name")
+
+        list.layoutManager = LinearLayoutManager(this)
+        adapter = ChatAdapter(messages, currentUser)
+        list.adapter = adapter
 
         //onclick listener for the send button
         sendButton.setOnClickListener {
@@ -69,8 +81,8 @@ class GroopChatActivity : AppCompatActivity() {
         // so let's get that li'l guy
         //key should be "groopId"
         groopId = intent.getStringExtra("groopId")
-            groopHashKeys = intent.getStringArrayListExtra("groop_hash_keys")
-            groopHashEmails = intent.getStringArrayListExtra("groop_hash_emails")
+        groopHashKeys = intent.getStringArrayListExtra("groop_hash_keys")
+        groopHashEmails = intent.getStringArrayListExtra("groop_hash_emails")
 
 
         //must include the groop id
@@ -106,8 +118,8 @@ class GroopChatActivity : AppCompatActivity() {
         messages = DBManager.getMessageHistory(snapshot)
         //then update the associated UI element
         messages.sortBy { it.timeStamp }
-        list.adapter = ArrayAdapter<Message>(this,
-            android.R.layout.simple_list_item_1, messages)
+        adapter.messages = messages
+        adapter.notifyDataSetChanged()
     }
 
     /**

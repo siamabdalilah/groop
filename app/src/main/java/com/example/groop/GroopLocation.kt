@@ -105,24 +105,5 @@ class GroopLocation(private val activity: Activity) {
         return ""
     }
 
-    companion object {
-        fun getLocation(activity: Activity): Location {
 
-            val locationManager = activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED
-            ) {
-                val loc = locationManager.getLastKnownLocation(locationManager.getBestProvider(Criteria(), true))
-                return loc;
-
-
-            } else {
-                ActivityCompat.requestPermissions(
-                    activity,
-                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1
-                )
-                return getLocation(activity)
-            }
-        }
-    }
 }
